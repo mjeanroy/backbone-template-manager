@@ -135,7 +135,7 @@ describe('DomTemplateManager', () => {
       });
 
       expect(error).not.toHaveBeenCalled();
-      expect(success).toHaveBeenCalledWith(html);
+      expect(success).toHaveBeenCalledWith(_.object(selectors, html));
     });
 
     it('should fail if single template does not exist', () => {
@@ -186,10 +186,15 @@ describe('DomTemplateManager', () => {
       });
 
       expect(success).not.toHaveBeenCalledWith();
-      expect(error).toHaveBeenCalledWith([
-        { data: 'Cannot find template: #test-template-1' },
-        { data: 'Cannot find template: #test-template-2' }
-      ]);
+      expect(error).toHaveBeenCalledWith({
+        '#test-template-1': {
+          data: 'Cannot find template: #test-template-1'
+        },
+
+        '#test-template-2': {
+          data: 'Cannot find template: #test-template-2'
+        }
+      });
     });
 
     it('should fail if array of templates exist with multiple results', () => {
@@ -221,10 +226,15 @@ describe('DomTemplateManager', () => {
       });
 
       expect(success).not.toHaveBeenCalledWith();
-      expect(error).toHaveBeenCalledWith([
-        { data: 'Found multiple templates for selector: [data-template="test-template-1"]' },
-        { data: 'Found multiple templates for selector: [data-template="test-template-2"]' }
-      ]);
+      expect(error).toHaveBeenCalledWith({
+        '[data-template="test-template-1"]': {
+          data: 'Found multiple templates for selector: [data-template="test-template-1"]'
+        },
+
+        '[data-template="test-template-2"]': {
+          data: 'Found multiple templates for selector: [data-template="test-template-2"]'
+        }
+      });
     });
 
     it('should fail if array of templates has some errors', () => {
@@ -243,9 +253,11 @@ describe('DomTemplateManager', () => {
       });
 
       expect(success).not.toHaveBeenCalledWith();
-      expect(error).toHaveBeenCalledWith([
-        { data: 'Cannot find template: #test-template-2' }
-      ]);
+      expect(error).toHaveBeenCalledWith({
+        '#test-template-2': {
+          data: 'Cannot find template: #test-template-2'
+        }
+      });
     });
   });
 });

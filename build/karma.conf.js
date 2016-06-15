@@ -33,26 +33,23 @@ module.exports = config => {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: root,
 
-
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
-
     // Files to load in the browser.
     files: [
-      { pattern: 'node_modules/jquery/dist/jquery.js', watched: false, included: true, served: true },
-      { pattern: 'node_modules/underscore/underscore.js', watched: false, included: true, served: true },
-      { pattern: 'node_modules/backbone/backbone.js', watched: false, included: true, served: true },
-      { pattern: 'src/**/*.js', watched: true, included: false, served: true },
-      { pattern: 'test/**/*.js', watched: true, included: true, served: true }
+      {pattern: 'node_modules/jquery/dist/jquery.js', watched: false, included: true, served: true},
+      {pattern: 'node_modules/underscore/underscore.js', watched: false, included: true, served: true},
+      {pattern: 'node_modules/backbone/backbone.js', watched: false, included: true, served: true},
+      {pattern: 'node_modules/jasmine-ajax/lib/mock-ajax.js', watched: false, included: true, served: true},
+      {pattern: 'src/**/*.js', watched: true, included: false, served: true},
+      {pattern: 'test/**/*.js', watched: true, included: true, served: true}
     ],
-
 
     // list of files to exclude
     exclude: [
     ],
-
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -61,39 +58,31 @@ module.exports = config => {
       'test/**/*.js': ['rollup']
     },
 
-
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress'],
 
-
     // web server port
     port: 9876,
 
-
     // enable / disable colors in the output (reporters and logs)
     colors: true,
-
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
-
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS'],
 
-
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
-
 
     // Rollup Configuration
     rollupPreprocessor: {

@@ -24,6 +24,8 @@
 
 import _ from 'underscore';
 
+const firstEntry = obj => obj[_.keys(obj)[0]];
+
 export class AbstractTemplateManager {
   constructor(options) {
     this.options = options || {};
@@ -42,7 +44,7 @@ export class AbstractTemplateManager {
     if (_.isString(templates)) {
       singular = true;
       sources = [templates];
-    } else if (_.isArray(templates)) {
+    } else if (_.isArray(templates) && _.every(templates, _.isString)) {
       singular = false;
       sources = templates;
     } else {
@@ -54,32 +56,35 @@ export class AbstractTemplateManager {
     let done = opts.done || _.noop;
 
     const onDone = _.after(sources.length, results => {
-      if (_.isEmpty(results.errors)) {
-        success(singular ? results.success[0] : results.success);
+      const ok = singular ? firstEntry(results.success) : results.success;
+      const ko = singular ? firstEntry(results.errors) : results.errors;
+
+      if (_.isEmpty(ko)) {
+        success(ok);
       } else {
-        error(singular ? results.errors[0] : results.errors);
+        error(ko);
       }
 
-      done(results.success, results.error);
+      done(ok, ko);
 
       // Free memory.
       success = error = done = null;
     });
 
     const results = {
-      success: [],
-      errors: []
+      success: {},
+      errors: {}
     };
 
     _.forEach(sources, source => {
       this._doFetch(source, {
         success: template => {
-          results.success.push(template);
+          results.success[source] = template;
           onDone(results);
         },
 
         error: error => {
-          results.errors.push(error);
+          results.errors[source] = error;
           onDone(results);
         }
       });
