@@ -22,4 +22,18 @@
  * SOFTWARE.
  */
 
-export {DomTemplateManager} from 'core/dom-template-manager';
+import {DomTemplateManager} from 'core/dom-template-manager';
+import {RemoteTemplateManager} from 'core/remote-template-manager';
+import {defaults} from 'core/defaults';
+import {TemplateView} from 'core/template-view';
+
+/**
+ * Public API.
+ * Create an object containing public components that can be used.
+ */
+export const TemplateManager = {
+  DomTemplateManager: DomTemplateManager,
+  RemoteTemplateManager: RemoteTemplateManager,
+  TemplateView: TemplateView,
+  defaults: defaults
+};

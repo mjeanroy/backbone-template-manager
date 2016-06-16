@@ -29,7 +29,7 @@ const includePaths = require('rollup-plugin-includepaths');
 
 module.exports = options => {
   const rollupConf = {
-    entry: path.join(options.src, 'backbone-tpls-mgr.js'),
+    entry: path.join(options.src, 'index.js'),
     external: ['underscore', 'backbone'],
     plugins: [
       includePaths({
