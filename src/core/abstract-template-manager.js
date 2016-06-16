@@ -26,16 +26,55 @@ import _ from 'underscore';
 
 const firstEntry = obj => obj[_.keys(obj)[0]];
 
+/**
+ * Partial implementation of template manager.
+ * A template manager is a simple class that can be used to fetch
+ * templates according to several strategies, such as:
+ *  - Querying the DOM for templates.
+ *  - Make an ajax call to fetch templates on the server.
+ */
 export class AbstractTemplateManager {
+  /**
+   * Constructor using options as arguments.
+   * The constructor will automatically called the `initialize` function
+   * with a valid options object (empty object if no options given).
+   *
+   * @param {object?} options Optional options.
+   */
   constructor(options) {
     this.options = options || {};
     this.initialize(this.options);
   }
 
+  /**
+   * Initalize function.
+   *
+   * @param {object} options Options object (may be an empty object).
+   */
   initialize() {
     // No op, should be implemented by subclass.
   }
 
+  /**
+   * Fetch a template (or an array of templates).
+   *
+   * If templates is a string, then a single template is fetched, otherwise each
+   * templates in the array will be fetched.
+   *
+   * Option argument can defined a `success` and an `error` callback:
+   *  - The `success` callback will be resolved with the template value if first
+   *    argument is a string, or an object (key is the template id, value is the
+   *    resolved template) if first argument is an array.
+   *  - The `error` callback will be resolved if at least one template cannot be
+   *    resolved. This callback will be called with the error object as first argument
+   *    and valid template (i.e the ones that could be resolved).
+   *
+   * Note that if first argument is not a string or an array of string, an error
+   * will be thrown.
+   *
+   * @param {string|array<string>} templates Templates to fetch (required).
+   * @param {object?} options Option object.
+   */
   fetch(templates, options) {
     let opts = options || {};
 
@@ -71,6 +110,7 @@ export class AbstractTemplateManager {
       success = error = done = null;
     });
 
+    // Store success / errors while fetching templates.
     const results = {
       success: {},
       errors: {}
@@ -91,6 +131,14 @@ export class AbstractTemplateManager {
     });
   }
 
+  /**
+   * Fetch a single template.
+   * This method must be overridden by sub classes, default implementation
+   * throw an error.
+   *
+   * @param {string} template Template to fetch.
+   * @param {object} options Options object containing success / error callback.
+   */
   _doFetch() {
     throw new Error('Method "doFetch" should be implemented');
   }
