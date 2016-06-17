@@ -23,19 +23,24 @@
  */
 
 const path = require('path');
-const fs = require('fs');
+const express = require('express');
+const connectLivereload = require('connect-livereload');
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
-};
+const port = 8080;
+const app = express();
+const root = path.join(__dirname, '..');
 
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
+app.use(connectLivereload());
+
+// Static directories
+app.use('/vendors', express.static(path.join(root, 'node_modules')));
+app.use('/dist', express.static(path.join(root, 'sample', '.tmp')));
+app.use('/', express.static(path.join(root, 'sample')));
+
+const frameworks = require('./techs.json');
+
+app.get('/api/frameworks', (req, res) => res.json(frameworks));
+
+app.listen(port, () => {
+  console.log('Server listening on : http://localhost:' + port);
 });

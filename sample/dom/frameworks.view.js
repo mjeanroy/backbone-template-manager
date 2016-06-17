@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
+import {TemplateManager} from 'backbone-tpls-mgr';
+import {Frameworks} from '../commons/frameworks.collection';
+import {FrameworkView} from './framework.view';
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
-};
+export class FrameworksView extends TemplateManager.TemplateView {
+  initialize() {
+    this.collection = new Frameworks();
+    this.listenTo(this.collection, 'sync', this.render);
+    this.listenTo(this, 'render:success', this.renderCollection);
+    this.collection.fetch();
+  }
 
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
+  renderCollection() {
+    const $container = this.$('.js-frameworks');
+    this.collection.forEach(model => {
+      $container.append(new FrameworkView({model}).$el);
+    });
+  }
+
+  templates() {
+    return '[data-template-id="frameworks"]';
+  }
+}

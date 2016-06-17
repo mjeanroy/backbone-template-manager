@@ -7,7 +7,8 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "test": "gulp test",
-    "tdd": "gulp tdd"
+    "tdd": "gulp tdd",
+    "start": "gulp serve"
   },
 
   "keywords": [
@@ -24,12 +25,17 @@
 
   "devDependencies": {
     "jquery": ">=1.11.0",
+    "bootstrap": "~3.3.5",
+    "mustache": "2.2.1",
     "q": "1.4.1",
     "gulp": "3.9.1",
+    "gulp-util": "3.0.7",
     "eslint": "2.12.0",
     "rollup": "0.31.1",
     "rollup-plugin-includepaths": "0.1.5",
-    "rollup-plugin-babel": "2.5.1",
+    "rollup-plugin-babel": "2.4.0",
+    "rollup-plugin-node-resolve": "1.7.0",
+    "rollup-plugin-commonjs": "3.0.0",
     "babel-preset-es2015-rollup": "1.1.1",
     "eslint-config-google": "0.5.0",
     "eslint-config-xo": "0.14.1",
@@ -46,6 +52,9 @@
     "karma-jasmine": "1.0.2",
     "karma-rollup-preprocessor": "2.0.2",
     "karma-babel-preprocessor": "6.0.1",
-    "phantomjs-prebuilt": "2.1.7"
+    "phantomjs-prebuilt": "2.1.7",
+    "gulp-live-server": "0.0.30",
+    "express": "4.13.4",
+    "connect-livereload": "0.5.4"
   }
 }

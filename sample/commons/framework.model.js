@@ -22,20 +22,10 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
+import Backbone from 'backbone';
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
-};
-
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
+export class Framework extends Backbone.Model {
+  urlRoot() {
+    return '/api/frameworks';
+  }
+}

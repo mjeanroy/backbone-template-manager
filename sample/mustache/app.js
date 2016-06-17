@@ -22,20 +22,31 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
+import Mustache from 'mustache';
+import Backbone from 'backbone';
+import {TemplateManager} from 'backbone-tpls-mgr';
+import {FrameworksView} from './frameworks.view';
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
+class App extends Backbone.View {
+  initialize() {
+    this.$el = Backbone.$('#main');
+    this.render();
+  }
+
+  render() {
+    this.$el.html(new FrameworksView().$el);
+  }
+}
+
+// Override default template manager.
+TemplateManager.defaults.templateManager = new TemplateManager.DomTemplateManager();
+
+// Override default compile function with mustache.
+TemplateManager.defaults.compile = html => {
+  return (data, partials) => {
+    return Mustache.render(html, data, partials);
+  };
 };
 
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
+// Start and export app.
+new App(); // eslint-disable-line no-new

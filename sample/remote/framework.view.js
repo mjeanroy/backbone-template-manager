@@ -22,20 +22,23 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
+import {TemplateManager} from 'backbone-tpls-mgr';
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
-};
+export class FrameworkView extends TemplateManager.TemplateView {
+  initialize(options) {
+    this.model = options.model;
+    this.render();
+  }
 
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
+  templates() {
+    return 'framework';
+  }
+
+  tagName() {
+    return 'div';
+  }
+
+  className() {
+    return 'col-sm-6 col-md-4';
+  }
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Backbone TemplateManager - DOM Template</title>
+    <link rel="stylesheet" href="/vendors/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/index.html">Backbone TemplateManager</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/remote/index.html">Remote Template</a></li>
+            <li class="active"><a href="/dom/index.html">Dom Template</a></li>
+            <li><a href="/mustache/index.html">Mustache Template</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="main" class="container"></div>
+
+    <script type="text/template" data-template-id="framework">
+      <div class="thumbnail">
+        <div class="caption">
+          <h3><%= model.title %></h3>
+          <p><%= model.description %></p>
+          <p><a href="<%= model.url %>"><%= model.url %></a></p>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/template" data-template-id="frameworks">
+      <div class="row js-frameworks"></div>
+    </script>
+
+    <script type="text/javascript" src="/dom/.tmp/bundle.js"></script>
+  </body>
+</html>

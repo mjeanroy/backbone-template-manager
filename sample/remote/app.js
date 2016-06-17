@@ -22,20 +22,19 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
+import Backbone from 'backbone';
+import {FrameworksView} from './frameworks.view';
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
-};
+class App extends Backbone.View {
+  initialize() {
+    this.$el = Backbone.$('#main');
+    this.render();
+  }
 
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
+  render() {
+    this.$el.html(new FrameworksView().$el);
+  }
+}
+
+// Start and export app.
+new App(); // eslint-disable-line no-new
