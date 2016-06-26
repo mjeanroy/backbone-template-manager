@@ -23,36 +23,17 @@
 */
 
 const _ = require('lodash');
+const fs = require('fs');
 const path = require('path');
-const includePaths = require('rollup-plugin-includepaths');
-const external = ['underscore', 'backbone'];
-const license = require('./license.conf');
 
-const LICENSE_REGEXP = /\/\*\*(\*(?!\/)|[^*])*(The MIT License)(\*(?!\/)|[^*])*\*\//;
+const EOL = '\n';
+const LICENSE = [`/**`]
+  .concat(fs.readFileSync(path.join(__dirname, '..', 'LICENSE'))
+    .toString()
+    .trim()
+    .split(EOL)
+    .map(line => _.trimEnd(` * ${line}`)))
+  .concat(` */${EOL}`)
+  .join(EOL);
 
-module.exports = options => ({
-  rollup: {
-    entry: path.join(options.src, 'index.js'),
-    external,
-
-    plugins: [
-      {transform: code => _.trimStart(code.replace(LICENSE_REGEXP, ''))},
-
-      includePaths({
-        external,
-        paths: [
-          options.src
-        ]
-      })
-    ]
-  },
-
-  bundle: {
-    dest: path.join(options.dist, 'backbone-template-manager.js'),
-    banner: license(),
-    globals: {
-      underscore: '_',
-      backbone: 'Backbone'
-    }
-  }
-});
+module.exports = () => LICENSE;

@@ -29,6 +29,8 @@ const rename = require("gulp-rename");
 const rollup = require('rollup');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
+const header = require('gulp-header');
+const license = require('../license.conf');
 
 const babelConf = require('../babel.conf');
 const rollupConf = require('../rollup.conf');
@@ -47,6 +49,7 @@ module.exports = options => {
         gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
         return gulp.src(src)
           .pipe(babel(babelConf()))
+          .pipe(header(license()))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
           .pipe(uglify())
           .pipe(rename('backbone-template-manager.min.js'))
