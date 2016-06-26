@@ -2,7 +2,8 @@
   "name": "backbone-tpls-mgr",
   "version": "0.0.0",
   "description": "Simple template manager for Backbone",
-  "main": "dist/backbone-tpls-mgr.js",
+  "main": "dist/es5/backbone-template-manager.js",
+  "jsnext:main": "dist/backbone-template-manager.js",
   "scripts": {
     "clean": "gulp clean",
     "lint": "gulp lint",
