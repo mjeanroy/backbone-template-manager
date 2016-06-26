@@ -177,3 +177,6 @@ export class TemplateView extends Backbone.View {
     return this;
   }
 }
+
+// Add `extend` method from Backbone.
+TemplateView.extend = Backbone.View.extend;

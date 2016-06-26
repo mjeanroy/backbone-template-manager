@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import {TemplateManager} from 'backbone-template-manager';
+import {TemplateView} from 'backbone-template-manager';
 
-export class FrameworkView extends TemplateManager.TemplateView {
+export class FrameworkView extends TemplateView {
   initialize(options) {
     this.model = options.model;
     this.render();

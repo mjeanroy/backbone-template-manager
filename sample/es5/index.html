@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>Backbone TemplateManager - Samples</title>
+    <title>Backbone TemplateManager - DOM Template</title>
     <link rel="stylesheet" href="/vendors/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/app.css">
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -15,16 +16,18 @@
             <li><a href="/remote/index.html">Remote Template</a></li>
             <li><a href="/dom/index.html">Dom Template</a></li>
             <li><a href="/mustache/index.html">Mustache Template</a></li>
-            <li><a href="/es5/index.html">ES5 (UMD)</a></li>
+            <li class="active"><a href="/es5/index.html">ES5 (UMD)</a></li>
           </ul>
         </div>
       </div>
     </nav>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Backbone Template Manager</h1>
-        <p>Samples to test for Remote & DOM Templates</p>
-      </div>
-    </div>
+
+    <div id="main" class="container"></div>
+
+    <script type="text/javascript" src="/vendors/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="/vendors/underscore/underscore.js"></script>
+    <script type="text/javascript" src="/vendors/backbone/backbone.js"></script>
+    <script type="text/javascript" src="/dist/es5/backbone-template-manager.js"></script>
+    <script type="text/javascript" src="/es5/app.js"></script>
   </body>
 </html>

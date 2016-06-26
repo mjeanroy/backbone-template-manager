@@ -24,7 +24,7 @@
 
 import Mustache from 'mustache';
 import Backbone from 'backbone';
-import {TemplateManager} from 'backbone-template-manager';
+import {defaults, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
 class App extends Backbone.View {
@@ -39,10 +39,10 @@ class App extends Backbone.View {
 }
 
 // Override default template manager.
-TemplateManager.defaults.templateManager = new TemplateManager.DomTemplateManager();
+defaults.templateManager = new DomTemplateManager();
 
 // Override default compile function with mustache.
-TemplateManager.defaults.compile = html => {
+defaults.compile = html => {
   return (data, partials) => {
     return Mustache.render(html, data, partials);
   };

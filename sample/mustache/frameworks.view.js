@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import {TemplateManager} from 'backbone-template-manager';
+import {TemplateView} from 'backbone-template-manager';
 import {Frameworks} from '../commons/frameworks.collection';
 
-export class FrameworksView extends TemplateManager.TemplateView {
+export class FrameworksView extends TemplateView {
   initialize() {
     this.collection = new Frameworks();
     this.listenTo(this.collection, 'sync', this.render);

@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {TemplateManager} from 'backbone-template-manager';
+import {defaults, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
 class App extends Backbone.View {
@@ -38,7 +38,7 @@ class App extends Backbone.View {
 }
 
 // Override default template manager.
-TemplateManager.defaults.templateManager = new TemplateManager.DomTemplateManager();
+defaults.templateManager = new DomTemplateManager();
 
 // Start and export app.
 new App(); // eslint-disable-line no-new
