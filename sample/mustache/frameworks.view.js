@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {TemplateManager} from 'backbone-tpls-mgr';
+import {TemplateManager} from 'backbone-template-manager';
 import {Frameworks} from '../commons/frameworks.collection';
 
 export class FrameworksView extends TemplateManager.TemplateView {

@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {TemplateManager} from 'backbone-tpls-mgr';
+import {TemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
 class App extends Backbone.View {
