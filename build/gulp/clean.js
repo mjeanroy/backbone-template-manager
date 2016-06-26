@@ -22,28 +22,11 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
+const del = require('del');
 
-const options = {
-  root: __dirname,
-  src: path.join(__dirname, 'src'),
-  dist: path.join(__dirname, 'dist'),
-  build: path.join(__dirname, 'build'),
-  test: path.join(__dirname, 'test'),
-  sample: path.join(__dirname, 'sample')
+module.exports = options => {
+  gulp.task('clean', () => {
+    return del(options.dist);
+  });
 };
-
-// Read sub-tasks
-const dir = path.join(__dirname, 'build', 'gulp');
-fs.readdirSync(dir).forEach(file => {
-  require(path.join(dir, file))(options);
-});
-
-gulp.task('dist', (done) => {
-  runSequence('lint', 'test', 'build', done);
-});
-
-gulp.task('default', ['dist']);

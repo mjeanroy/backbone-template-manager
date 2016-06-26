@@ -24,32 +24,35 @@
 
 const path = require('path');
 const gulp = require('gulp');
-const rollup = require('rollup').rollup;
+const rename = require("gulp-rename");
+const rollup = require('gulp-rollup');
+const babel = require('gulp-babel');
 const includePaths = require('rollup-plugin-includepaths');
+const babelConf = require('../babel.conf');
 
 module.exports = options => {
   const rollupConf = {
-    entry: path.join(options.src, 'index.js'),
     external: ['underscore', 'backbone'],
+
     plugins: [
       includePaths({
         external: ['underscore', 'backbone'],
         paths: [options.src]
       })
-    ]
-  };
+    ],
 
-  const bundleConf = {
-    dest: path.join(options.dist, 'backbone-tpls-mgr.js'),
     globals: {
       underscore: '_',
       backbone: 'Backbone'
     }
   };
 
-  gulp.task('build', () => {
-    return rollup(rollupConf).then(bundle => {
-      return bundle.write(bundleConf);
-    });
+  gulp.task('build', ['clean'], () => {
+    return gulp.src(path.join(options.src, 'index.js'))
+      .pipe(rollup(rollupConf))
+      .pipe(rename('backbone-template-manager.js'))
+      .pipe(gulp.dest(path.join(options.dist)))
+      .pipe(babel(babelConf))
+      .pipe(gulp.dest(path.join(options.dist, 'es5')));
   });
 };
