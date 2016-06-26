@@ -24,23 +24,33 @@
 
 const path = require('path');
 const gulp = require('gulp');
+const gutil = require('gulp-util');
+const rename = require("gulp-rename");
 const rollup = require('rollup');
 const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
+
 const babelConf = require('../babel.conf');
 const rollupConf = require('../rollup.conf');
-const applyRollup = config => (
-  rollup.rollup(config.rollup).then(bundle => (
-    bundle.write(config.bundle).then(() => config.bundle.dest)
-  ))
-);
+const applyRollup = config => {
+  gutil.log(gutil.colors.gray(`Rollup entry point`));
+  return rollup.rollup(config.rollup).then(bundle => {
+    gutil.log(gutil.colors.gray(`Writing rollup bundle`));
+    return bundle.write(config.bundle).then(() => config.bundle.dest);
+  });
+};
 
 module.exports = options => {
   gulp.task('build', ['clean'], () => {
     return applyRollup(rollupConf(options))
-      .then(src => (
-        gulp.src(src)
+      .then(src => {
+        gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
+        return gulp.src(src)
           .pipe(babel(babelConf()))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
-      ));
+          .pipe(uglify())
+          .pipe(rename('backbone-template-manager.min.js'))
+          .pipe(gulp.dest(path.join(options.dist, 'es5')));
+      });
   });
 };
