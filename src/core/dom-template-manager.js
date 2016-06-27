@@ -27,6 +27,9 @@ import Backbone from 'backbone';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 export class DomTemplateManager extends AbstractTemplateManager {
+  /**
+   * Initialize template manager (i.e initialize empty cache).
+   */
   initialize() {
     this._cache = {};
   }
@@ -38,6 +41,14 @@ export class DomTemplateManager extends AbstractTemplateManager {
     this._cache = {};
   }
 
+  /**
+   * Fetch template from the dom.
+   * Error callback will be triggered if no DOM element can be found or if
+   * selector match more than one element.
+   *
+   * @param {string} id DOM selector.
+   * @param {object} options Options object, containing success/error callbacks.
+   */
   _doFetch(id, options) {
     const success = options.success;
     const error = options.error;

@@ -52,7 +52,6 @@ export class AbstractTemplateManager {
    * @param {object} options Options object (may be an empty object).
    */
   initialize() {
-    // No op, should be implemented by subclass.
   }
 
   /**

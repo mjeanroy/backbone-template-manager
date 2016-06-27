@@ -31,6 +31,16 @@ const DEFAULT_SUFFIX = '.template.html';
 const or = (val, def) => _.isUndefined(val) ? def : val;
 
 export class RemoteTemplateManager extends AbstractTemplateManager {
+  /**
+   * Initialize template manager with options, with:
+   * - prefix: default is '/templates'.
+   * - suffix: default is '.template.html'.
+   * - method: default is 'GET'.
+   *
+   * An empty cache is initialized.
+   *
+   * @param {object} options Options object.
+   */
   initialize(options) {
     this._prefix = or(_.result(options, 'prefix'), DEFAULT_PREFIX);
     this._suffix = or(_.result(options, 'suffix'), DEFAULT_SUFFIX);
@@ -45,6 +55,13 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     this._cache = {};
   }
 
+  /**
+   * Fetch template and trigger success callback if request succed,
+   * error callback on failure.
+   *
+   * @param {string} id Template id.
+   * @param {object} options Option object, containing success/error callbacks.
+   */
   _doFetch(id, options) {
     const success = options.success;
     const error = options.error;
