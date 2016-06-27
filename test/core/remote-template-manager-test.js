@@ -64,10 +64,14 @@ describe('RemoteTemplateManager', () => {
     beforeEach(() => {
       spyOn(Backbone, 'ajax').and.callThrough();
       templateManager = new RemoteTemplateManager();
+      templateManager._cache = {};
     });
 
     beforeEach(() => jasmine.Ajax.install());
     afterEach(() => jasmine.Ajax.uninstall());
+
+    beforeEach(() => jasmine.clock().install());
+    afterEach(() => jasmine.clock().uninstall());
 
     it('should fetch a single template', () => {
       const success = jasmine.createSpy('success');
@@ -76,6 +80,8 @@ describe('RemoteTemplateManager', () => {
         success: success,
         error: error
       });
+
+      jasmine.clock().tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
@@ -98,6 +104,8 @@ describe('RemoteTemplateManager', () => {
         responseText: template,
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(template);
@@ -139,6 +147,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(error1).not.toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(template);
@@ -175,6 +185,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(error).not.toHaveBeenCalled();
       expect(success).not.toHaveBeenCalled();
 
@@ -184,6 +196,8 @@ describe('RemoteTemplateManager', () => {
         responseText: template2,
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith({
@@ -216,6 +230,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(error).toHaveBeenCalledWith({status, message});
       expect(success).not.toHaveBeenCalledWith();
     });
@@ -245,6 +261,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
@@ -253,6 +271,8 @@ describe('RemoteTemplateManager', () => {
         responseText: message,
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
@@ -286,6 +306,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
@@ -294,6 +316,8 @@ describe('RemoteTemplateManager', () => {
         responseText: '<div>Hello World</div>',
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
@@ -323,6 +347,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(success1).not.toHaveBeenCalled();
       expect(error1).toHaveBeenCalled();
 
@@ -347,6 +373,8 @@ describe('RemoteTemplateManager', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(success2).toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
     });
@@ -361,6 +389,8 @@ describe('RemoteTemplateManager', () => {
         responseText: template,
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(templateManager._cache).toBeDefined();
       expect(templateManager._cache).toEqual({

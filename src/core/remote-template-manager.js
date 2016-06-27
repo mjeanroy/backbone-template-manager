@@ -78,16 +78,18 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       });
     }
 
-    cache[id]
-      .done(data => success(data))
-      .fail(xhr => {
-        // Remove from cache, maybe we will be luckier on next try.
-        cache[id] = null;
+    const onSuccess = data => success(data);
+    const onError = xhr => {
+      // Remove from cache, maybe we will be luckier on next try.
+      cache[id] = null;
 
-        error({
-          status: xhr.status,
-          message: xhr.responseText
-        });
+      // Then, trigger error callback.
+      error({
+        status: xhr.status,
+        message: xhr.responseText
       });
+    };
+
+    cache[id].then(onSuccess, onError);
   }
 }

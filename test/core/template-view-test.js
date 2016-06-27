@@ -74,6 +74,9 @@ describe('TemplateView', () => {
     beforeEach(() => jasmine.Ajax.install());
     afterEach(() => jasmine.Ajax.uninstall());
 
+    beforeEach(() => jasmine.clock().install());
+    afterEach(() => jasmine.clock().uninstall());
+
     it('should get empty json', () => {
       expect(view.toJSON()).toEqual({});
     });
@@ -176,6 +179,8 @@ describe('TemplateView', () => {
         contentType: 'text/html'
       });
 
+      jasmine.clock().tick();
+
       expect(_.template).toHaveBeenCalledWith(template);
       expect(view.$el.html()).toEqual('<div>Hello John Doe</div>');
       expect(view.trigger).toHaveBeenCalledWith('render:success');
@@ -204,6 +209,8 @@ describe('TemplateView', () => {
         responseText: 'Cannot find template',
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
 
       expect(_.template).not.toHaveBeenCalled();
       expect(view.$el.html()).toEqual('');
