@@ -40,5 +40,9 @@ export const templateManager = () => _templateManager;
  * @param {object} templateManager Thew new default template manager.
  */
 export const overrideTemplateManager = templateManager => {
+  // Clear template manager before overriding it.
+  _templateManager.clear();
+
+  // Set new default template manager.
   _templateManager = templateManager;
 };

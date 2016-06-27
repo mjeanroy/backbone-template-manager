@@ -259,5 +259,34 @@ describe('DomTemplateManager', () => {
         }
       });
     });
+
+    it('should clear cache', () => {
+      // Create template element
+      const id = 'test-template';
+      const html = '<div>Hello World</div>';
+      const template = document.createElement('script');
+      template.setAttribute('type', 'text/template');
+      template.setAttribute('id', 'test-template');
+      template.innerHTML = html;
+      fixtures.appendChild(template);
+
+      const success1 = jasmine.createSpy('success1');
+      const error1 = jasmine.createSpy('error1');
+
+      domTemplateManager.fetch(`#${id}`, {
+        success: success1,
+        error: error1
+      });
+
+      expect(domTemplateManager._cache).toBeDefined();
+      expect(domTemplateManager._cache).toEqual({
+        [`#${id}`]: html
+      });
+
+      domTemplateManager.clear();
+
+      expect(domTemplateManager._cache).toBeDefined();
+      expect(domTemplateManager._cache).toEqual({});
+    });
   });
 });

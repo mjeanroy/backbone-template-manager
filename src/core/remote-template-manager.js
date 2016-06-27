@@ -38,6 +38,13 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     this._cache = {};
   }
 
+  /**
+   * Clear request cache.
+   */
+  clear() {
+    this._cache = {};
+  }
+
   _doFetch(id, options) {
     const success = options.success;
     const error = options.error;

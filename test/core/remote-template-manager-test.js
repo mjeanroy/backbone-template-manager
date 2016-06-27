@@ -350,5 +350,27 @@ describe('RemoteTemplateManager', () => {
       expect(success2).toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
     });
+
+    it('should clear cache', () => {
+      templateManager.fetch('foo');
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      const template = '<div>Hello World</div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html'
+      });
+
+      expect(templateManager._cache).toBeDefined();
+      expect(templateManager._cache).toEqual({
+        foo: jasmine.anything()
+      });
+
+      templateManager.clear();
+
+      expect(templateManager._cache).toBeDefined();
+      expect(templateManager._cache).toEqual({});
+    });
   });
 });

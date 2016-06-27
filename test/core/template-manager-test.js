@@ -35,10 +35,14 @@ describe('templateManager', () => {
   it('should override template manager', () => {
     const fakeTemplateManager = jasmine.createSpyObj('fakeTemplateManager', ['fetch']);
 
-    expect(templateManager()).not.toBe(fakeTemplateManager);
+    const tmplMngr = templateManager();
+    expect(tmplMngr).not.toBe(fakeTemplateManager);
+
+    spyOn(tmplMngr, 'clear').and.callThrough();
 
     overrideTemplateManager(fakeTemplateManager);
 
     expect(templateManager()).toBe(fakeTemplateManager);
+    expect(tmplMngr.clear).toHaveBeenCalled();
   });
 });

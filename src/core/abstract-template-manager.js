@@ -132,6 +132,12 @@ export class AbstractTemplateManager {
   }
 
   /**
+   * Clear template manager (i.e clear cache if appropriate).
+   */
+  clear() {
+  }
+
+  /**
    * Fetch a single template.
    * This method must be overridden by sub classes, default implementation
    * throw an error.

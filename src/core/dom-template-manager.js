@@ -31,6 +31,13 @@ export class DomTemplateManager extends AbstractTemplateManager {
     this._cache = {};
   }
 
+  /**
+   * Clear DOM cache.
+   */
+  clear() {
+    this._cache = {};
+  }
+
   _doFetch(id, options) {
     const success = options.success;
     const error = options.error;
