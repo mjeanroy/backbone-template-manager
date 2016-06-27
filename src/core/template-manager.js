@@ -22,12 +22,23 @@
  * SOFTWARE.
  */
 
-/**
- * Public API.
- */
+import {RemoteTemplateManager} from 'core/remote-template-manager';
 
-export {DomTemplateManager} from 'core/dom-template-manager';
-export {RemoteTemplateManager} from 'core/remote-template-manager';
-export {compile, overrideCompile} from 'core/compile';
-export {templateManager, overrideTemplateManager} from 'core/template-manager';
-export {TemplateView} from 'core/template-view';
+let _templateManager = new RemoteTemplateManager();
+
+/**
+ * Default template manager (default is the remote template
+ * manager).
+ *
+ * @return {object} Global template manager.
+ */
+export const templateManager = () => _templateManager;
+
+/**
+ * Override the default template manager.
+ *
+ * @param {object} templateManager Thew new default template manager.
+ */
+export const overrideTemplateManager = templateManager => {
+  _templateManager = templateManager;
+};

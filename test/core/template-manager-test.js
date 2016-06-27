@@ -22,27 +22,23 @@
  * SOFTWARE.
  */
 
-import _ from 'underscore';
-import {defaults} from 'core/defaults';
+import {templateManager, overrideTemplateManager} from 'core/template-manager';
 import {RemoteTemplateManager} from 'core/remote-template-manager';
 
-describe('defaults', () => {
-  it('should compile HTML using _.template', () => {
-    spyOn(_, 'template').and.callThrough();
-
-    const template = '<div><%= name %></div>';
-    const renderFn = defaults.compile(template);
-
-    expect(renderFn).toBeDefined();
-    expect(_.template).toHaveBeenCalledWith(template);
-
-    const model = {name: 'John Doe'};
-    expect(renderFn(model)).toEqual('<div>John Doe</div>');
+describe('templateManager', () => {
+  it('should have a default template manager', () => {
+    const tmplMngr = templateManager();
+    expect(tmplMngr).toBeDefined();
+    expect(tmplMngr instanceof RemoteTemplateManager).toBeTruthy();
   });
 
-  it('should have a default template manager', () => {
-    const templateManager = defaults.templateManager;
-    expect(templateManager).toBeDefined();
-    expect(templateManager instanceof RemoteTemplateManager).toBeTruthy();
+  it('should override template manager', () => {
+    const fakeTemplateManager = jasmine.createSpyObj('fakeTemplateManager', ['fetch']);
+
+    expect(templateManager()).not.toBe(fakeTemplateManager);
+
+    overrideTemplateManager(fakeTemplateManager);
+
+    expect(templateManager()).toBe(fakeTemplateManager);
   });
 });

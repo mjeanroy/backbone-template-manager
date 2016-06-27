@@ -23,31 +23,44 @@
  */
 
 import _ from 'underscore';
-import {RemoteTemplateManager} from 'remote-template-manager';
+import {compile, overrideCompile} from 'core/compile';
 
-export const defaults = {
-  /**
-   * Default HTML compile.
-   * This method should return a function used to render html
-   * with model object.
-   *
-   * For example:
-   *  ```
-   *    const render = compile('<div><%= foo %>');
-   *    console.log(render({ foo: 'Hello World' }));
-   *  ```
-   *
-   * Default implementation use `_.template` but it may be override
-   * with other rendering engine (Mustache, Handlebars, etc.).
-   *
-   * @param {string} html HTML Input.
-   * @return {function} Render function.
-   */
-  compile: html => _.template(html),
+describe('compile', () => {
+  beforeEach(() => {
+    spyOn(_, 'template').and.callThrough();
+  });
 
-  /**
-   * Default template manager, may be override with a custom
-   * manager.
-   */
-  templateManager: new RemoteTemplateManager()
-};
+  it('should compile HTML using _.template', () => {
+    const template = '<div><%= name %></div>';
+    const renderFn = compile(template);
+
+    expect(renderFn).toBeDefined();
+    expect(_.template).toHaveBeenCalledWith(template);
+
+    const model = {name: 'John Doe'};
+    expect(renderFn(model)).toEqual('<div>John Doe</div>');
+  });
+
+  it('should override compile function', () => {
+    const spy = jasmine.createSpy('compile').and.callFake(html => {
+      return () => html;
+    });
+
+    const html = '<div>Hello <%= name %></div>';
+
+    const r1 = compile(html);
+    expect(r1).toBeDefined();
+    expect(_.template).toHaveBeenCalledWith(html);
+    expect(spy).not.toHaveBeenCalled();
+
+    _.template.calls.reset();
+    spy.calls.reset();
+
+    overrideCompile(spy);
+
+    const r2 = compile(html);
+    expect(r2).toBeDefined();
+    expect(_.template).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(html);
+  });
+});

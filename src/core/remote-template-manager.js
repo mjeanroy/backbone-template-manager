@@ -24,7 +24,7 @@
 
 import _ from 'underscore';
 import Backbone from 'backbone';
-import {AbstractTemplateManager} from './abstract-template-manager';
+import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 const DEFAULT_PREFIX = '/templates';
 const DEFAULT_SUFFIX = '.template.html';

@@ -24,7 +24,8 @@
 
 import _ from 'underscore';
 import Backbone from 'backbone';
-import {defaults} from 'core/defaults';
+import {compile} from 'core/compile';
+import {templateManager} from 'core/template-manager';
 
 const EVT_PREFIX = 'render';
 
@@ -53,7 +54,7 @@ export class TemplateView extends Backbone.View {
    * @return {TemplateView} The template manager for this view.
    */
   templateManager() {
-    return defaults.templateManager;
+    return templateManager();
   }
 
   /**
@@ -65,7 +66,7 @@ export class TemplateView extends Backbone.View {
    * @return {function} Render function.
    */
   compile(html) {
-    return defaults.compile(html);
+    return compile(html);
   }
 
   /**

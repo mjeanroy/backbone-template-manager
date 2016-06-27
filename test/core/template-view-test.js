@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
+import _ from 'underscore';
 import Backbone from 'backbone';
-import {defaults} from 'core/defaults';
+import {templateManager} from 'core/template-manager';
 import {TemplateView} from 'core/template-view';
 
 describe('TemplateView', () => {
@@ -35,6 +36,7 @@ describe('TemplateView', () => {
   describe('once initialized', () => {
     let view;
     let fixtures;
+    let tmplMngr;
 
     beforeEach(() => {
       fixtures = document.createElement('div');
@@ -57,14 +59,15 @@ describe('TemplateView', () => {
       });
 
       // Clear cache before each tests.
-      defaults.templateManager._cache = {};
+      tmplMngr = templateManager();
+      tmplMngr._cache = {};
 
-      spyOn(defaults, 'compile').and.callThrough();
-      spyOn(defaults.templateManager, 'fetch').and.callThrough();
+      spyOn(_, 'template').and.callThrough();
+      spyOn(tmplMngr, 'fetch').and.callThrough();
       spyOn(view, 'trigger').and.callThrough();
 
-      defaults.compile.calls.reset();
-      defaults.templateManager.fetch.calls.reset();
+      _.template.calls.reset();
+      tmplMngr.fetch.calls.reset();
       view.trigger.calls.reset();
     });
 
@@ -142,13 +145,13 @@ describe('TemplateView', () => {
       const renderFn = view.compile(html);
 
       expect(renderFn).toBeDefined();
-      expect(defaults.compile).toHaveBeenCalledWith(html);
+      expect(_.template).toHaveBeenCalledWith(html);
     });
 
     it('should use defaults.templateManager by default', () => {
       const templateManager = view.templateManager();
       expect(templateManager).toBeDefined();
-      expect(templateManager).toBe(defaults.templateManager);
+      expect(templateManager).toBe(tmplMngr);
     });
 
     it('should render a single template', () => {
@@ -159,8 +162,8 @@ describe('TemplateView', () => {
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
-      expect(defaults.compile).not.toHaveBeenCalled();
-      expect(defaults.templateManager.fetch).toHaveBeenCalledWith('foo', {
+      expect(_.template).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
         error: jasmine.any(Function)
       });
@@ -173,7 +176,7 @@ describe('TemplateView', () => {
         contentType: 'text/html'
       });
 
-      expect(defaults.compile).toHaveBeenCalledWith(template);
+      expect(_.template).toHaveBeenCalledWith(template);
       expect(view.$el.html()).toEqual('<div>Hello John Doe</div>');
       expect(view.trigger).toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
@@ -189,8 +192,8 @@ describe('TemplateView', () => {
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
-      expect(defaults.compile).not.toHaveBeenCalled();
-      expect(defaults.templateManager.fetch).toHaveBeenCalledWith('foo', {
+      expect(_.template).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
         error: jasmine.any(Function)
       });
@@ -202,7 +205,7 @@ describe('TemplateView', () => {
         contentType: 'text/html'
       });
 
-      expect(defaults.compile).not.toHaveBeenCalled();
+      expect(_.template).not.toHaveBeenCalled();
       expect(view.$el.html()).toEqual('');
       expect(view.trigger).toHaveBeenCalledWith('render:error');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');

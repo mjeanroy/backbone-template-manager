@@ -22,12 +22,23 @@
  * SOFTWARE.
  */
 
-/**
- * Public API.
- */
+import _ from 'underscore';
 
-export {DomTemplateManager} from 'core/dom-template-manager';
-export {RemoteTemplateManager} from 'core/remote-template-manager';
-export {compile, overrideCompile} from 'core/compile';
-export {templateManager, overrideTemplateManager} from 'core/template-manager';
-export {TemplateView} from 'core/template-view';
+let _compile = html => _.template(html);
+
+/**
+ * Default compile function.
+ *
+ * @param {string} html HTML Input.
+ * @return {function} Render function.
+ */
+export const compile = html => _compile(html);
+
+/**
+ * Override the default compile function.
+ *
+ * @param {function} compileFn The new compile function.
+ */
+export const overrideCompile = compileFn => {
+  _compile = compileFn;
+};

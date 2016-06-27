@@ -24,7 +24,7 @@
 
 import Mustache from 'mustache';
 import Backbone from 'backbone';
-import {defaults, DomTemplateManager} from 'backbone-template-manager';
+import {overrideCompile, overrideTemplateManager, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
 class App extends Backbone.View {
@@ -39,14 +39,14 @@ class App extends Backbone.View {
 }
 
 // Override default template manager.
-defaults.templateManager = new DomTemplateManager();
+overrideTemplateManager(new DomTemplateManager());
 
 // Override default compile function with mustache.
-defaults.compile = html => {
+overrideCompile(html => {
   return (data, partials) => {
     return Mustache.render(html, data, partials);
   };
-};
+});
 
 // Start and export app.
 new App(); // eslint-disable-line no-new
