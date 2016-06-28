@@ -27,6 +27,9 @@ import Backbone from 'backbone';
 import {DomTemplateManager} from 'core/dom-template-manager';
 
 describe('DomTemplateManager', () => {
+  beforeEach(() => jasmine.clock().install());
+  afterEach(() => jasmine.clock().uninstall());
+
   it('should create template manager', () => {
     const domTemplateManager = new DomTemplateManager();
     expect(domTemplateManager).toBeDefined();
@@ -68,6 +71,30 @@ describe('DomTemplateManager', () => {
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(html);
+    });
+
+    it('should query a single template and return promise', done => {
+      // Create template element
+      const html = '<div>Hello World</div>';
+      const template = document.createElement('script');
+      template.setAttribute('type', 'text/template');
+      template.setAttribute('id', 'test-template');
+      template.innerHTML = html;
+      fixtures.appendChild(template);
+
+      const success = jasmine.createSpy('success').and.callFake(data => {
+        expect(data).toEqual(html);
+        done();
+      });
+
+      const error = jasmine.createSpy('error').and.callFake(() => {
+        jasmine.fail('Error callback should not be called');
+        done();
+      });
+
+      const promise = domTemplateManager.fetch('#test-template');
+      promise.then(success, error);
+      jasmine.clock().tick();
     });
 
     it('should use cache on next fetch', () => {
@@ -138,6 +165,40 @@ describe('DomTemplateManager', () => {
       expect(success).toHaveBeenCalledWith(_.object(selectors, html));
     });
 
+    it('should query array of templates and return promise of results', done => {
+      // Create template element
+      const html = [];
+      const ids = [];
+
+      for (let i = 0; i < 4; ++i) {
+        html[i] = `<div>Hello World #${i}</div>`;
+        ids[i] = `test-template-${i}`;
+
+        const template = document.createElement('script');
+        template.setAttribute('type', 'text/template');
+        template.setAttribute('id', ids[i]);
+        template.innerHTML = html[i];
+        fixtures.appendChild(template);
+      }
+
+      const selectors = _.map(ids, id => `#${id}`);
+
+      const error = jasmine.createSpy('error').and.callFake(() => {
+        jasmine.fail('Error callback should not be called');
+        done();
+      });
+
+      const success = jasmine.createSpy('success').and.callFake(data => {
+        expect(data).toEqual(_.object(selectors, html));
+        expect(error).not.toHaveBeenCalled();
+        done();
+      });
+
+      const promise = domTemplateManager.fetch(selectors);
+      promise.then(success, error);
+      jasmine.clock().tick();
+    });
+
     it('should fail if single template does not exist', () => {
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
@@ -151,6 +212,26 @@ describe('DomTemplateManager', () => {
       expect(error).toHaveBeenCalledWith({
         data: 'Cannot find template: #test-template'
       });
+    });
+
+    it('should trigger promise error if single template does not exist', done => {
+      const success = jasmine.createSpy('success').and.callFake(() => {
+        jasmine.fail('Success callback should not be called');
+        done();
+      });
+
+      const error = jasmine.createSpy('error').and.callFake(data => {
+        expect(success).not.toHaveBeenCalled();
+        expect(data).toEqual({
+          data: 'Cannot find template: #test-template'
+        });
+
+        done();
+      });
+
+      const promise = domTemplateManager.fetch('#test-template');
+      promise.then(success, error);
+      jasmine.clock().tick();
     });
 
     it('should fail if single template exist with multiple results', () => {
@@ -174,6 +255,34 @@ describe('DomTemplateManager', () => {
       expect(error).toHaveBeenCalledWith({
         data: 'Found multiple templates for selector: [data-template="test-template"]'
       });
+    });
+
+    it('should trigger promise error if single template exist with multiple results', done => {
+      const tmpl = document.createElement('script');
+      tmpl.setAttribute('type', 'text/template');
+      tmpl.setAttribute('data-template', 'test-template');
+      tmpl.innerHTML = '<div>Hello World</div>';
+
+      fixtures.appendChild(tmpl);
+      fixtures.appendChild(tmpl.cloneNode(true));
+
+      const success = jasmine.createSpy('success').and.callFake(() => {
+        jasmine.fail('Success callback should not be called');
+        done();
+      });
+
+      const error = jasmine.createSpy('error').and.callFake(data => {
+        expect(success).not.toHaveBeenCalled();
+        expect(data).toEqual({
+          data: 'Found multiple templates for selector: [data-template="test-template"]'
+        });
+
+        done();
+      });
+
+      const promise = domTemplateManager.fetch('[data-template="test-template"]');
+      promise.then(success, error);
+      jasmine.clock().tick();
     });
 
     it('should fail if array of templates does not exist', () => {
