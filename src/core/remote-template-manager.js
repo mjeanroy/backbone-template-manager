@@ -23,12 +23,11 @@
  */
 
 import Backbone from 'backbone';
-import {has, result, isUndefined, isNull} from 'core/utils';
+import {has, result, isNull, or} from 'core/utils';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 const DEFAULT_PREFIX = '/templates';
 const DEFAULT_SUFFIX = '.template.html';
-const or = (val, def) => isUndefined(val) ? def : val;
 
 export class RemoteTemplateManager extends AbstractTemplateManager {
   /**

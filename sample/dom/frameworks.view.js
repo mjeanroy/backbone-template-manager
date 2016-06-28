@@ -42,6 +42,6 @@ export class FrameworksView extends TemplateView {
   }
 
   templates() {
-    return '[data-template-id="frameworks"]';
+    return 'frameworks';
   }
 }

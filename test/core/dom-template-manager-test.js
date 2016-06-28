@@ -35,6 +35,18 @@ describe('DomTemplateManager', () => {
     expect(domTemplateManager).toBeDefined();
     expect(domTemplateManager._cache).toBeDefined();
     expect(domTemplateManager._cache).toEqual({});
+    expect(domTemplateManager.selector).toBeDefined();
+    expect(domTemplateManager.selector('foo')).toBe('[data-template-id="foo"]');
+  });
+
+  it('should create template manager with custom selector factory', () => {
+    const domTemplateManager = new DomTemplateManager({
+      selector: id => `#${id}`
+    });
+
+    expect(domTemplateManager).toBeDefined();
+    expect(domTemplateManager.selector).toBeDefined();
+    expect(domTemplateManager.selector('foo')).toBe('#foo');
   });
 
   describe('once initialized', () => {
@@ -57,14 +69,14 @@ describe('DomTemplateManager', () => {
       const html = '<div>Hello World</div>';
       const template = document.createElement('script');
       template.setAttribute('type', 'text/template');
-      template.setAttribute('id', 'test-template');
+      template.setAttribute('data-template-id', 'test-template');
       template.innerHTML = html;
       fixtures.appendChild(template);
 
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
 
-      domTemplateManager.fetch('#test-template', {
+      domTemplateManager.fetch('test-template', {
         success: success,
         error: error
       });
@@ -78,7 +90,7 @@ describe('DomTemplateManager', () => {
       const html = '<div>Hello World</div>';
       const template = document.createElement('script');
       template.setAttribute('type', 'text/template');
-      template.setAttribute('id', 'test-template');
+      template.setAttribute('data-template-id', 'test-template');
       template.innerHTML = html;
       fixtures.appendChild(template);
 
@@ -92,7 +104,7 @@ describe('DomTemplateManager', () => {
         done();
       });
 
-      const promise = domTemplateManager.fetch('#test-template');
+      const promise = domTemplateManager.fetch('test-template');
       promise.then(success, error);
       jasmine.clock().tick();
     });
@@ -103,14 +115,14 @@ describe('DomTemplateManager', () => {
       const html = '<div>Hello World</div>';
       const template = document.createElement('script');
       template.setAttribute('type', 'text/template');
-      template.setAttribute('id', 'test-template');
+      template.setAttribute('data-template-id', 'test-template');
       template.innerHTML = html;
       fixtures.appendChild(template);
 
       const success1 = jasmine.createSpy('success1');
       const error1 = jasmine.createSpy('error1');
 
-      domTemplateManager.fetch(`#${id}`, {
+      domTemplateManager.fetch(id, {
         success: success1,
         error: error1
       });
@@ -118,7 +130,7 @@ describe('DomTemplateManager', () => {
       expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(html);
       expect(domTemplateManager._cache).toEqual({
-        [`#${id}`]: html
+        [id]: html
       });
 
       spyOn(Backbone, '$').and.callThrough();
@@ -126,7 +138,7 @@ describe('DomTemplateManager', () => {
       const success2 = jasmine.createSpy('success2');
       const error2 = jasmine.createSpy('error2');
 
-      domTemplateManager.fetch(`#${id}`, {
+      domTemplateManager.fetch(id, {
         success: success2,
         error: error2
       });
@@ -147,22 +159,21 @@ describe('DomTemplateManager', () => {
 
         const template = document.createElement('script');
         template.setAttribute('type', 'text/template');
-        template.setAttribute('id', ids[i]);
+        template.setAttribute('data-template-id', ids[i]);
         template.innerHTML = html[i];
         fixtures.appendChild(template);
       }
 
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
-      const selectors = _.map(ids, id => `#${id}`);
 
-      domTemplateManager.fetch(selectors, {
+      domTemplateManager.fetch(ids, {
         success: success,
         error: error
       });
 
       expect(error).not.toHaveBeenCalled();
-      expect(success).toHaveBeenCalledWith(_.object(selectors, html));
+      expect(success).toHaveBeenCalledWith(_.object(ids, html));
     });
 
     it('should query array of templates and return promise of results', done => {
@@ -176,12 +187,10 @@ describe('DomTemplateManager', () => {
 
         const template = document.createElement('script');
         template.setAttribute('type', 'text/template');
-        template.setAttribute('id', ids[i]);
+        template.setAttribute('data-template-id', ids[i]);
         template.innerHTML = html[i];
         fixtures.appendChild(template);
       }
-
-      const selectors = _.map(ids, id => `#${id}`);
 
       const error = jasmine.createSpy('error').and.callFake(() => {
         jasmine.fail('Error callback should not be called');
@@ -189,12 +198,12 @@ describe('DomTemplateManager', () => {
       });
 
       const success = jasmine.createSpy('success').and.callFake(data => {
-        expect(data).toEqual(_.object(selectors, html));
+        expect(data).toEqual(_.object(ids, html));
         expect(error).not.toHaveBeenCalled();
         done();
       });
 
-      const promise = domTemplateManager.fetch(selectors);
+      const promise = domTemplateManager.fetch(ids);
       promise.then(success, error);
       jasmine.clock().tick();
     });
@@ -203,14 +212,14 @@ describe('DomTemplateManager', () => {
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
 
-      domTemplateManager.fetch('#test-template', {
+      domTemplateManager.fetch('test-template', {
         success: success,
         error: error
       });
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        data: 'Cannot find template: #test-template'
+        data: 'Cannot find template: test-template'
       });
     });
 
@@ -223,13 +232,13 @@ describe('DomTemplateManager', () => {
       const error = jasmine.createSpy('error').and.callFake(data => {
         expect(success).not.toHaveBeenCalled();
         expect(data).toEqual({
-          data: 'Cannot find template: #test-template'
+          data: 'Cannot find template: test-template'
         });
 
         done();
       });
 
-      const promise = domTemplateManager.fetch('#test-template');
+      const promise = domTemplateManager.fetch('test-template');
       promise.then(success, error);
       jasmine.clock().tick();
     });
@@ -240,27 +249,27 @@ describe('DomTemplateManager', () => {
 
       const tmpl = document.createElement('script');
       tmpl.setAttribute('type', 'text/template');
-      tmpl.setAttribute('data-template', 'test-template');
+      tmpl.setAttribute('data-template-id', 'test-template');
       tmpl.innerHTML = '<div>Hello World</div>';
 
       fixtures.appendChild(tmpl);
       fixtures.appendChild(tmpl.cloneNode(true));
 
-      domTemplateManager.fetch('[data-template="test-template"]', {
+      domTemplateManager.fetch('test-template', {
         success: success,
         error: error
       });
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        data: 'Found multiple templates for selector: [data-template="test-template"]'
+        data: 'Found multiple templates for selector: [data-template-id="test-template"]'
       });
     });
 
     it('should trigger promise error if single template exist with multiple results', done => {
       const tmpl = document.createElement('script');
       tmpl.setAttribute('type', 'text/template');
-      tmpl.setAttribute('data-template', 'test-template');
+      tmpl.setAttribute('data-template-id', 'test-template');
       tmpl.innerHTML = '<div>Hello World</div>';
 
       fixtures.appendChild(tmpl);
@@ -274,13 +283,13 @@ describe('DomTemplateManager', () => {
       const error = jasmine.createSpy('error').and.callFake(data => {
         expect(success).not.toHaveBeenCalled();
         expect(data).toEqual({
-          data: 'Found multiple templates for selector: [data-template="test-template"]'
+          data: 'Found multiple templates for selector: [data-template-id="test-template"]'
         });
 
         done();
       });
 
-      const promise = domTemplateManager.fetch('[data-template="test-template"]');
+      const promise = domTemplateManager.fetch('test-template');
       promise.then(success, error);
       jasmine.clock().tick();
     });
@@ -289,19 +298,19 @@ describe('DomTemplateManager', () => {
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
 
-      domTemplateManager.fetch(['#test-template-1', '#test-template-2'], {
+      domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
         error: error
       });
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        '#test-template-1': {
-          data: 'Cannot find template: #test-template-1'
+        'test-template-1': {
+          data: 'Cannot find template: test-template-1'
         },
 
-        '#test-template-2': {
-          data: 'Cannot find template: #test-template-2'
+        'test-template-2': {
+          data: 'Cannot find template: test-template-2'
         }
       });
     });
@@ -312,36 +321,31 @@ describe('DomTemplateManager', () => {
 
       const tmpl1 = document.createElement('script');
       tmpl1.setAttribute('type', 'text/template');
-      tmpl1.setAttribute('data-template', 'test-template-1');
+      tmpl1.setAttribute('data-template-id', 'test-template-1');
       tmpl1.innerHTML = '<div>Hello World</div>';
       fixtures.appendChild(tmpl1);
       fixtures.appendChild(tmpl1.cloneNode(true));
 
       const tmpl2 = document.createElement('script');
       tmpl2.setAttribute('type', 'text/template');
-      tmpl2.setAttribute('data-template', 'test-template-2');
+      tmpl2.setAttribute('data-template-id', 'test-template-2');
       tmpl2.innerHTML = '<div>Hello World</div>';
       fixtures.appendChild(tmpl2);
       fixtures.appendChild(tmpl2.cloneNode(true));
 
-      const selectors = [
-        '[data-template="test-template-1"]',
-        '[data-template="test-template-2"]'
-      ];
-
-      domTemplateManager.fetch(selectors, {
+      domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
         error: error
       });
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        '[data-template="test-template-1"]': {
-          data: 'Found multiple templates for selector: [data-template="test-template-1"]'
+        'test-template-1': {
+          data: 'Found multiple templates for selector: [data-template-id="test-template-1"]'
         },
 
-        '[data-template="test-template-2"]': {
-          data: 'Found multiple templates for selector: [data-template="test-template-2"]'
+        'test-template-2': {
+          data: 'Found multiple templates for selector: [data-template-id="test-template-2"]'
         }
       });
     });
@@ -352,19 +356,19 @@ describe('DomTemplateManager', () => {
 
       const tmpl = document.createElement('script');
       tmpl.setAttribute('type', 'text/template');
-      tmpl.setAttribute('id', 'test-template-1');
+      tmpl.setAttribute('data-template-id', 'test-template-1');
       tmpl.innerHTML = '<div>Hello World</div>';
       fixtures.appendChild(tmpl);
 
-      domTemplateManager.fetch(['#test-template-1', '#test-template-2'], {
+      domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
         error: error
       });
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        '#test-template-2': {
-          data: 'Cannot find template: #test-template-2'
+        'test-template-2': {
+          data: 'Cannot find template: test-template-2'
         }
       });
     });
@@ -375,21 +379,21 @@ describe('DomTemplateManager', () => {
       const html = '<div>Hello World</div>';
       const template = document.createElement('script');
       template.setAttribute('type', 'text/template');
-      template.setAttribute('id', 'test-template');
+      template.setAttribute('data-template-id', id);
       template.innerHTML = html;
       fixtures.appendChild(template);
 
       const success1 = jasmine.createSpy('success1');
       const error1 = jasmine.createSpy('error1');
 
-      domTemplateManager.fetch(`#${id}`, {
+      domTemplateManager.fetch(id, {
         success: success1,
         error: error1
       });
 
       expect(domTemplateManager._cache).toBeDefined();
       expect(domTemplateManager._cache).toEqual({
-        [`#${id}`]: html
+        [id]: html
       });
 
       domTemplateManager.clear();

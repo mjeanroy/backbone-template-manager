@@ -23,14 +23,25 @@
  */
 
 import Backbone from 'backbone';
-import {has, isEmpty} from 'core/utils';
+import {has, isEmpty, or} from 'core/utils';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
+
+// Default selector factory, used if no factory is specified during
+// initialization.
+const defaultSelectorFactory = id => `[data-template-id="${id}"]`;
 
 export class DomTemplateManager extends AbstractTemplateManager {
   /**
    * Initialize template manager (i.e initialize empty cache).
+   *
+   * Options object can be used to override default selector factory.
+   * The default will build selector such as:
+   *   `[data-template-id="${id}"]`
+   *
+   * @param {object} options Options object.
    */
-  initialize() {
+  initialize(options) {
+    this.selector = or(options.selector, defaultSelectorFactory);
     this._cache = {};
   }
 
@@ -61,15 +72,12 @@ export class DomTemplateManager extends AbstractTemplateManager {
     }
 
     // Query template in the DOM.
-    const node = Backbone.$(id);
-    if (isEmpty(node)) {
-      error({
-        data: `Cannot find template: ${id}`
-      });
+    const selector = this.selector(id);
+    const node = Backbone.$(selector);
+    if (isEmpty(node) || node.length === 0) {
+      error({data: `Cannot find template: ${id}`});
     } else if (node.length > 1) {
-      error({
-        data: `Found multiple templates for selector: ${id}`
-      });
+      error({data: `Found multiple templates for selector: ${selector}`});
     } else {
       // Put in the cache for next resolution.
       cache[id] = node.html();

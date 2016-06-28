@@ -31,7 +31,7 @@ export class FrameworkView extends TemplateView {
   }
 
   templates() {
-    return '[data-template-id="framework"]';
+    return 'framework';
   }
 
   tagName() {
