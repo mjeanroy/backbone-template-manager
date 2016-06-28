@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import _ from 'underscore';
 import Backbone from 'backbone';
+import {defaults, result, isEmpty, isArray} from 'core/utils';
 import {compile} from 'core/compile';
 import {templateManager} from 'core/template-manager';
 
@@ -91,7 +91,7 @@ export class TemplateView extends Backbone.View {
     const results = {};
 
     // Add `view` options to let model knows that `toJSON` is called from a view.
-    const opts = _.defaults(options || {}, {
+    const opts = defaults(options || {}, {
       view: true
     });
 
@@ -120,22 +120,21 @@ export class TemplateView extends Backbone.View {
    * @return {TemplateView} Current view (for chaining).
    */
   render() {
-    const templates = _.result(this, 'templates');
-    if (!_.isEmpty(templates)) {
+    const templates = result(this, 'templates');
+    if (!isEmpty(templates)) {
       // Trigger event
       this.trigger(`${EVT_PREFIX}:loading`);
 
       // Get view's template manager.
       // Use _.result if template manager is a static variable defined
       // on the class.
-      const templateManager = _.result(this, 'templateManager');
+      const tmplMngr = result(this, 'templateManager');
 
       // Fetch templates and render view on success.
-      templateManager.fetch(templates, {
+      tmplMngr.fetch(templates, {
         success: results => {
-          this
-            ._renderTemplates(templates, results)
-            .trigger(`${EVT_PREFIX}:success`);
+          this._renderTemplates(templates, results)
+              .trigger(`${EVT_PREFIX}:success`);
         },
 
         error: () => {
@@ -158,9 +157,9 @@ export class TemplateView extends Backbone.View {
    * @return {TemplateView} Current view (for chaining).
    */
   _renderTemplates(templates, results) {
-    const main = _.isArray(templates) ? results[0] : results;
+    const main = isArray(templates) ? results[0] : results;
     const html = this.compile(main);
-    const partials = _.isArray(results) ? results : null;
+    const partials = isArray(results) ? results : null;
     const output = html(this.toJSON(), partials);
     return this._setHtml(output);
   }

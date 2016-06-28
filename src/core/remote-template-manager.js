@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import _ from 'underscore';
 import Backbone from 'backbone';
+import {has, result, isUndefined, isNull} from 'core/utils';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 const DEFAULT_PREFIX = '/templates';
 const DEFAULT_SUFFIX = '.template.html';
-const or = (val, def) => _.isUndefined(val) ? def : val;
+const or = (val, def) => isUndefined(val) ? def : val;
 
 export class RemoteTemplateManager extends AbstractTemplateManager {
   /**
@@ -42,8 +42,8 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
    * @param {object} options Options object.
    */
   initialize(options) {
-    this._prefix = or(_.result(options, 'prefix'), DEFAULT_PREFIX);
-    this._suffix = or(_.result(options, 'suffix'), DEFAULT_SUFFIX);
+    this._prefix = or(result(options, 'prefix'), DEFAULT_PREFIX);
+    this._suffix = or(result(options, 'suffix'), DEFAULT_SUFFIX);
     this._method = options.method || 'GET';
     this._cache = {};
   }
@@ -67,7 +67,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     const error = options.error;
     const cache = this._cache;
 
-    if (!_.has(cache, id) || _.isNull(cache[id])) {
+    if (!has(cache, id) || isNull(cache[id])) {
       const prefix = this._prefix || '';
       const suffix = this._suffix || '';
       const method = this._method;

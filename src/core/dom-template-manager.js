@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import _ from 'underscore';
 import Backbone from 'backbone';
+import {has, isEmpty} from 'core/utils';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 export class DomTemplateManager extends AbstractTemplateManager {
@@ -55,14 +55,14 @@ export class DomTemplateManager extends AbstractTemplateManager {
     const cache = this._cache;
 
     // Already in cache.
-    if (_.has(cache, id)) {
+    if (has(cache, id)) {
       success(cache[id]);
       return;
     }
 
     // Query template in the DOM.
     const node = Backbone.$(id);
-    if (_.isEmpty(node)) {
+    if (isEmpty(node)) {
       error({
         data: `Cannot find template: ${id}`
       });

@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import _ from 'underscore';
+import {noop, keys, after, isString, isEmpty, isArray, every, forEach} from 'core/utils';
 import {promise} from 'core/promise';
 
-const firstEntry = obj => obj[_.keys(obj)[0]];
+const firstEntry = obj => obj[keys(obj)[0]];
 
 /**
  * Partial implementation of template manager.
@@ -85,26 +85,26 @@ export class AbstractTemplateManager {
 
     let sources;
     let singular;
-    if (_.isString(templates)) {
+    if (isString(templates)) {
       singular = true;
       sources = [templates];
-    } else if (_.isArray(templates) && _.every(templates, _.isString)) {
+    } else if (isArray(templates) && every(templates, isString)) {
       singular = false;
       sources = templates;
     } else {
       throw new Error(`Templates must be a string or an array of string, found: ${templates}`);
     }
 
-    let success = opts.success || _.noop;
-    let error = opts.error || _.noop;
-    let done = opts.done || _.noop;
+    let success = opts.success || noop;
+    let error = opts.error || noop;
+    let done = opts.done || noop;
 
     return promise((resolve, reject) => {
-      const onDone = _.after(sources.length, results => {
+      const onDone = after(sources.length, results => {
         const ok = singular ? firstEntry(results.success) : results.success;
         const ko = singular ? firstEntry(results.errors) : results.errors;
 
-        if (_.isEmpty(ko)) {
+        if (isEmpty(ko)) {
           success(ok);
           resolve(ok);
         } else {
@@ -124,7 +124,7 @@ export class AbstractTemplateManager {
         errors: {}
       };
 
-      _.forEach(sources, source => {
+      forEach(sources, source => {
         this._doFetch(source, {
           success: template => {
             results.success[source] = template;

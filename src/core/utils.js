@@ -22,27 +22,18 @@
  * SOFTWARE.
  */
 
-import Backbone from 'backbone';
-import {noop} from 'core/utils';
+import _ from 'underscore';
 
-export const promise = fn => {
-  // Use native ES6 Promise if defined.
-  if (typeof Promise !== 'undefined') {
-    return new Promise((resolve, reject, notify) => {
-      fn(resolve, reject, notify);
-    });
-  }
-
-  // Use jQuery promise if defined
-  const deferredFactory = Backbone.$.Deferred;
-  if (deferredFactory) {
-    const deferred = deferredFactory();
-    const resolve = data => deferred.resolve(data);
-    const reject = data => deferred.reject(data);
-    fn(resolve, reject, noop);
-    return deferred;
-  }
-
-  // Return noop implementation.
-  return fn(noop, noop, noop);
-};
+export const noop = _.noop;
+export const has = _.has;
+export const keys = _.keys;
+export const after = _.after;
+export const isNull = _.isNull;
+export const isUndefined = _.isUndefined;
+export const isString = _.isString;
+export const isArray = _.isArray;
+export const defaults = _.defaults;
+export const isEmpty = _.isEmpty;
+export const result = _.result;
+export const every = _.every;
+export const forEach = _.forEach;
