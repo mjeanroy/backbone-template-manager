@@ -1,5 +1,5 @@
 {
-  "name": "backbone-tpls-mgr",
+  "name": "backbone-template-manager",
   "description": "Simple template manager for Backbone",
   "main": "dist/es5/backbone-template-manager.js",
   "jsnext:main": "dist/backbone-template-manager.js",
