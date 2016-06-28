@@ -1,0 +1,28 @@
+{
+  "name": "backbone-tpls-mgr",
+  "description": "Simple template manager for Backbone",
+  "main": "dist/es5/backbone-template-manager.js",
+  "jsnext:main": "dist/backbone-template-manager.js",
+  "authors": [
+    "Mickael Jeanroy <mickael.jeanroy@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "backbone"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "sample",
+    "build",
+    "gulpfile.js"
+  ],
+  "dependencies": {
+    "backbone": ">=1.0.0",
+    "underscore": ">=1.6.0"
+  }
+}
