@@ -73,7 +73,7 @@
     "babel-plugin-transform-es2015-sticky-regex": "6.8.0",
     "babel-plugin-transform-es2015-template-literals": "6.8.0",
     "babel-plugin-transform-es2015-typeof-symbol": "6.8.0",
-    "babel-plugin-transform-es2015-unicode-regex": "6.8.0",
+    "babel-plugin-transform-es2015-unicode-regex": "6.11.0",
     "babel-plugin-transform-es2015-modules-umd": "6.8.0",
     "karma": "1.1.0",
     "karma-babel-preprocessor": "6.0.1",
