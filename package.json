@@ -22,14 +22,19 @@
   "license": "MIT",
 
   "dependencies": {
+  },
+
+  "peerDependencies": {
     "backbone": ">=1.0.0",
     "underscore": ">=1.6.0"
   },
 
   "devDependencies": {
+    "backbone": ">=1.0.0",
+    "underscore": ">=1.6.0",
+    "jquery": ">=1.11.0",
     "bower": "1.7.9",
     "lodash": "4.13.1",
-    "jquery": ">=1.11.0",
     "bootstrap": "~3.3.5",
     "mustache": "2.2.1",
     "q": "1.4.1",
