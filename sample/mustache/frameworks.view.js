@@ -29,11 +29,10 @@ export class FrameworksView extends TemplateView {
   initialize() {
     this.collection = new Frameworks();
     this.listenTo(this.collection, 'sync', this.render);
-    this.listenTo(this, 'render:success', this.renderCollection);
     this.collection.fetch();
   }
 
   templates() {
-    return '[data-template-id="frameworks"]';
+    return 'frameworks';
   }
 }
