@@ -38,7 +38,7 @@ import {
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 const URL_SEPARATOR = '/';
-const DEFAULT_PREFIX = '/templates';
+const DEFAULT_PREFIX = '/templates/';
 const DEFAULT_SUFFIX = '.template.html';
 const createUrl = (path, prefix, suffix) => {
   const firstPath = path.charAt(0);

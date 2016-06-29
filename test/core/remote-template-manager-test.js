@@ -33,7 +33,7 @@ describe('RemoteTemplateManager', () => {
   it('should create template manager with default options', () => {
     const templateManager = new RemoteTemplateManager();
     expect(templateManager._cache).toEqual({});
-    expect(templateManager._prefix).toEqual('/templates');
+    expect(templateManager._prefix).toEqual('/templates/');
     expect(templateManager._suffix).toEqual('.template.html');
     expect(templateManager._method).toEqual('GET');
   });

@@ -69,7 +69,7 @@ By default, templates are downloaded using `Backbone.ajax`.
 
 - The default http method is `GET`.
 - The requested URL is built with:
-  - The template manager prefix (default is `/templates`).
+  - The template manager prefix (default is `/templates/`).
   - The template id.
   - The template manager suffix (default is `.template.html`).
 
