@@ -23,7 +23,18 @@
  */
 
 import Backbone from 'backbone';
-import {has, result, isNull, or} from 'core/utils';
+import {
+  has,
+  result,
+  isNull,
+  isString,
+  isObject,
+  isBoolean,
+  isArray,
+  clone,
+  or
+} from 'core/utils';
+
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
 const URL_SEPARATOR = '/';
@@ -69,6 +80,25 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     this._suffix = or(result(options, 'suffix'), DEFAULT_SUFFIX);
     this._method = options.method || 'GET';
     this._cache = {};
+
+    // Try to initialize cache with JavaScript templates created
+    // at build time.
+    const JST = options.JST;
+    if (JST) {
+      if (isString(JST)) {
+        // 1- Name of the variable.
+        this._cache = clone(window[JST] || {});
+      } else if (isBoolean(JST)) {
+        // 2- Default name is JST.
+        this._cache = clone(window.JST || {});
+      } else if (isObject(JST) && !isArray(JST)) {
+        // 3- The cache object is given.
+        this._cache = clone(JST);
+      } else {
+        // 4- Don't know how to handle this variable!
+        throw new Error(`Cannot infer JST variables from: ${JST}`);
+      }
+    }
   }
 
   /**
@@ -101,7 +131,21 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       });
     }
 
-    const onSuccess = data => success(data);
+    // If template is already in the cache.
+    const cachedValue = cache[id];
+    if (isString(cachedValue)) {
+      setTimeout(() => success(cachedValue));
+      return;
+    }
+
+    const onSuccess = data => {
+      // Remove promise from cache and populate with template.
+      cache[id] = data;
+
+      // Trigger success.
+      success(data);
+    };
+
     const onError = xhr => {
       // Remove from cache, maybe we will be luckier on next try.
       cache[id] = null;

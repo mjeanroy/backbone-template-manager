@@ -26,6 +26,10 @@ import Backbone from 'backbone';
 import {RemoteTemplateManager} from 'core/remote-template-manager';
 
 describe('RemoteTemplateManager', () => {
+  afterEach(() => {
+    delete window.JST;
+  });
+
   it('should create template manager with default options', () => {
     const templateManager = new RemoteTemplateManager();
     expect(templateManager._cache).toEqual({});
@@ -56,6 +60,57 @@ describe('RemoteTemplateManager', () => {
     const suffix = null;
     const templateManager = new RemoteTemplateManager({suffix});
     expect(templateManager._suffix).toEqual(null);
+  });
+
+  it('should create template manager with pre-filled cache with JST variables', () => {
+    const JST = true;
+    const templates = {
+      foo: '<div>Hello <%= name %></div>'
+    };
+
+    window.JST = templates;
+
+    const templateManager = new RemoteTemplateManager({JST});
+
+    expect(templateManager._cache).not.toBe(templates);
+    expect(templateManager._cache).toEqual(templates);
+  });
+
+  it('should create template manager with pre-filled cache with custom JST variable', () => {
+    const JST = '__JST__';
+    const templates = {
+      foo: '<div>Hello <%= name %></div>'
+    };
+
+    window.__JST__ = templates;
+
+    const templateManager = new RemoteTemplateManager({JST});
+
+    expect(templateManager._cache).not.toBe(templates);
+    expect(templateManager._cache).toEqual(templates);
+  });
+
+  it('should create template manager with pre-filled cache with custom JST object', () => {
+    const JST = {
+      foo: '<div>Hello <%= name %></div>'
+    };
+
+    const templateManager = new RemoteTemplateManager({JST});
+
+    expect(templateManager._cache).not.toBe(JST);
+    expect(templateManager._cache).toEqual(JST);
+  });
+
+  it('should if JST object is not a string, nor a boolean, nor an object', () => {
+    const JST = [{
+      foo: '<div>Hello <%= name %></div>'
+    }];
+
+    const apply = () => {
+      return new RemoteTemplateManager({JST});
+    };
+
+    expect(apply).toThrow(new Error(`Cannot infer JST variables from: ${JST}`));
   });
 
   describe('once initialized', () => {
@@ -104,6 +159,34 @@ describe('RemoteTemplateManager', () => {
         responseText: template,
         contentType: 'text/html'
       });
+
+      jasmine.clock().tick();
+
+      expect(error).not.toHaveBeenCalled();
+      expect(success).toHaveBeenCalledWith(template);
+    });
+
+    it('should fetch template and use JST cache', () => {
+      const template = '<div>Hello World</div>';
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      const jstTmplMngr = new RemoteTemplateManager({
+        JST: {
+          foo: template
+        }
+      });
+
+      jstTmplMngr.fetch('foo', {
+        success: success,
+        error: error
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      expect(request).not.toBeDefined();
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
 
       jasmine.clock().tick();
 
@@ -195,7 +278,7 @@ describe('RemoteTemplateManager', () => {
       expect(success).toHaveBeenCalledWith(template);
     });
 
-    it('should fetch template and use cache on next call', () => {
+    it('should fetch template and use cache on pending call', () => {
       const success1 = jasmine.createSpy('success1');
       const error1 = jasmine.createSpy('error1');
       templateManager.fetch('foo', {
@@ -236,6 +319,52 @@ describe('RemoteTemplateManager', () => {
       expect(error1).not.toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(template);
+      expect(success2).toHaveBeenCalledWith(template);
+    });
+
+    it('should fetch template and use cache on next call', () => {
+      const template = '<div>Hello World</div>';
+      const success1 = jasmine.createSpy('success1');
+      const error1 = jasmine.createSpy('error1');
+      templateManager.fetch('foo', {
+        success: success1,
+        error: error1
+      });
+
+      expect(success1).not.toHaveBeenCalled();
+      expect(error1).not.toHaveBeenCalled();
+
+      const r1 = jasmine.Ajax.requests.mostRecent();
+      expect(r1).toBeDefined();
+      expect(r1.method).toBe('GET');
+      expect(r1.url).toBe('/templates/foo.template.html');
+
+      r1.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html'
+      });
+
+      jasmine.clock().tick();
+
+      expect(error1).not.toHaveBeenCalled();
+      expect(success1).toHaveBeenCalledWith(template);
+
+      const success2 = jasmine.createSpy('success2');
+      const error2 = jasmine.createSpy('error2');
+
+      templateManager.fetch('foo', {
+        success: success2,
+        error: error2
+      });
+
+      const r2 = jasmine.Ajax.requests.mostRecent();
+      expect(r2).toBeDefined();
+      expect(r2).toBe(r1);
+
+      jasmine.clock().tick();
+
+      expect(error2).not.toHaveBeenCalled();
       expect(success2).toHaveBeenCalledWith(template);
     });
 
