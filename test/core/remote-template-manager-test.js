@@ -195,35 +195,6 @@ describe('RemoteTemplateManager', () => {
       expect(success).toHaveBeenCalledWith(template);
     });
 
-    it('should fetch a single template and return promise', done => {
-      const template = '<div>Hello World</div>';
-
-      const error = jasmine.createSpy('error').and.callFake(() => {
-        jasmine.fail('Error callback should not be called');
-        done();
-      });
-
-      const success = jasmine.createSpy('success').and.callFake(data => {
-        expect(error).not.toHaveBeenCalled();
-        expect(data).toEqual(template);
-        done();
-      });
-
-      const promise = templateManager.fetch('foo');
-      promise.then(success, error);
-      jasmine.clock().tick();
-
-      const request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-      jasmine.clock().tick();
-    });
-
     it('should fetch template and use cache on next call', () => {
       const success1 = jasmine.createSpy('success1');
       const error1 = jasmine.createSpy('error1');
@@ -319,48 +290,6 @@ describe('RemoteTemplateManager', () => {
       });
     });
 
-    it('should fetch array of templates and return promise', done => {
-      const template1 = '<div>Hello World 1</div>';
-      const template2 = '<div>Hello World 2</div>';
-
-      const error = jasmine.createSpy('error').and.callFake(() => {
-        jasmine.fail('Error callback should not be called');
-        done();
-      });
-
-      const success = jasmine.createSpy('success').and.callFake(data => {
-        expect(error).not.toHaveBeenCalled();
-        expect(data).toEqual({
-          foo: template1,
-          bar: template2
-        });
-
-        done();
-      });
-
-      const promise = templateManager.fetch(['foo', 'bar']);
-      promise.then(success, error);
-
-      const request1 = jasmine.Ajax.requests.at(0);
-      const request2 = jasmine.Ajax.requests.at(1);
-      request1.respondWith({
-        status: 200,
-        responseText: template1,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-
-      request2.respondWith({
-        status: 200,
-        responseText: template2,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-      jasmine.clock().tick();
-    });
-
     it('should fetch a single template and trigger error with a failure', () => {
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
@@ -389,35 +318,6 @@ describe('RemoteTemplateManager', () => {
 
       expect(error).toHaveBeenCalledWith({status, message});
       expect(success).not.toHaveBeenCalledWith();
-    });
-
-    it('should fetch a single template and return a failed promise error with a failure', done => {
-      const message = 'Template does not exist';
-      const status = 404;
-
-      const success = jasmine.createSpy('success').and.callFake(() => {
-        jasmine.fail('Success callback should not be called');
-        done();
-      });
-
-      const error = jasmine.createSpy('error').and.callFake(data => {
-        expect(success).not.toHaveBeenCalled();
-        expect(data).toEqual({status, message});
-        done();
-      });
-
-      const promise = templateManager.fetch('foo');
-      promise.then(success, error);
-
-      const request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-      jasmine.clock().tick();
     });
 
     it('should fetch array of templates and trigger errors with failures', () => {
@@ -463,50 +363,6 @@ describe('RemoteTemplateManager', () => {
         foo: {status, message},
         bar: {status, message}
       });
-    });
-
-    it('should fetch array of templates and return failed promise with failures', done => {
-      const message = 'Template does not exist';
-      const status = 404;
-
-      const success = jasmine.createSpy('success').and.callFake(() => {
-        jasmine.fail('Success callback should not be called');
-        done();
-      });
-
-      const error = jasmine.createSpy('error').and.callFake(data => {
-        expect(success).not.toHaveBeenCalled();
-        expect(data).toEqual({
-          foo: {status, message},
-          bar: {status, message}
-        });
-
-        done();
-      });
-
-      const ids = ['foo', 'bar'];
-      const promise = templateManager.fetch(ids);
-      promise.then(success, error);
-
-      const request1 = jasmine.Ajax.requests.at(0);
-      const request2 = jasmine.Ajax.requests.at(1);
-
-      request1.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-
-      request2.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html'
-      });
-
-      jasmine.clock().tick();
-      jasmine.clock().tick();
     });
 
     it('should fetch array of templates and trigger error with at least one failure', () => {

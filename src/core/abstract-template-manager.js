@@ -22,8 +22,16 @@
  * SOFTWARE.
  */
 
-import {noop, keys, after, isString, isEmpty, isArray, every, forEach} from 'core/utils';
-import {promise} from 'core/promise';
+import {
+  noop,
+  keys,
+  after,
+  isString,
+  isEmpty,
+  isArray,
+  every,
+  forEach
+} from 'core/utils';
 
 const firstEntry = obj => obj[keys(obj)[0]];
 
@@ -72,13 +80,8 @@ export class AbstractTemplateManager {
    * Note that if first argument is not a string or an array of string, an error
    * will be thrown.
    *
-   * If a promise implementation can be found, this method will return a promise (allow
-   * to attach success/error callbacks on the returned promise).
-   * Promise implementation may be:
-   *
    * @param {string|array<string>} templates Templates to fetch (required).
    * @param {object?} options Option object.
-   * @return {Promise|undefined} A promise, or undefined if no promise implementation can be found.
    */
   fetch(templates, options) {
     let opts = options || {};
@@ -99,43 +102,39 @@ export class AbstractTemplateManager {
     let error = opts.error || noop;
     let done = opts.done || noop;
 
-    return promise((resolve, reject) => {
-      const onDone = after(sources.length, results => {
-        const ok = singular ? firstEntry(results.success) : results.success;
-        const ko = singular ? firstEntry(results.errors) : results.errors;
+    const onDone = after(sources.length, results => {
+      const ok = singular ? firstEntry(results.success) : results.success;
+      const ko = singular ? firstEntry(results.errors) : results.errors;
 
-        if (isEmpty(ko)) {
-          success(ok);
-          resolve(ok);
-        } else {
-          error(ko);
-          reject(ko);
+      if (isEmpty(ko)) {
+        success(ok);
+      } else {
+        error(ko);
+      }
+
+      done(ok, ko);
+
+      // Free memory.
+      success = error = done = null;
+    });
+
+    // Store success / errors while fetching templates.
+    const results = {
+      success: {},
+      errors: {}
+    };
+
+    forEach(sources, source => {
+      this._doFetch(source, {
+        success: template => {
+          results.success[source] = template;
+          onDone(results);
+        },
+
+        error: error => {
+          results.errors[source] = error;
+          onDone(results);
         }
-
-        done(ok, ko);
-
-        // Free memory.
-        success = error = done = null;
-      });
-
-      // Store success / errors while fetching templates.
-      const results = {
-        success: {},
-        errors: {}
-      };
-
-      forEach(sources, source => {
-        this._doFetch(source, {
-          success: template => {
-            results.success[source] = template;
-            onDone(results);
-          },
-
-          error: error => {
-            results.errors[source] = error;
-            onDone(results);
-          }
-        });
       });
     });
   }

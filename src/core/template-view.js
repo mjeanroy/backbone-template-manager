@@ -133,8 +133,8 @@ export class TemplateView extends Backbone.View {
       // Fetch templates and render view on success.
       tmplMngr.fetch(templates, {
         success: results => {
-          this._renderTemplates(templates, results)
-              .trigger(`${EVT_PREFIX}:success`);
+          this._renderTemplates(templates, results);
+          this.trigger(`${EVT_PREFIX}:success`);
         },
 
         error: () => {
@@ -161,7 +161,8 @@ export class TemplateView extends Backbone.View {
     const html = this.compile(main);
     const partials = isArray(results) ? results : null;
     const output = html(this.toJSON(), partials);
-    return this._setHtml(output);
+    this._setHtml(output);
+    return this;
   }
 
   /**
