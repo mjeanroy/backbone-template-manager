@@ -1,6 +1,8 @@
 ### Backbone Template-Manager
 
-Simple template manager for your Backbone application. This library allows you to:
+Simple template manager for your Backbone application.
+This library allows you to:
+
 - Use a template manager to query templates from the DOM or from a server.
 - Create view with a template manager to download templates.
 - Render view with your model and a default compile function (use `_.template` by default).
@@ -35,7 +37,7 @@ export class MyView extends TemplateView {
   templates() {
     return 'my-template';
   }
-};
+}
 ```
 
 **What happens here?**
@@ -46,17 +48,25 @@ export class MyView extends TemplateView {
 
 And that's all!
 
+Note that following events will be triggered:
+
+- `render:loading` when the view start rendering (before any template download and rendering).
+- `render:success` when the view is fully rendered (templates are fetched, view is up to date).
+- `render:error` when the view cannot be rendered because of missing templates.
+
 **How it works?**
 
 The `render` method comes with a default implementation:
+
 - Get the default template manager of the view (basically, calls `templateManager` method view).
 - Download the template using its id (what happens here precisely depends on the template manager, more details later).
-- Calls the `toJSON` method from the view: by default return an object containing a `model` property (with `model.toJSON` as the value).
+- Calls the `toJSON` method from the view: by default return an object containing a `model` property (with `model.toJSON` as the value) and/or a `collection` property (result of `collection.toJSON` method).
 - Render the view using default compile function (use `_.template` under the hood).
 
 **How templates are downloaded?**
 
 By default, templates are downloaded using `Backbone.ajax`.
+
 - The default http method is `GET`.
 - The requested URL is built with:
   - The template manager prefix (default is `/templates`).
@@ -85,8 +95,14 @@ import {overrideTemplateManager, DomTemplateManager} from 'backbone-template-man
 
 // Just given an instance of the new template manager as the first parameter.
 // Should be done when your application starts.
-overrideTemplateManager(new DomTemplateManager());
+overrideTemplateManager(new DomTemplateManager({
+  // Override default selector.
+  // Default is `[data-template-id="${templateId}"]`
+  selector: templateId => `#${templateId}`
+}));
 ```
+
+By default, the selector in the DOM will be defined as `[data-template-id="${templateId}"]`, but it may be override (see below).
 
 Now, the `template` method of your view must return the selector in the DOM to query the DOM appropriately:
 
@@ -103,12 +119,12 @@ export class MyView extends TemplateView {
   }
 
   templates() {
-    return '[data-template-id="my-template"]';
+    return 'my-template';
   }
-};
+}
 ```
 
-Note that the `overrideTemplateManager` method can be used to override the default `prefix`, `suffix` and `method` parameters:
+Note that the `overrideTemplateManager` method can also be used to override the default `prefix`, `suffix` and `method` parameters:
 
 ```javascript
 import Mustache from 'mustache';
@@ -139,6 +155,108 @@ import {overrideCompile} from 'backbone-template-manager';
 overrideCompile(html => {
   return data => Mustache.render(html, data);
 });
+```
+
+#### Dealing with partials
+
+Some libraries, such as Mustache, allow you to define partials:
+
+```html
+<div>
+  <span>Hello {{ name }}</span>
+  <div>{{ > user-view }}</div>
+</div>
+```
+
+In the template below, `user-view` is a partial that can be set during template compilation:
+
+```javascript
+Mustache.render(mainTemplate, data, {
+  'user-view': '<div>User information</div>'
+});
+```
+
+This little library can deal with partials, simply defined an array of templates in your view:
+
+```javascript
+import Backbone from 'backbone';
+import {TemplateView} from 'backbone-template-manager';
+
+export class MyView extends TemplateView {
+  initialize() {
+    this.model = new Backbone.Model({
+      id: 1,
+      name: 'John Doe'
+    });
+  }
+
+  templates() {
+    return ['my-template', 'user-view'];
+  }
+}
+```
+
+When an array is defined as a template view, the first entry in the array will be the first
+argument of the `compile` function, other templates will be given as second argument as a dictionary where the
+entry is the template id and the value is the template. You can now render templates easily:
+
+```javascript
+import Mustache from 'mustache';
+import {overrideCompile} from 'backbone-template-manager';
+
+overrideCompile((html, partials) => {
+  return data => Mustache.render(html, data, partials);
+});
+```
+
+#### Dealing with JST
+
+The remote template manager can be optimized by sending all templates in a javascript
+file stored in a variable (see [here](http://ricostacruz.com/backbone-patterns/jst-templates.html)) and query this dictionary instead of querying the remote server:
+
+```javascript
+import Mustache from 'mustache';
+import {overrideTemplateManager, RemoteTemplateManager} from 'backbone-template-manager';
+
+// Just given an instance of the new template manager as the first parameter.
+// Should be done when your application starts.
+overrideTemplateManager(new RemoteTemplateManager({
+  JST: true
+}));
+```
+
+Three options are available:
+- `JST: true`: assume that templates may already exist in `window.JST`.
+- `JST: '__JST__'`: assume that templates may already exist in `window.__JST__`.
+- `JST: {}`: send the templates object directly during the construction.
+
+If templates does not exist in the JST variable, a classic HTTP request will be made as a fallback.
+Note that templates should be stored with the template id as the key (not the full URL), for example:
+
+```javascript
+import Backbone from 'backbone';
+import {TemplateView} from 'backbone-template-manager';
+
+export class MyView extends TemplateView {
+  initialize() {
+    this.model = new Backbone.Model({
+      id: 1,
+      name: 'John Doe'
+    });
+  }
+
+  templates() {
+    return 'my-template';
+  }
+}
+```
+
+The template manager will assume that `window.JST` will be equal to:
+
+```json
+{
+  "my-template": "<div>My Template</div>"
+}
 ```
 
 #### History
