@@ -82,6 +82,11 @@ describe('DomTemplateManager', () => {
       });
 
       expect(error).not.toHaveBeenCalled();
+      expect(success).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(html);
     });
 
@@ -104,6 +109,11 @@ describe('DomTemplateManager', () => {
       });
 
       expect(error1).not.toHaveBeenCalled();
+      expect(success1).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(html);
       expect(domTemplateManager._cache).toEqual({
         [id]: html
@@ -118,6 +128,11 @@ describe('DomTemplateManager', () => {
         success: success2,
         error: error2
       });
+
+      expect(error2).not.toHaveBeenCalled();
+      expect(success2).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
 
       expect(error2).not.toHaveBeenCalled();
       expect(success2).toHaveBeenCalledWith(html);
@@ -149,6 +164,11 @@ describe('DomTemplateManager', () => {
       });
 
       expect(error).not.toHaveBeenCalled();
+      expect(success).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(_.object(ids, html));
     });
 
@@ -161,7 +181,12 @@ describe('DomTemplateManager', () => {
         error: error
       });
 
-      expect(success).not.toHaveBeenCalledWith();
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         data: 'Cannot find template: test-template'
       });
@@ -184,7 +209,12 @@ describe('DomTemplateManager', () => {
         error: error
       });
 
-      expect(success).not.toHaveBeenCalledWith();
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         data: 'Found multiple templates for selector: [data-template-id="test-template"]'
       });
@@ -199,7 +229,12 @@ describe('DomTemplateManager', () => {
         error: error
       });
 
-      expect(success).not.toHaveBeenCalledWith();
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-1': {
           data: 'Cannot find template: test-template-1'
@@ -234,7 +269,12 @@ describe('DomTemplateManager', () => {
         error: error
       });
 
-      expect(success).not.toHaveBeenCalledWith();
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-1': {
           data: 'Found multiple templates for selector: [data-template-id="test-template-1"]'
@@ -261,7 +301,12 @@ describe('DomTemplateManager', () => {
         error: error
       });
 
-      expect(success).not.toHaveBeenCalledWith();
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-2': {
           data: 'Cannot find template: test-template-2'
@@ -286,6 +331,8 @@ describe('DomTemplateManager', () => {
         success: success1,
         error: error1
       });
+
+      jasmine.clock().tick();
 
       expect(domTemplateManager._cache).toBeDefined();
       expect(domTemplateManager._cache).toEqual({

@@ -61,27 +61,29 @@ export class DomTemplateManager extends AbstractTemplateManager {
    * @param {object} options Options object, containing success/error callbacks.
    */
   _doFetch(id, options) {
-    const success = options.success;
-    const error = options.error;
-    const cache = this._cache;
+    setTimeout(() => {
+      const success = options.success;
+      const error = options.error;
+      const cache = this._cache;
 
-    // Already in cache.
-    if (has(cache, id)) {
-      success(cache[id]);
-      return;
-    }
+      // Already in cache.
+      if (has(cache, id)) {
+        success(cache[id]);
+        return;
+      }
 
-    // Query template in the DOM.
-    const selector = this.selector(id);
-    const node = Backbone.$(selector);
-    if (isEmpty(node) || node.length === 0) {
-      error({data: `Cannot find template: ${id}`});
-    } else if (node.length > 1) {
-      error({data: `Found multiple templates for selector: ${selector}`});
-    } else {
-      // Put in the cache for next resolution.
-      cache[id] = node.html();
-      success(cache[id]);
-    }
+      // Query template in the DOM.
+      const selector = this.selector(id);
+      const node = Backbone.$(selector);
+      if (isEmpty(node) || node.length === 0) {
+        error({data: `Cannot find template: ${id}`});
+      } else if (node.length > 1) {
+        error({data: `Found multiple templates for selector: ${selector}`});
+      } else {
+        // Put in the cache for next resolution.
+        cache[id] = node.html();
+        success(cache[id]);
+      }
+    });
   }
 }
