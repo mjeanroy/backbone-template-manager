@@ -111,6 +111,90 @@ describe('RemoteTemplateManager', () => {
       expect(success).toHaveBeenCalledWith(template);
     });
 
+    it('should fetch a single template and do not prefix with double slash', () => {
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      // Override prefix.
+      templateManager._prefix = '/templates/';
+
+      templateManager.fetch('/foo', {
+        success: success,
+        error: error
+      });
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      const expectedUrl = '/templates/foo.template.html';
+      const expectedMethod = 'GET';
+      expect(Backbone.ajax).toHaveBeenCalledWith({
+        method: expectedMethod,
+        url: expectedUrl
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      expect(request).toBeDefined();
+      expect(request.method).toBe(expectedMethod);
+      expect(request.url).toBe(expectedUrl);
+
+      const template = '<div>Hello World</div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html'
+      });
+
+      jasmine.clock().tick();
+
+      expect(error).not.toHaveBeenCalled();
+      expect(success).toHaveBeenCalledWith(template);
+    });
+
+    it('should fetch a single template and do not suffix with double slash', () => {
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      // Override prefix.
+      templateManager._suffix = '/index.html';
+
+      templateManager.fetch('foo/', {
+        success: success,
+        error: error
+      });
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      const expectedUrl = '/templates/foo/index.html';
+      const expectedMethod = 'GET';
+      expect(Backbone.ajax).toHaveBeenCalledWith({
+        method: expectedMethod,
+        url: expectedUrl
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      expect(request).toBeDefined();
+      expect(request.method).toBe(expectedMethod);
+      expect(request.url).toBe(expectedUrl);
+
+      const template = '<div>Hello World</div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html'
+      });
+
+      jasmine.clock().tick();
+
+      expect(error).not.toHaveBeenCalled();
+      expect(success).toHaveBeenCalledWith(template);
+    });
+
     it('should fetch a single template and return promise', done => {
       const template = '<div>Hello World</div>';
 

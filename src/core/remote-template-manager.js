@@ -26,8 +26,32 @@ import Backbone from 'backbone';
 import {has, result, isNull, or} from 'core/utils';
 import {AbstractTemplateManager} from 'core/abstract-template-manager';
 
+const URL_SEPARATOR = '/';
 const DEFAULT_PREFIX = '/templates';
 const DEFAULT_SUFFIX = '.template.html';
+const createUrl = (path, prefix, suffix) => {
+  const firstPath = path.charAt(0);
+  const lastPath = path.length > 1 ? path.charAt(path.length - 1) : '';
+  const lastPrefix = prefix.charAt(prefix.length - 1);
+  const firstSuffix = suffix.charAt(0);
+
+  let realPath = path;
+
+  if (firstPath === URL_SEPARATOR && lastPrefix === URL_SEPARATOR) {
+    // Avoid double slash with prefix.
+    realPath = path.slice(1);
+  } else if (firstPath !== URL_SEPARATOR && lastPrefix !== URL_SEPARATOR) {
+    // Prepend with slash (should it be an option?).
+    realPath = `/${path}`;
+  }
+
+  // Avoid double slash with suffix.
+  if (lastPath === URL_SEPARATOR && firstSuffix === URL_SEPARATOR) {
+    realPath = realPath.slice(0, realPath.length - 1);
+  }
+
+  return `${prefix}${realPath}${suffix}`;
+};
 
 export class RemoteTemplateManager extends AbstractTemplateManager {
   /**
@@ -70,7 +94,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       const prefix = this._prefix || '';
       const suffix = this._suffix || '';
       const method = this._method;
-      const url = `${prefix}/${id}${suffix}`;
+      const url = createUrl(id, prefix, suffix);
       cache[id] = Backbone.ajax({
         url: url,
         method: method
