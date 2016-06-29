@@ -158,11 +158,24 @@ export class TemplateView extends Backbone.View {
    */
   _renderTemplates(templates, results) {
     const main = isArray(templates) ? results[0] : results;
-    const html = this.compile(main);
     const partials = isArray(results) ? results : null;
-    const output = html(this.toJSON(), partials);
+    const output = this._toHTML(main, partials);
     this._setHtml(output);
     return this;
+  }
+
+  /**
+   * Produce HTML output from main template and optional partials.
+   * This function should not be called directly but it can be overridden
+   * with custom logic.
+   *
+   * @param {string} main Main template.
+   * @param {object<string, string>?} partials Optional partials.
+   * @return {string} HTML output.
+   */
+  _toHTML(main, partials) {
+    const html = this.compile(main);
+    return html(this.toJSON(), partials);
   }
 
   /**
