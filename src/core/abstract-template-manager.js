@@ -94,8 +94,16 @@ export class AbstractTemplateManager {
     let done = opts.done || noop;
 
     const onDone = after(sources.length, results => {
-      const ok = singular ? firstEntry(results.success) : results.success;
-      const ko = singular ? firstEntry(results.errors) : results.errors;
+      let ok;
+      let ko;
+
+      if (singular) {
+        ok = firstEntry(results.success);
+        ko = firstEntry(results.errors);
+      } else {
+        ok = results.success;
+        ko = results.errors;
+      }
 
       if (isEmpty(ko)) {
         success(ok);
