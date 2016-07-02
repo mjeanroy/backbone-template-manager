@@ -31,6 +31,7 @@ export const after = _.after;
 export const isNull = _.isNull;
 export const isUndefined = _.isUndefined;
 export const isString = _.isString;
+export const isNumber = _.isNumber;
 export const isArray = _.isArray;
 export const isObject = _.isObject;
 export const isBoolean = _.isBoolean;
@@ -40,4 +41,18 @@ export const result = _.result;
 export const every = _.every;
 export const forEach = _.forEach;
 export const clone = _.clone;
+
 export const or = (val, def) => isUndefined(val) ? def : val;
+
+export const toString = val => {
+  if (isNull(val) || isUndefined(val)) {
+    return String(val);
+  }
+
+  if (isNumber(val) || isString(val) || isBoolean(val)) {
+    return val.toString();
+  }
+
+  // Object or array: use JSON.stringify
+  return JSON.stringify(val);
+};

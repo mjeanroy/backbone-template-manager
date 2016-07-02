@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {has, result, isNull, isString, isObject, isBoolean, isArray, clone, or} from './utils';
+import {has, result, isNull, isString, isObject, isBoolean, isArray, clone, or, toString} from './utils';
 import {AbstractTemplateManager} from './abstract-template-manager';
 
 const URL_SEPARATOR = '/';
@@ -85,7 +85,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
         this._cache = clone(JST);
       } else {
         // 4- Don't know how to handle this variable!
-        throw new Error(`Cannot infer JST variables from: ${JST}`);
+        throw new Error(`Cannot infer JST variables from: ${toString(JST)}`);
       }
     }
   }

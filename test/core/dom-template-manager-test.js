@@ -64,6 +64,68 @@ describe('DomTemplateManager', () => {
       document.body.removeChild(fixtures);
     });
 
+    it('should fail to fetch non string template', () => {
+      const apply = val => {
+        return () => {
+          domTemplateManager.fetch(val, {
+            success: jasmine.createSpy('success'),
+            error: jasmine.createSpy('error')
+          });
+        };
+      };
+
+      expect(apply({})).toThrow(
+        new Error('Templates must be a string or an array of string, found: {}')
+      );
+
+      expect(apply(1)).toThrow(
+        new Error('Templates must be a string or an array of string, found: 1')
+      );
+
+      expect(apply(true)).toThrow(
+        new Error('Templates must be a string or an array of string, found: true')
+      );
+
+      expect(apply(null)).toThrow(
+        new Error('Templates must be a string or an array of string, found: null')
+      );
+
+      expect(apply(undefined)).toThrow(
+        new Error('Templates must be a string or an array of string, found: undefined')
+      );
+    });
+
+    it('should fail to fetch non string array of template', () => {
+      const apply = val => {
+        return () => {
+          domTemplateManager.fetch(val, {
+            success: jasmine.createSpy('success'),
+            error: jasmine.createSpy('error')
+          });
+        };
+      };
+
+      expect(apply([])).toThrow(
+        new Error('Templates must be a string or an array of string, found: []')
+      );
+
+      expect(apply([{}])).toThrow(
+        new Error('Templates must be a string or an array of string, found: [{}]')
+      );
+
+      expect(apply(['foo', 'bar', true])).toThrow(
+        new Error('Templates must be a string or an array of string, found: ["foo","bar",true]')
+      );
+
+      expect(apply(['foo', 'bar', 1])).toThrow(
+        new Error('Templates must be a string or an array of string, found: ["foo","bar",1]')
+      );
+
+      expect(apply(['foo', 'bar', null])).toThrow(
+        new Error('Templates must be a string or an array of string, found: ["foo","bar",null]')
+      );
+    });
+
     it('should query a single template', () => {
       // Create template element
       const html = '<div>Hello World</div>';

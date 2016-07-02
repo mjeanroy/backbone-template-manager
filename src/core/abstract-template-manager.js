@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {noop, keys, after, isString, isEmpty, isArray, every, forEach} from './utils';
+import {noop, keys, after, isString, isEmpty, isArray, every, forEach, toString} from './utils';
 
 const firstEntry = obj => obj[keys(obj)[0]];
 
@@ -82,11 +82,11 @@ export class AbstractTemplateManager {
     if (isString(templates)) {
       singular = true;
       sources = [templates];
-    } else if (isArray(templates) && every(templates, isString)) {
+    } else if (isArray(templates) && !isEmpty(templates) && every(templates, isString)) {
       singular = false;
       sources = templates;
     } else {
-      throw new Error(`Templates must be a string or an array of string, found: ${templates}`);
+      throw new Error(`Templates must be a string or an array of string, found: ${toString(templates)}`);
     }
 
     let success = opts.success || noop;
