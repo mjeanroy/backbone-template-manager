@@ -26,8 +26,8 @@
  * Public API.
  */
 
-export {DomTemplateManager} from 'core/dom-template-manager';
-export {RemoteTemplateManager} from 'core/remote-template-manager';
-export {compile, overrideCompile} from 'core/compile';
-export {templateManager, overrideTemplateManager} from 'core/template-manager';
-export {TemplateView} from 'core/template-view';
+export {DomTemplateManager} from './core/dom-template-manager';
+export {RemoteTemplateManager} from './core/remote-template-manager';
+export {compile, overrideCompile} from './core/compile';
+export {templateManager, overrideTemplateManager} from './core/template-manager';
+export {TemplateView} from './core/template-view';

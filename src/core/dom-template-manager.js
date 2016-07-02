@@ -23,8 +23,8 @@
  */
 
 import Backbone from 'backbone';
-import {has, isEmpty, or} from 'core/utils';
-import {AbstractTemplateManager} from 'core/abstract-template-manager';
+import {has, isEmpty, or} from './utils';
+import {AbstractTemplateManager} from './abstract-template-manager';
 
 // Default selector factory, used if no factory is specified during
 // initialization.

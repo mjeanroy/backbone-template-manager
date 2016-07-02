@@ -23,9 +23,9 @@
  */
 
 import Backbone from 'backbone';
-import {defaults, result, isEmpty, isArray} from 'core/utils';
-import {compile} from 'core/compile';
-import {templateManager} from 'core/template-manager';
+import {defaults, result, isEmpty, isArray} from './utils';
+import {compile} from './compile';
+import {templateManager} from './template-manager';
 
 const EVT_PREFIX = 'render';
 

@@ -23,19 +23,8 @@
  */
 
 import Backbone from 'backbone';
-import {
-  has,
-  result,
-  isNull,
-  isString,
-  isObject,
-  isBoolean,
-  isArray,
-  clone,
-  or
-} from 'core/utils';
-
-import {AbstractTemplateManager} from 'core/abstract-template-manager';
+import {has, result, isNull, isString, isObject, isBoolean, isArray, clone, or} from './utils';
+import {AbstractTemplateManager} from './abstract-template-manager';
 
 const URL_SEPARATOR = '/';
 const DEFAULT_PREFIX = '/templates/';

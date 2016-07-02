@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {RemoteTemplateManager} from 'core/remote-template-manager';
+import {RemoteTemplateManager} from './remote-template-manager';
 
 let _templateManager = new RemoteTemplateManager();
 

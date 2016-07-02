@@ -22,16 +22,7 @@
  * SOFTWARE.
  */
 
-import {
-  noop,
-  keys,
-  after,
-  isString,
-  isEmpty,
-  isArray,
-  every,
-  forEach
-} from 'core/utils';
+import {noop, keys, after, isString, isEmpty, isArray, every, forEach} from './utils';
 
 const firstEntry = obj => obj[keys(obj)[0]];
 
