@@ -1,10 +1,23 @@
 {
-    "extends": "google",
-    "env": {
-      "browser": true,
-      "node": true
-    },
-    "rules": {
-      "max-len": [2, 120, 2]
-    }
+  "extends": "google",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "max-len": [2, 120, 2],
+    "valid-jsdoc": [2, {
+      "requireReturn": true,
+      "requireParamDescription": true,
+      "requireReturnDescription": true,
+      "prefer": {
+        "return": "return",
+        "arg": "param",
+        "argument": "param"
+      },
+      "preferType": {
+        "object": "object"
+      }
+    }]
+  }
 }

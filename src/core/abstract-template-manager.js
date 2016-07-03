@@ -39,7 +39,8 @@ export class AbstractTemplateManager {
    * The constructor will automatically called the `initialize` function
    * with a valid options object (empty object if no options given).
    *
-   * @param {object?} options Optional options.
+   * @param {object} options Optional options.
+   * @constructor
    */
   constructor(options) {
     this.options = options || {};
@@ -49,9 +50,11 @@ export class AbstractTemplateManager {
   /**
    * Initalize function.
    *
-   * @param {object} options Options object (may be an empty object).
+   * @param {object} options Option object.
+   * @return {void}
+   * @abstract
    */
-  initialize() {
+  initialize(options) {
   }
 
   /**
@@ -71,8 +74,9 @@ export class AbstractTemplateManager {
    * Note that if first argument is not a string or an array of string, an error
    * will be thrown.
    *
-   * @param {string|array<string>} templates Templates to fetch (required).
-   * @param {object?} options Option object.
+   * @param {(string|Array<string>)} templates Templates to fetch (required).
+   * @param {object} options Option object.
+   * @return {void}
    */
   fetch(templates, options) {
     let opts = options || {};
@@ -140,6 +144,8 @@ export class AbstractTemplateManager {
 
   /**
    * Clear template manager (i.e clear cache if appropriate).
+   *
+   * @return {void}
    */
   clear() {
   }
@@ -151,8 +157,10 @@ export class AbstractTemplateManager {
    *
    * @param {string} template Template to fetch.
    * @param {object} options Options object containing success / error callback.
+   * @return {void}
+   * @abstract
    */
-  _doFetch() {
+  _doFetch(template, options) {
     throw new Error('Method "doFetch" should be implemented');
   }
 }

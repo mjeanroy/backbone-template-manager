@@ -38,6 +38,7 @@ export const compile = html => _compile(html);
  * Override the default compile function.
  *
  * @param {function} compileFn The new compile function.
+ * @return {void}
  */
 export const overrideCompile = compileFn => {
   _compile = compileFn;

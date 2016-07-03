@@ -63,6 +63,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
    * An empty cache is initialized.
    *
    * @param {object} options Options object.
+   * @return {void}
    */
   initialize(options) {
     this._prefix = or(result(options, 'prefix'), DEFAULT_PREFIX);
@@ -92,6 +93,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
 
   /**
    * Clear request cache.
+   * @return {void}
    */
   clear() {
     this._cache = {};
@@ -103,6 +105,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
    *
    * @param {string} id Template id.
    * @param {object} options Option object, containing success/error callbacks.
+   * @return {void}
    */
   _doFetch(id, options) {
     const success = options.success;

@@ -83,7 +83,7 @@ export class TemplateView extends Backbone.View {
    * Note that if `model` or `collection` are not defined, it will not be
    * added to the result object.
    *
-   * @param {object?} options Optional options given to the `toJSON` methods of models.
+   * @param {object} options Optional options given to the `toJSON` methods of models.
    * @return {object} Data object rendered into the view.
    */
   toJSON(options) {
@@ -152,8 +152,8 @@ export class TemplateView extends Backbone.View {
    * This function should not be called directly but it can be overridden
    * with custom logic.
    *
-   * @param {string|array<string>} templates Set of templates sources.
-   * @param {string|object<string, string>} results Fetched templates.
+   * @param {(string|array<string>)} templates Set of templates sources.
+   * @param {(string|object<string, string>)} results Fetched templates.
    * @return {TemplateView} Current view (for chaining).
    */
   _renderTemplates(templates, results) {
@@ -170,7 +170,7 @@ export class TemplateView extends Backbone.View {
    * with custom logic.
    *
    * @param {string} main Main template.
-   * @param {object<string, string>?} partials Optional partials.
+   * @param {?(object<string, string>)} partials Optional partials.
    * @return {string} HTML output.
    */
   _toHTML(main, partials) {

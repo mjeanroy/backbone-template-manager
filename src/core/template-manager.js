@@ -38,6 +38,7 @@ export const templateManager = () => _templateManager;
  * Override the default template manager.
  *
  * @param {object} templateManager Thew new default template manager.
+ * @return {void}
  */
 export const overrideTemplateManager = templateManager => {
   // Clear template manager before overriding it.

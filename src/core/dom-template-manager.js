@@ -31,6 +31,7 @@ import {AbstractTemplateManager} from './abstract-template-manager';
 const defaultSelectorFactory = id => `[data-template-id="${id}"]`;
 
 export class DomTemplateManager extends AbstractTemplateManager {
+
   /**
    * Initialize template manager (i.e initialize empty cache).
    *
@@ -39,6 +40,7 @@ export class DomTemplateManager extends AbstractTemplateManager {
    *   `[data-template-id="${id}"]`
    *
    * @param {object} options Options object.
+   * @return {void}
    */
   initialize(options) {
     this.selector = or(options.selector, defaultSelectorFactory);
@@ -47,6 +49,7 @@ export class DomTemplateManager extends AbstractTemplateManager {
 
   /**
    * Clear DOM cache.
+   * @return {void}
    */
   clear() {
     this._cache = {};
@@ -58,7 +61,9 @@ export class DomTemplateManager extends AbstractTemplateManager {
    * selector match more than one element.
    *
    * @param {string} id DOM selector.
-   * @param {object} options Options object, containing success/error callbacks.
+   * @param {Object} options Options object, containing success/error callbacks.
+   * @return {void}
+   * @override
    */
   _doFetch(id, options) {
     setTimeout(() => {
