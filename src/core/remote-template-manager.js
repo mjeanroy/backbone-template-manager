@@ -126,7 +126,10 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     // If template is already in the cache.
     const cachedValue = cache[id];
     if (isString(cachedValue)) {
-      setTimeout(() => success(cachedValue));
+      setTimeout(() => {
+        success(cachedValue);
+      });
+
       return;
     }
 
