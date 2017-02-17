@@ -86,29 +86,25 @@ module.exports = config => {
 
     // Rollup Configuration
     rollupPreprocessor: {
-      rollup: {
-        external: ['underscore', 'backbone'],
-        plugins: [
-          includePaths({
-            paths: [path.join(root, 'src')],
-            external: ['underscore', 'backbone']
-          }),
+      sourceMap: 'inline',
+      format: 'iife',
+      moduleName: 'Backbone.TemplateManager',
+      external: ['underscore', 'backbone'],
+      plugins: [
+        includePaths({
+          paths: [path.join(root, 'src')],
+          external: ['underscore', 'backbone']
+        }),
 
-          babel({
-            babelrc: false,
-            presets: ['es2015-rollup']
-          })
-        ]
-      },
+        babel({
+          babelrc: false,
+          presets: ['es2015-rollup']
+        })
+      ],
 
-      bundle: {
-        sourceMap: 'inline',
-        format: 'iife',
-        moduleName: 'Backbone.TemplateManager',
-        globals: {
-          underscore: '_',
-          backbone: 'Backbone'
-        }
+      globals: {
+        underscore: '_',
+        backbone: 'Backbone'
       }
     }
   });
