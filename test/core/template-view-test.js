@@ -55,7 +55,7 @@ describe('TemplateView', () => {
       fixtures.appendChild(el);
 
       view = new TemplateView({
-        el: el
+        el: el,
       });
 
       // Clear cache before each tests.
@@ -134,7 +134,7 @@ describe('TemplateView', () => {
       spyOn(view.model, 'toJSON').and.callThrough();
 
       const json = view.toJSON({
-        foo: 'bar'
+        foo: 'bar',
       });
 
       expect(json).toBeDefined();
@@ -168,7 +168,7 @@ describe('TemplateView', () => {
       expect(_.template).not.toHaveBeenCalled();
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
-        error: jasmine.any(Function)
+        error: jasmine.any(Function),
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
@@ -176,7 +176,7 @@ describe('TemplateView', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -200,14 +200,14 @@ describe('TemplateView', () => {
       expect(_.template).not.toHaveBeenCalled();
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
-        error: jasmine.any(Function)
+        error: jasmine.any(Function),
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
       request.respondWith({
         status: 404,
         responseText: 'Cannot find template',
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();

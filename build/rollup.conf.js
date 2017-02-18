@@ -30,21 +30,21 @@ const license = require('./license.conf');
 
 const LICENSE_REGEXP = /\/\*\*(\*(?!\/)|[^*])*(The MIT License)(\*(?!\/)|[^*])*\*\//;
 
-module.exports = options => ({
+module.exports = (options) => ({
   rollup: {
     entry: path.join(options.src, 'index.js'),
     external,
 
     plugins: [
-      {transform: code => _.trimStart(code.replace(LICENSE_REGEXP, ''))},
+      {transform: (code) => _.trimStart(code.replace(LICENSE_REGEXP, ''))},
 
       includePaths({
         external,
         paths: [
-          options.src
-        ]
-      })
-    ]
+          options.src,
+        ],
+      }),
+    ],
   },
 
   bundle: {
@@ -52,7 +52,7 @@ module.exports = options => ({
     banner: license(),
     globals: {
       underscore: '_',
-      backbone: 'Backbone'
-    }
-  }
+      backbone: 'Backbone',
+    },
+  },
 });

@@ -25,12 +25,26 @@
 import Backbone from 'backbone';
 import {FrameworksView} from './frameworks.view';
 
+/**
+ * Application.
+ * @class
+ */
 class App extends Backbone.View {
+  /**
+   * Initialize application.
+   * @return {void}
+   * @override
+   */
   initialize() {
     this.$el = Backbone.$('#main');
     this.render();
   }
 
+  /**
+   * Render application.
+   * @return {void}
+   * @override
+   */
   render() {
     this.$el.html(new FrameworksView().$el);
   }

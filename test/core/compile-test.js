@@ -42,7 +42,7 @@ describe('compile', () => {
   });
 
   it('should override compile function', () => {
-    const spy = jasmine.createSpy('compile').and.callFake(html => {
+    const spy = jasmine.createSpy('compile').and.callFake((html) => {
       return () => html;
     });
 

@@ -24,7 +24,7 @@
 
 import _ from 'underscore';
 
-let _compile = html => _.template(html);
+let _compile = (html) => _.template(html);
 
 /**
  * Default compile function.
@@ -32,7 +32,7 @@ let _compile = html => _.template(html);
  * @param {string} html HTML Input.
  * @return {function} Render function.
  */
-export const compile = html => _compile(html);
+export const compile = (html) => _compile(html);
 
 /**
  * Override the default compile function.
@@ -40,6 +40,6 @@ export const compile = html => _compile(html);
  * @param {function} compileFn The new compile function.
  * @return {void}
  */
-export const overrideCompile = compileFn => {
+export const overrideCompile = (compileFn) => {
   _compile = compileFn;
 };

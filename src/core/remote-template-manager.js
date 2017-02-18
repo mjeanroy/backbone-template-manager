@@ -53,6 +53,16 @@ const createUrl = (path, prefix, suffix) => {
   return `${prefix}${realPath}${suffix}`;
 };
 
+/**
+ * Template Manager that will fetch templates from a remote endpoint.
+ *
+ * Each template URL will (by default) be built with:
+ * - A prefix (default is `/templates`).
+ * - A suffix (default is `.template.html`).
+ *
+ * Each template will (by default) be fetched with `GET` method.
+ * @class
+ */
 export class RemoteTemplateManager extends AbstractTemplateManager {
   /**
    * Initialize template manager with options, with:
@@ -119,7 +129,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       const url = createUrl(id, prefix, suffix);
       cache[id] = Backbone.ajax({
         url: url,
-        method: method
+        method: method,
       });
     }
 
@@ -133,7 +143,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       return;
     }
 
-    const onSuccess = data => {
+    const onSuccess = (data) => {
       // Remove promise from cache and populate with template.
       cache[id] = data;
 
@@ -141,14 +151,14 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
       success(data);
     };
 
-    const onError = xhr => {
+    const onError = (xhr) => {
       // Remove from cache, maybe we will be luckier on next try.
       cache[id] = null;
 
       // Then, trigger error callback.
       error({
         status: xhr.status,
-        message: xhr.responseText
+        message: xhr.responseText,
       });
     };
 

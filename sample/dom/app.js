@@ -26,12 +26,26 @@ import Backbone from 'backbone';
 import {overrideTemplateManager, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
+/**
+ * Application.
+ * @class
+ */
 class App extends Backbone.View {
+  /**
+   * Initialize application.
+   * @return {void}
+   * @override
+   */
   initialize() {
     this.$el = Backbone.$('#main');
     this.render();
   }
 
+  /**
+   * Get view class name.
+   * @return {string} View class name.
+   * @override
+   */
   render() {
     this.$el.html(new FrameworksView().$el);
   }

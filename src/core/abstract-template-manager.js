@@ -24,7 +24,7 @@
 
 import {noop, keys, after, isString, isEmpty, isArray, every, forEach, toString} from './utils';
 
-const firstEntry = obj => obj[keys(obj)[0]];
+const firstEntry = (obj) => obj[keys(obj)[0]];
 
 /**
  * Partial implementation of template manager.
@@ -97,7 +97,7 @@ export class AbstractTemplateManager {
     let error = opts.error || noop;
     let done = opts.done || noop;
 
-    const onDone = after(sources.length, results => {
+    const onDone = after(sources.length, (results) => {
       let ok;
       let ko;
 
@@ -124,20 +124,20 @@ export class AbstractTemplateManager {
     // Store success / errors while fetching templates.
     const results = {
       success: {},
-      errors: {}
+      errors: {},
     };
 
-    forEach(sources, source => {
+    forEach(sources, (source) => {
       this._doFetch(source, {
-        success: template => {
+        success: (template) => {
           results.success[source] = template;
           onDone(results);
         },
 
-        error: error => {
+        error: (error) => {
           results.errors[source] = error;
           onDone(results);
-        }
+        },
       });
     });
   }

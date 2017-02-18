@@ -28,7 +28,7 @@ const moduleName = 'BackboneTemplateManager';
 const loose = true;
 const globals = {
   underscore: '_',
-  backbone: 'Backbone'
+  backbone: 'Backbone',
 };
 
 module.exports = () => ({
@@ -53,6 +53,6 @@ module.exports = () => ({
     ['transform-es2015-template-literals',      {loose}],
     ['transform-es2015-typeof-symbol',          {loose}],
     ['transform-es2015-unicode-regex',          {loose}],
-    ['transform-es2015-modules-umd',            {loose, globals}]
-  ]
+    ['transform-es2015-modules-umd',            {loose, globals}],
+  ],
 });

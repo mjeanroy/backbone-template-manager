@@ -25,13 +25,27 @@
 import {TemplateView} from 'backbone-template-manager';
 import {Frameworks} from '../commons/frameworks.collection';
 
+/**
+ * Display list of frameworks.
+ * @class
+ */
 export class FrameworksView extends TemplateView {
+  /**
+   * Initialize callback.
+   * @return {void}
+   * @override
+   */
   initialize() {
     this.collection = new Frameworks();
     this.listenTo(this.collection, 'sync', this.render);
     this.collection.fetch();
   }
 
+  /**
+   * Get the view template.
+   * @return {string} View template.
+   * @override
+   */
   templates() {
     return 'frameworks';
   }

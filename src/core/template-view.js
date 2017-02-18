@@ -29,6 +29,21 @@ import {templateManager} from './template-manager';
 
 const EVT_PREFIX = 'render';
 
+/**
+ * Implementation of `Backbone.View` that use a template manager to fetch templates
+ * and render the view.
+ * View data are retrieved using `toJSON` method: by default, this method return the
+ * result of `model.toJSON({view: true})` and/or `collection.toJSON({view: true}) method as
+ * an object such as:
+ * ```
+ *   {
+ *     model: view.model.toJSON({view: true}),           // not set if view.model does not exist
+ *     collection: view.collection.toJSON({view: true}), // not set if view.collection does not exist
+ *   }
+ * ```
+ *
+ * @class
+ */
 export class TemplateView extends Backbone.View {
   /**
    * Template / Array of templates to load to render the view.
@@ -76,7 +91,7 @@ export class TemplateView extends Backbone.View {
    *  ```
    *    {
    *      model: model.toJSON(options),
-   *      collection: collection.toJSON(options)
+   *      collection: collection.toJSON(options),
    *    }
    *  ```
    *
@@ -92,7 +107,7 @@ export class TemplateView extends Backbone.View {
 
     // Add `view` options to let model knows that `toJSON` is called from a view.
     const opts = defaults(options || {}, {
-      view: true
+      view: true,
     });
 
     // Add model if it exists.
@@ -132,7 +147,7 @@ export class TemplateView extends Backbone.View {
 
       // Fetch templates and render view on success.
       tmplMngr.fetch(templates, {
-        success: results => {
+        success: (results) => {
           this._renderTemplates(templates, results);
           this.trigger(`${EVT_PREFIX}:success`);
         },
@@ -140,7 +155,7 @@ export class TemplateView extends Backbone.View {
         error: () => {
           this.trigger(`${EVT_PREFIX}:error`);
           // Should we throw an exception?
-        }
+        },
       });
 
       return this;

@@ -25,7 +25,7 @@
 const gulp = require('gulp');
 const del = require('del');
 
-module.exports = options => {
+module.exports = (options) => {
   gulp.task('clean', () => {
     return del(options.dist);
   });

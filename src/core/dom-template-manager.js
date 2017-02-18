@@ -28,8 +28,13 @@ import {AbstractTemplateManager} from './abstract-template-manager';
 
 // Default selector factory, used if no factory is specified during
 // initialization.
-const defaultSelectorFactory = id => `[data-template-id="${id}"]`;
+const defaultSelectorFactory = (id) => `[data-template-id="${id}"]`;
 
+/**
+ * Template Manager implementation that fetch templates from the DOM, each templates
+ * will be search with a given selector.
+ * @class
+ */
 export class DomTemplateManager extends AbstractTemplateManager {
 
   /**

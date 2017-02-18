@@ -27,12 +27,26 @@ import Backbone from 'backbone';
 import {overrideCompile, overrideTemplateManager, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
+/**
+ * Application.
+ * @class
+ */
 class App extends Backbone.View {
+  /**
+   * Initialize application.
+   * @return {void}
+   * @override
+   */
   initialize() {
     this.$el = Backbone.$('#main');
     this.render();
   }
 
+  /**
+   * Render application.
+   * @return {void}
+   * @override
+   */
   render() {
     this.$el.html(new FrameworksView().$el);
   }
@@ -42,7 +56,7 @@ class App extends Backbone.View {
 overrideTemplateManager(new DomTemplateManager());
 
 // Override default compile function with mustache.
-overrideCompile(html => {
+overrideCompile((html) => {
   return (data, partials) => {
     return Mustache.render(html, data, partials);
   };

@@ -27,7 +27,7 @@ const includePaths = require('rollup-plugin-includepaths');
 const babel = require('rollup-plugin-babel');
 const root = path.join(__dirname, '..');
 
-module.exports = config => {
+module.exports = (config) => {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -44,7 +44,7 @@ module.exports = config => {
       {pattern: 'node_modules/backbone/backbone.js', watched: false, included: true, served: true},
       {pattern: 'node_modules/jasmine-ajax/lib/mock-ajax.js', watched: false, included: true, served: true},
       {pattern: 'src/**/*.js', watched: true, included: false, served: true},
-      {pattern: 'test/**/*.js', watched: true, included: true, served: true}
+      {pattern: 'test/**/*.js', watched: true, included: true, served: true},
     ],
 
     // list of files to exclude
@@ -55,7 +55,7 @@ module.exports = config => {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'src/**/*.js': ['rollup'],
-      'test/**/*.js': ['rollup']
+      'test/**/*.js': ['rollup'],
     },
 
     // test results reporter to use
@@ -93,19 +93,19 @@ module.exports = config => {
       plugins: [
         includePaths({
           paths: [path.join(root, 'src')],
-          external: ['underscore', 'backbone']
+          external: ['underscore', 'backbone'],
         }),
 
         babel({
           babelrc: false,
-          presets: ['es2015-rollup']
-        })
+          presets: ['es2015-rollup'],
+        }),
       ],
 
       globals: {
         underscore: '_',
-        backbone: 'Backbone'
-      }
-    }
+        backbone: 'Backbone',
+      },
+    },
   });
 };

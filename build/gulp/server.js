@@ -33,47 +33,47 @@ const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const babel = require('rollup-plugin-babel');
 
-module.exports = options => {
-  const bundle = id => {
+module.exports = (options) => {
+  const bundle = (id) => {
     const rollupConf = {
       entry: path.join(options.sample, id, 'app.js'),
       plugins: [
         includePaths({
           paths: [
-            options.dist
-          ]
+            options.dist,
+          ],
         }),
 
         nodeResolve({
           jsnext: true,
-          main: true
+          main: true,
         }),
 
         commonjs(),
 
         babel({
           babelrc: false,
-          presets: ['es2015-rollup']
-        })
-      ]
+          presets: ['es2015-rollup'],
+        }),
+      ],
     };
 
     const bundleConf = {
       dest: path.join(options.sample, id, '.tmp', 'bundle.js'),
-      format: 'iife'
+      format: 'iife',
     };
 
     return rollup(rollupConf)
-      .then(bundle => {
+      .then((bundle) => {
         return bundle.write(bundleConf);
       })
-      .catch(err => {
+      .catch((err) => {
         gutil.log(gutil.colors.red(err));
       });
   };
 
   const bundleAll = () => {
-    const promises = ['dom', 'remote', 'mustache'].map(id => bundle(id));
+    const promises = ['dom', 'remote', 'mustache'].map((id) => bundle(id));
     return Q.all(promises);
   };
 

@@ -28,14 +28,14 @@ const Q = require('q');
 const karma = require('karma');
 const KarmaServer = karma.Server;
 
-module.exports = options => {
+module.exports = (options) => {
   const karmaConf = path.join(options.build, 'karma.conf.js');
 
-  const runKarma = singleRun => {
+  const runKarma = (singleRun) => {
     const deferred = Q.defer();
     const onDone = () => deferred.resolve();
     const config = {
-      configFile: karmaConf
+      configFile: karmaConf,
     };
 
     if (singleRun) {

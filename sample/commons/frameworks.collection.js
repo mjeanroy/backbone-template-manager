@@ -25,11 +25,23 @@
 import Backbone from 'backbone';
 import {Framework} from './framework.model';
 
+/**
+ * Framework Collection.
+ * @class
+ */
 export class Frameworks extends Backbone.Collection {
+  /**
+   * Initialize Collection.
+   * @return {void}
+   */
   initialize() {
     this.model = Framework;
   }
 
+  /**
+   * Get Collection URL.
+   * @return {string} Collection URL.
+   */
   url() {
     return '/api/frameworks';
   }

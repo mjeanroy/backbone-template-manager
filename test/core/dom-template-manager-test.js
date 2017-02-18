@@ -41,7 +41,7 @@ describe('DomTemplateManager', () => {
 
   it('should create template manager with custom selector factory', () => {
     const domTemplateManager = new DomTemplateManager({
-      selector: id => `#${id}`
+      selector: (id) => `#${id}`,
     });
 
     expect(domTemplateManager).toBeDefined();
@@ -65,11 +65,11 @@ describe('DomTemplateManager', () => {
     });
 
     it('should fail to fetch non string template', () => {
-      const apply = val => {
+      const apply = (val) => {
         return () => {
           domTemplateManager.fetch(val, {
             success: jasmine.createSpy('success'),
-            error: jasmine.createSpy('error')
+            error: jasmine.createSpy('error'),
           });
         };
       };
@@ -96,11 +96,11 @@ describe('DomTemplateManager', () => {
     });
 
     it('should fail to fetch non string array of template', () => {
-      const apply = val => {
+      const apply = (val) => {
         return () => {
           domTemplateManager.fetch(val, {
             success: jasmine.createSpy('success'),
-            error: jasmine.createSpy('error')
+            error: jasmine.createSpy('error'),
           });
         };
       };
@@ -140,7 +140,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch('test-template', {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(error).not.toHaveBeenCalled();
@@ -167,7 +167,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(id, {
         success: success1,
-        error: error1
+        error: error1,
       });
 
       expect(error1).not.toHaveBeenCalled();
@@ -178,7 +178,7 @@ describe('DomTemplateManager', () => {
       expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(html);
       expect(domTemplateManager._cache).toEqual({
-        [id]: html
+        [id]: html,
       });
 
       spyOn(Backbone, '$').and.callThrough();
@@ -188,7 +188,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(id, {
         success: success2,
-        error: error2
+        error: error2,
       });
 
       expect(error2).not.toHaveBeenCalled();
@@ -222,7 +222,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(ids, {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(error).not.toHaveBeenCalled();
@@ -240,7 +240,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch('test-template', {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -250,7 +250,7 @@ describe('DomTemplateManager', () => {
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
-        data: 'Cannot find template: test-template'
+        data: 'Cannot find template: test-template',
       });
     });
 
@@ -268,7 +268,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch('test-template', {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -278,7 +278,7 @@ describe('DomTemplateManager', () => {
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
-        data: 'Found multiple templates for selector: [data-template-id="test-template"]'
+        data: 'Found multiple templates for selector: [data-template-id="test-template"]',
       });
     });
 
@@ -288,7 +288,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -299,12 +299,12 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-1': {
-          data: 'Cannot find template: test-template-1'
+          data: 'Cannot find template: test-template-1',
         },
 
         'test-template-2': {
-          data: 'Cannot find template: test-template-2'
-        }
+          data: 'Cannot find template: test-template-2',
+        },
       });
     });
 
@@ -328,7 +328,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -339,12 +339,12 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-1': {
-          data: 'Found multiple templates for selector: [data-template-id="test-template-1"]'
+          data: 'Found multiple templates for selector: [data-template-id="test-template-1"]',
         },
 
         'test-template-2': {
-          data: 'Found multiple templates for selector: [data-template-id="test-template-2"]'
-        }
+          data: 'Found multiple templates for selector: [data-template-id="test-template-2"]',
+        },
       });
     });
 
@@ -360,7 +360,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(['test-template-1', 'test-template-2'], {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -371,8 +371,8 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
         'test-template-2': {
-          data: 'Cannot find template: test-template-2'
-        }
+          data: 'Cannot find template: test-template-2',
+        },
       });
     });
 
@@ -391,14 +391,14 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(id, {
         success: success1,
-        error: error1
+        error: error1,
       });
 
       jasmine.clock().tick();
 
       expect(domTemplateManager._cache).toBeDefined();
       expect(domTemplateManager._cache).toEqual({
-        [id]: html
+        [id]: html,
       });
 
       domTemplateManager.clear();

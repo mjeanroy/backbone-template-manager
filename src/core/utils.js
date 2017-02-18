@@ -44,7 +44,7 @@ export const clone = _.clone;
 
 export const or = (val, def) => isUndefined(val) ? def : val;
 
-export const toString = val => {
+export const toString = (val) => {
   if (isNull(val) || isUndefined(val)) {
     return String(val);
   }

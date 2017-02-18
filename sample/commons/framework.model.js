@@ -24,7 +24,15 @@
 
 import Backbone from 'backbone';
 
+/**
+ * Framework Model Object.
+ * @class
+ */
 export class Framework extends Backbone.Model {
+  /**
+   * Get Model URL.
+   * @return {string} Model URL.
+   */
   urlRoot() {
     return '/api/frameworks';
   }

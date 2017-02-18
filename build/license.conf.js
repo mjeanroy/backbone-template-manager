@@ -32,7 +32,7 @@ const LICENSE = [`/**`]
     .toString()
     .trim()
     .split(EOL)
-    .map(line => _.trimEnd(` * ${line}`)))
+    .map((line) => _.trimEnd(` * ${line}`)))
   .concat(` */${EOL}`)
   .join(EOL);
 

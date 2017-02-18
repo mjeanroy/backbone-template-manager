@@ -65,7 +65,7 @@ describe('RemoteTemplateManager', () => {
   it('should create template manager with pre-filled cache with JST variables', () => {
     const JST = true;
     const templates = {
-      foo: '<div>Hello <%= name %></div>'
+      foo: '<div>Hello <%= name %></div>',
     };
 
     window.JST = templates;
@@ -79,7 +79,7 @@ describe('RemoteTemplateManager', () => {
   it('should create template manager with pre-filled cache with custom JST variable', () => {
     const JST = '__JST__';
     const templates = {
-      foo: '<div>Hello <%= name %></div>'
+      foo: '<div>Hello <%= name %></div>',
     };
 
     window.__JST__ = templates;
@@ -92,7 +92,7 @@ describe('RemoteTemplateManager', () => {
 
   it('should create template manager with pre-filled cache with custom JST object', () => {
     const JST = {
-      foo: '<div>Hello <%= name %></div>'
+      foo: '<div>Hello <%= name %></div>',
     };
 
     const templateManager = new RemoteTemplateManager({JST});
@@ -103,7 +103,7 @@ describe('RemoteTemplateManager', () => {
 
   it('should if JST object is not a string, nor a boolean, nor an object', () => {
     const JST = [{
-      foo: '<div>Hello <%= name %></div>'
+      foo: '<div>Hello <%= name %></div>',
     }];
 
     const apply = () => {
@@ -129,11 +129,11 @@ describe('RemoteTemplateManager', () => {
     afterEach(() => jasmine.clock().uninstall());
 
     it('should fail to fetch non string template', () => {
-      const apply = val => {
+      const apply = (val) => {
         return () => {
           templateManager.fetch(val, {
             success: jasmine.createSpy('success'),
-            error: jasmine.createSpy('error')
+            error: jasmine.createSpy('error'),
           });
         };
       };
@@ -160,11 +160,11 @@ describe('RemoteTemplateManager', () => {
     });
 
     it('should fail to fetch non string array of template', () => {
-      const apply = val => {
+      const apply = (val) => {
         return () => {
           templateManager.fetch(val, {
             success: jasmine.createSpy('success'),
-            error: jasmine.createSpy('error')
+            error: jasmine.createSpy('error'),
           });
         };
       };
@@ -195,7 +195,7 @@ describe('RemoteTemplateManager', () => {
       const error = jasmine.createSpy('error');
       templateManager.fetch('foo', {
         success: success,
-        error: error
+        error: error,
       });
 
       jasmine.clock().tick();
@@ -207,7 +207,7 @@ describe('RemoteTemplateManager', () => {
       const expectedMethod = 'GET';
       expect(Backbone.ajax).toHaveBeenCalledWith({
         method: expectedMethod,
-        url: expectedUrl
+        url: expectedUrl,
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
@@ -219,7 +219,7 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -235,13 +235,13 @@ describe('RemoteTemplateManager', () => {
 
       const jstTmplMngr = new RemoteTemplateManager({
         JST: {
-          foo: template
-        }
+          foo: template,
+        },
       });
 
       jstTmplMngr.fetch('foo', {
         success: success,
-        error: error
+        error: error,
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
@@ -265,7 +265,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch('/foo', {
         success: success,
-        error: error
+        error: error,
       });
 
       jasmine.clock().tick();
@@ -277,7 +277,7 @@ describe('RemoteTemplateManager', () => {
       const expectedMethod = 'GET';
       expect(Backbone.ajax).toHaveBeenCalledWith({
         method: expectedMethod,
-        url: expectedUrl
+        url: expectedUrl,
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
@@ -289,7 +289,7 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -307,7 +307,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch('foo/', {
         success: success,
-        error: error
+        error: error,
       });
 
       jasmine.clock().tick();
@@ -319,7 +319,7 @@ describe('RemoteTemplateManager', () => {
       const expectedMethod = 'GET';
       expect(Backbone.ajax).toHaveBeenCalledWith({
         method: expectedMethod,
-        url: expectedUrl
+        url: expectedUrl,
       });
 
       const request = jasmine.Ajax.requests.mostRecent();
@@ -331,7 +331,7 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -345,7 +345,7 @@ describe('RemoteTemplateManager', () => {
       const error1 = jasmine.createSpy('error1');
       templateManager.fetch('foo', {
         success: success1,
-        error: error1
+        error: error1,
       });
 
       expect(Backbone.ajax).toHaveBeenCalled();
@@ -357,7 +357,7 @@ describe('RemoteTemplateManager', () => {
       const error2 = jasmine.createSpy('error2');
       templateManager.fetch('foo', {
         success: success2,
-        error: error2
+        error: error2,
       });
 
       expect(Backbone.ajax.calls.count()).toBe(1);
@@ -373,7 +373,7 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -390,7 +390,7 @@ describe('RemoteTemplateManager', () => {
       const error1 = jasmine.createSpy('error1');
       templateManager.fetch('foo', {
         success: success1,
-        error: error1
+        error: error1,
       });
 
       expect(success1).not.toHaveBeenCalled();
@@ -404,7 +404,7 @@ describe('RemoteTemplateManager', () => {
       r1.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -417,7 +417,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch('foo', {
         success: success2,
-        error: error2
+        error: error2,
       });
 
       const r2 = jasmine.Ajax.requests.mostRecent();
@@ -437,7 +437,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch(ids, {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -457,7 +457,7 @@ describe('RemoteTemplateManager', () => {
       request1.respondWith({
         status: 200,
         responseText: template1,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -469,7 +469,7 @@ describe('RemoteTemplateManager', () => {
       request2.respondWith({
         status: 200,
         responseText: template2,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -477,7 +477,7 @@ describe('RemoteTemplateManager', () => {
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith({
         foo: template1,
-        bar: template2
+        bar: template2,
       });
     });
 
@@ -486,7 +486,7 @@ describe('RemoteTemplateManager', () => {
       const error = jasmine.createSpy('error');
       templateManager.fetch('foo', {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -502,7 +502,7 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: status,
         responseText: message,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -518,7 +518,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch(ids, {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -533,7 +533,7 @@ describe('RemoteTemplateManager', () => {
       request1.respondWith({
         status: status,
         responseText: message,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -544,7 +544,7 @@ describe('RemoteTemplateManager', () => {
       request2.respondWith({
         status: status,
         responseText: message,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -552,7 +552,7 @@ describe('RemoteTemplateManager', () => {
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
         foo: {status, message},
-        bar: {status, message}
+        bar: {status, message},
       });
     });
 
@@ -563,7 +563,7 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch(ids, {
         success: success,
-        error: error
+        error: error,
       });
 
       expect(success).not.toHaveBeenCalled();
@@ -578,7 +578,7 @@ describe('RemoteTemplateManager', () => {
       request1.respondWith({
         status: status,
         responseText: message,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -589,14 +589,14 @@ describe('RemoteTemplateManager', () => {
       request2.respondWith({
         status: 200,
         responseText: '<div>Hello World</div>',
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
-        foo: {status, message}
+        foo: {status, message},
       });
     });
 
@@ -605,7 +605,7 @@ describe('RemoteTemplateManager', () => {
       const error1 = jasmine.createSpy('error1');
       templateManager.fetch('foo', {
         success: success1,
-        error: error1
+        error: error1,
       });
 
       expect(success1).not.toHaveBeenCalled();
@@ -619,7 +619,7 @@ describe('RemoteTemplateManager', () => {
       request1.respondWith({
         status: status,
         responseText: message,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -632,7 +632,7 @@ describe('RemoteTemplateManager', () => {
       const error2 = jasmine.createSpy('error2');
       templateManager.fetch('foo', {
         success: success2,
-        error: error2
+        error: error2,
       });
 
       expect(success2).not.toHaveBeenCalled();
@@ -645,7 +645,7 @@ describe('RemoteTemplateManager', () => {
       request2.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
@@ -662,14 +662,14 @@ describe('RemoteTemplateManager', () => {
       request.respondWith({
         status: 200,
         responseText: template,
-        contentType: 'text/html'
+        contentType: 'text/html',
       });
 
       jasmine.clock().tick();
 
       expect(templateManager._cache).toBeDefined();
       expect(templateManager._cache).toEqual({
-        foo: jasmine.anything()
+        foo: jasmine.anything(),
       });
 
       templateManager.clear();

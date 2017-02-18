@@ -24,20 +24,48 @@
 
 import {TemplateView} from 'backbone-template-manager';
 
+/**
+ * Display framework item.
+ * @class
+ */
 export class FrameworkView extends TemplateView {
+  /**
+   * Initialize view.
+   * View options must contain the framework item to render.
+   *
+   * @param {Object} options View options.
+   * @return {void}
+   * @override
+   */
   initialize(options) {
     this.model = options.model;
     this.render();
   }
 
+  /**
+   * Get view template.
+   * @return {string} View template.
+   * @return {void}
+   * @override
+   */
   templates() {
     return 'framework';
   }
 
+  /**
+   * Get view tag name.
+   * @return {string} View tag name.
+   * @override
+   */
   tagName() {
     return 'div';
   }
 
+  /**
+   * Get view class name.
+   * @return {string} View class name.
+   * @override
+   */
   className() {
     return 'col-sm-6 col-md-4';
   }

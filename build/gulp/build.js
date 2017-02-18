@@ -25,7 +25,7 @@
 const path = require('path');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
-const rename = require("gulp-rename");
+const rename = require('gulp-rename');
 const rollup = require('rollup');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
@@ -34,18 +34,18 @@ const license = require('../license.conf');
 
 const babelConf = require('../babel.conf');
 const rollupConf = require('../rollup.conf');
-const applyRollup = config => {
+const applyRollup = (config) => {
   gutil.log(gutil.colors.gray(`Rollup entry point`));
-  return rollup.rollup(config.rollup).then(bundle => {
+  return rollup.rollup(config.rollup).then((bundle) => {
     gutil.log(gutil.colors.gray(`Writing rollup bundle`));
     return bundle.write(config.bundle).then(() => config.bundle.dest);
   });
 };
 
-module.exports = options => {
+module.exports = (options) => {
   gulp.task('build', ['clean'], () => {
     return applyRollup(rollupConf(options))
-      .then(src => {
+      .then((src) => {
         gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
         return gulp.src(src)
           .pipe(babel(babelConf()))

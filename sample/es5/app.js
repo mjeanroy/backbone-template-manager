@@ -24,12 +24,13 @@
 
 /* global Backbone:true */
 /* global BackboneTemplateManager:true */
+/* eslint-disable no-var */
 
 (function() {
   var Framework = Backbone.Model.extend({
     urlRoot: function() {
       return '/api/frameworks';
-    }
+    },
   });
 
   var Frameworks = Backbone.Collection.extend({
@@ -39,7 +40,7 @@
 
     url: function() {
       return '/api/frameworks';
-    }
+    },
   });
 
   var FrameworkView = BackboneTemplateManager.TemplateView.extend({
@@ -58,7 +59,7 @@
 
     className: function() {
       return 'col-sm-6 col-md-4';
-    }
+    },
   });
 
   var FrameworksView = BackboneTemplateManager.TemplateView.extend({
@@ -78,7 +79,7 @@
 
     templates: function() {
       return 'frameworks';
-    }
+    },
   });
 
   var App = Backbone.View.extend({
@@ -89,8 +90,9 @@
 
     render: function() {
       this.$el.html(new FrameworksView().$el);
-    }
+    },
   });
 
-  new App(); // eslint-disable-line no-new
+  // eslint-disable-next-line no-new
+  new App();
 })();
