@@ -22,13 +22,11 @@
 * SOFTWARE.
 */
 
-const _ = require('lodash');
 const path = require('path');
 const includePaths = require('rollup-plugin-includepaths');
+const stripBanner = require('rollup-plugin-strip-banner');
 const external = ['underscore', 'backbone'];
 const license = require('./license.conf');
-
-const LICENSE_REGEXP = /\/\*\*(\*(?!\/)|[^*])*(The MIT License)(\*(?!\/)|[^*])*\*\//;
 
 module.exports = (options) => ({
   rollup: {
@@ -36,8 +34,7 @@ module.exports = (options) => ({
     external,
 
     plugins: [
-      {transform: (code) => _.trimStart(code.replace(LICENSE_REGEXP, ''))},
-
+      stripBanner(),
       includePaths({
         external,
         paths: [
