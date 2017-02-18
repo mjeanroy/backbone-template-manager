@@ -23,7 +23,6 @@
 */
 
 const path = require('path');
-const includePaths = require('rollup-plugin-includepaths');
 const stripBanner = require('rollup-plugin-strip-banner');
 const external = ['underscore', 'backbone'];
 const license = require('./license.conf');
@@ -35,12 +34,6 @@ module.exports = (options) => ({
 
     plugins: [
       stripBanner(),
-      includePaths({
-        external,
-        paths: [
-          options.src,
-        ],
-      }),
     ],
   },
 
