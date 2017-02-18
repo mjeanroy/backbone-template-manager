@@ -24,22 +24,24 @@
 
 const path = require('path');
 const stripBanner = require('rollup-plugin-strip-banner');
-const external = ['underscore', 'backbone'];
-const license = require('./license.conf');
+const license = require('rollup-plugin-license');
 
 module.exports = (options) => ({
   rollup: {
     entry: path.join(options.src, 'index.js'),
-    external,
-
+    external: ['underscore', 'backbone'],
     plugins: [
       stripBanner(),
+      license({
+        banner: {
+          file: path.join(__dirname, '..', 'LICENSE'),
+        },
+      }),
     ],
   },
 
   bundle: {
     dest: path.join(options.dist, 'backbone-template-manager.js'),
-    banner: license(),
     globals: {
       underscore: '_',
       backbone: 'Backbone',
