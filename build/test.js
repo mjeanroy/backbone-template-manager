@@ -24,36 +24,43 @@
 
 const path = require('path');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
-const rename = require('gulp-rename');
-const rollup = require('rollup');
-const babel = require('gulp-babel');
-const uglify = require('gulp-uglify');
-const header = require('gulp-header');
-const license = require('../license.conf');
-
-const babelConf = require('../babel.conf');
-const rollupConf = require('../rollup.conf');
-const applyRollup = (config) => {
-  gutil.log(gutil.colors.gray(`Rollup entry point`));
-  return rollup.rollup(config.rollup).then((bundle) => {
-    gutil.log(gutil.colors.gray(`Writing rollup bundle`));
-    return bundle.write(config.bundle).then(() => config.bundle.dest);
-  });
-};
+const Q = require('q');
+const karma = require('karma');
+const KarmaServer = karma.Server;
 
 module.exports = (options) => {
-  gulp.task('build', ['clean'], () => {
-    return applyRollup(rollupConf(options))
-      .then((src) => {
-        gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
-        return gulp.src(src)
-          .pipe(babel(babelConf()))
-          .pipe(header(license()))
-          .pipe(gulp.dest(path.join(options.dist, 'es5')))
-          .pipe(uglify())
-          .pipe(rename('backbone-template-manager.min.js'))
-          .pipe(gulp.dest(path.join(options.dist, 'es5')));
-      });
+  const karmaConf = path.join(options.root, 'karma.conf.js');
+
+  const runKarma = (singleRun) => {
+    const deferred = Q.defer();
+    const onDone = () => deferred.resolve();
+    const config = {
+      configFile: karmaConf,
+    };
+
+    if (singleRun) {
+      // Continuous integration mode
+      config.singleRun = true;
+      config.autoWatch = false;
+      config.browsers = ['PhantomJS'];
+    } else {
+      // Dev mode
+      config.singleRun = false;
+      config.autoWatch = true;
+      config.reporters = ['progress'];
+      config.browsers = ['Chrome'];
+    }
+
+    const server = new KarmaServer(config, onDone);
+    server.start();
+    return deferred.promise;
+  };
+
+  gulp.task('test', () => {
+    return runKarma(true);
+  });
+
+  gulp.task('tdd', () => {
+    return runKarma(false);
   });
 };

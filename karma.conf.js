@@ -25,13 +25,13 @@
 const path = require('path');
 const includePaths = require('rollup-plugin-includepaths');
 const babel = require('rollup-plugin-babel');
-const root = path.join(__dirname, '..');
+const conf = require('./app.conf');
 
 module.exports = (config) => {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: root,
+    basePath: conf.root,
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -92,7 +92,7 @@ module.exports = (config) => {
       external: ['underscore', 'backbone'],
       plugins: [
         includePaths({
-          paths: [path.join(root, 'src')],
+          paths: [path.join(conf.root, 'src')],
           external: ['underscore', 'backbone'],
         }),
 

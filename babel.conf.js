@@ -31,7 +31,7 @@ const globals = {
   backbone: 'Backbone',
 };
 
-module.exports = () => ({
+module.exports = {
   moduleId: moduleName,
   plugins: [
     ['transform-es2015-arrow-functions',        {loose}],
@@ -55,4 +55,4 @@ module.exports = () => ({
     ['transform-es2015-unicode-regex',          {loose}],
     ['transform-es2015-modules-umd',            {loose, globals}],
   ],
-});
+};

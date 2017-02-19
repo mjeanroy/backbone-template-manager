@@ -22,29 +22,19 @@
 * SOFTWARE.
 */
 
+const _ = require('lodash');
+const fs = require('fs');
 const path = require('path');
-const stripBanner = require('rollup-plugin-strip-banner');
-const license = require('rollup-plugin-license');
+const conf = require('./app.conf');
 
-module.exports = (options) => ({
-  rollup: {
-    entry: path.join(options.src, 'index.js'),
-    external: ['underscore', 'backbone'],
-    plugins: [
-      stripBanner(),
-      license({
-        banner: {
-          file: path.join(__dirname, '..', 'LICENSE'),
-        },
-      }),
-    ],
-  },
+const EOL = '\n';
+const LICENSE = [`/**`]
+  .concat(fs.readFileSync(path.join(conf.root, 'LICENSE'))
+    .toString()
+    .trim()
+    .split(EOL)
+    .map((line) => _.trimEnd(` * ${line}`)))
+  .concat(` */${EOL}`)
+  .join(EOL);
 
-  bundle: {
-    dest: path.join(options.dist, 'backbone-template-manager.js'),
-    globals: {
-      underscore: '_',
-      backbone: 'Backbone',
-    },
-  },
-});
+module.exports = LICENSE;
