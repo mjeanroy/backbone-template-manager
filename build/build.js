@@ -37,9 +37,9 @@ const babelConf = require('../babel.conf');
 const rollupConf = require('../rollup.conf');
 const applyRollup = (config) => {
   gutil.log(gutil.colors.gray(`Rollup entry point`));
-  return rollup.rollup(config.rollup).then((bundle) => {
+  return rollup.rollup(config).then((bundle) => {
     gutil.log(gutil.colors.gray(`Writing rollup bundle`));
-    return bundle.write(config.bundle).then(() => config.bundle.dest);
+    return bundle.write(config).then(() => config.dest);
   });
 };
 

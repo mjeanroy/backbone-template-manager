@@ -23,29 +23,26 @@
 */
 
 const path = require('path');
+const _ = require('lodash');
 const stripBanner = require('rollup-plugin-strip-banner');
 const license = require('rollup-plugin-license');
 const conf = require('./app.conf');
+const globals = {
+  underscore: '_',
+  backbone: 'Backbone',
+};
 
 module.exports = {
-  rollup: {
-    entry: path.join(conf.src, 'index.js'),
-    external: ['underscore', 'backbone'],
-    plugins: [
-      stripBanner(),
-      license({
-        banner: {
-          file: conf.license,
-        },
-      }),
-    ],
-  },
-
-  bundle: {
-    dest: path.join(conf.dist, 'backbone-template-manager.js'),
-    globals: {
-      underscore: '_',
-      backbone: 'Backbone',
-    },
-  },
+  entry: path.join(conf.src, 'index.js'),
+  dest: path.join(conf.dist, 'backbone-template-manager.js'),
+  globals,
+  external: _.keys(globals),
+  plugins: [
+    stripBanner(),
+    license({
+      banner: {
+        file: conf.license,
+      },
+    }),
+  ],
 };
