@@ -32,4 +32,5 @@ module.exports = {
   build: path.join(root, 'build'),
   test: path.join(root, 'test'),
   sample: path.join(root, 'sample'),
+  license: path.join(root, 'LICENSE'),
 };

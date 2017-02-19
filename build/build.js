@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
@@ -30,7 +31,7 @@ const rollup = require('rollup');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header');
-const license = require('../license.conf');
+const commenting = require('commenting');
 
 const babelConf = require('../babel.conf');
 const rollupConf = require('../rollup.conf');
@@ -46,13 +47,14 @@ module.exports = (options) => {
   gulp.task('build', ['clean'], () => {
     return applyRollup(rollupConf)
       .then((src) => {
+        const license = fs.readFileSync(options.license).toString().trim();
         gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
         return gulp.src(src)
           .pipe(babel(babelConf))
-          .pipe(header(license))
+          .pipe(header(commenting(license, '.js')))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
           .pipe(uglify())
-          .pipe(rename('backbone-template-manager.min.js'))
+          .pipe(rename({extname: '.min.js'}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')));
       });
   });

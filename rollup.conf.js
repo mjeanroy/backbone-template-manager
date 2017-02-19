@@ -35,7 +35,7 @@ module.exports = {
       stripBanner(),
       license({
         banner: {
-          file: path.join(__dirname, '..', 'LICENSE'),
+          file: conf.license,
         },
       }),
     ],
