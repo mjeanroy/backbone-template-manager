@@ -43,9 +43,18 @@ module.exports = (options) => {
     return deferred.promise;
   };
 
-  ['test', 'tdd'].forEach((mode) => {
+  ['test', 'tdd', 'saucelab'].forEach((mode) => {
     gulp.task(mode, () => {
       return runKarma(mode);
     });
+  });
+
+  gulp.task('travis', () => {
+    if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
+      gutil.log(gutil.colors.grey('SauceLab environment not set, running classic test suite'));
+      return runKarma('test');
+    }
+
+    return runKarma('saucelab');
   });
 };
