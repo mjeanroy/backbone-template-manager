@@ -25,7 +25,6 @@
 const path = require('path');
 const _ = require('lodash');
 const includePaths = require('rollup-plugin-includepaths');
-const babel = require('rollup-plugin-babel');
 const conf = require('./app.conf');
 const lib = (file) => ({
   pattern: path.join(conf.root, 'node_modules', file),
@@ -61,7 +60,7 @@ module.exports = (config) => ({
   // preprocess matching files before serving them to the browser
   // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
   preprocessors: {
-    'test/**/*.js': ['rollup'],
+    'test/**/*.js': ['rollup', 'babel'],
   },
 
   // test results reporter to use
@@ -100,11 +99,6 @@ module.exports = (config) => ({
     plugins: [
       includePaths({
         paths: [path.join(conf.root, 'src')],
-      }),
-
-      babel({
-        babelrc: false,
-        presets: ['es2015-rollup'],
       }),
     ],
   },

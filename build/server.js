@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
@@ -31,41 +32,33 @@ const rollup = require('rollup').rollup;
 const includePaths = require('rollup-plugin-includepaths');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
-const babel = require('rollup-plugin-babel');
+const babel = require('babel-core');
+const babelConf = require('./babel.conf');
 
 module.exports = (options) => {
   const bundle = (id) => {
+    gutil.log(gutil.colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
       entry: path.join(options.sample, id, 'app.js'),
-      plugins: [
-        includePaths({
-          paths: [
-            options.dist,
-          ],
-        }),
-
-        nodeResolve({
-          jsnext: true,
-          main: true,
-        }),
-
-        commonjs(),
-
-        babel({
-          babelrc: false,
-          presets: ['es2015-rollup'],
-        }),
-      ],
-    };
-
-    const bundleConf = {
-      dest: path.join(options.sample, id, '.tmp', 'bundle.js'),
       format: 'iife',
+      plugins: [
+        includePaths({paths: [options.dist]}),
+        nodeResolve({jsnext: true, main: true}),
+        commonjs(),
+      ],
     };
 
     return rollup(rollupConf)
       .then((bundle) => {
-        return bundle.write(bundleConf);
+        gutil.log(gutil.colors.gray(`[${id}] Generating ES6 bundle`));
+        const result = bundle.generate(rollupConf);
+
+        gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
+        const dest = path.join(options.sample, id, '.tmp', 'bundle.js');
+        const es5 = babel.transform(result.code, babelConf);
+
+        gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
+        fs.writeFileSync(dest, es5.code, 'utf-8');
       })
       .catch((err) => {
         gutil.log(gutil.colors.red(err));

@@ -10,4 +10,5 @@ npm-debug.log
 /.travis.yml
 /.nvmrc
 /.eslintrc
+/.babelrc
 /gulpfile.js
