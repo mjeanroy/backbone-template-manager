@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const git = require('gulp-git');
