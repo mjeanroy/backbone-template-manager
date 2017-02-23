@@ -24,43 +24,28 @@
 
 const path = require('path');
 const gulp = require('gulp');
+const gutil = require('gulp-util');
 const Q = require('q');
 const karma = require('karma');
 const KarmaServer = karma.Server;
 
 module.exports = (options) => {
-  const karmaConf = path.join(options.build, 'karma.conf.js');
-
-  const runKarma = (singleRun) => {
+  const runKarma = (mode) => {
+    const configFile = path.join(options.build, `karma.${mode}.conf.js`);
     const deferred = Q.defer();
     const onDone = () => deferred.resolve();
-    const config = {
-      configFile: karmaConf,
-    };
+    const config = {configFile};
 
-    if (singleRun) {
-      // Continuous integration mode
-      config.singleRun = true;
-      config.autoWatch = false;
-      config.browsers = ['PhantomJS'];
-    } else {
-      // Dev mode
-      config.singleRun = false;
-      config.autoWatch = true;
-      config.reporters = ['progress'];
-      config.browsers = ['Chrome'];
-    }
+    gutil.log(gutil.colors.gray(`Running Karma server with configuration: ${configFile}`));
 
     const server = new KarmaServer(config, onDone);
     server.start();
     return deferred.promise;
   };
 
-  gulp.task('test', () => {
-    return runKarma(true);
-  });
-
-  gulp.task('tdd', () => {
-    return runKarma(false);
+  ['test', 'tdd'].forEach((mode) => {
+    gulp.task(mode, () => {
+      return runKarma(mode);
+    });
   });
 };
