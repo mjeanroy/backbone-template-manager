@@ -24,12 +24,10 @@
 
 /* eslint no-multi-spaces:0 */
 
-const moduleName = 'BackboneTemplateManager';
-const loose = true;
-const globals = {
-  underscore: '_',
-  backbone: 'Backbone',
-};
+const conf = require('./app.conf');
+const moduleName = conf.moduleName;
+const globals = conf.globals;
+const loose = conf.loose;
 
 module.exports = {
   moduleId: moduleName,

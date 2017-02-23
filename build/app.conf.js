@@ -23,14 +23,23 @@
  */
 
 const path = require('path');
-const root = __dirname;
+const rootDirectory = path.join(__dirname, '..');
 
 module.exports = {
-  root,
-  src: path.join(root, 'src'),
-  dist: path.join(root, 'dist'),
-  build: path.join(root, 'build'),
-  test: path.join(root, 'test'),
-  sample: path.join(root, 'sample'),
-  license: path.join(root, 'LICENSE'),
+  // Path configurations.
+  root: rootDirectory,
+  src: path.join(rootDirectory, 'src'),
+  dist: path.join(rootDirectory, 'dist'),
+  build: path.join(rootDirectory, 'build'),
+  test: path.join(rootDirectory, 'test'),
+  sample: path.join(rootDirectory, 'sample'),
+  license: path.join(rootDirectory, 'LICENSE'),
+
+  // Application settings.
+  moduleName: 'BackboneTemplateManager',
+  loose: true,
+  globals: {
+    underscore: '_',
+    backbone: 'Backbone',
+  },
 };

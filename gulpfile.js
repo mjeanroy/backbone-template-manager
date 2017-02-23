@@ -24,13 +24,16 @@
 
 const path = require('path');
 const fs = require('fs');
+const _ = require('lodash');
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
-const conf = require('./app.conf');
+const conf = require('./build/app.conf');
 
 // Read sub-tasks
 fs.readdirSync(conf.build).forEach((file) => {
-  require(path.join(conf.build, file))(conf);
+  if (!_.endsWith(file, '.conf.js')) {
+    require(path.join(conf.build, file))(conf);
+  }
 });
 
 gulp.task('dist', (done) => {

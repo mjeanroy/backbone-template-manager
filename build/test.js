@@ -29,7 +29,7 @@ const karma = require('karma');
 const KarmaServer = karma.Server;
 
 module.exports = (options) => {
-  const karmaConf = path.join(options.root, 'karma.conf.js');
+  const karmaConf = path.join(options.build, 'karma.conf.js');
 
   const runKarma = (singleRun) => {
     const deferred = Q.defer();

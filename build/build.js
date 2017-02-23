@@ -31,8 +31,9 @@ const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header-comment');
 
-const babelConf = require('../babel.conf');
-const rollupConf = require('../rollup.conf');
+const babelConf = require('./babel.conf');
+const rollupConf = require('./rollup.conf');
+
 const applyRollup = (config) => {
   gutil.log(gutil.colors.gray(`Rollup entry point`));
   return rollup.rollup(config).then((bundle) => {

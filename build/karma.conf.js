@@ -23,9 +23,17 @@
 */
 
 const path = require('path');
+const _ = require('lodash');
 const includePaths = require('rollup-plugin-includepaths');
 const babel = require('rollup-plugin-babel');
 const conf = require('./app.conf');
+
+const lib = (file) => ({
+  pattern: path.join(conf.root, 'node_modules', file),
+  watched: false,
+  included: true,
+  served: true,
+});
 
 module.exports = (config) => {
   config.set({
@@ -39,12 +47,14 @@ module.exports = (config) => {
 
     // Files to load in the browser.
     files: [
-      {pattern: 'node_modules/jquery/dist/jquery.js', watched: false, included: true, served: true},
-      {pattern: 'node_modules/underscore/underscore.js', watched: false, included: true, served: true},
-      {pattern: 'node_modules/backbone/backbone.js', watched: false, included: true, served: true},
-      {pattern: 'node_modules/jasmine-ajax/lib/mock-ajax.js', watched: false, included: true, served: true},
-      {pattern: 'src/**/*.js', watched: true, included: false, served: true},
-      {pattern: 'test/**/*.js', watched: true, included: true, served: true},
+      // Load mandatory libraries.
+      lib('jquery/dist/jquery.js'),
+      lib('underscore/underscore.js'),
+      lib('backbone/backbone.js'),
+      lib('jasmine-ajax/lib/mock-ajax.js'),
+
+      // Load test files.
+      path.join(conf.root, 'test', '**', '*-test.js'),
     ],
 
     // list of files to exclude
@@ -88,12 +98,12 @@ module.exports = (config) => {
     rollupPreprocessor: {
       sourceMap: 'inline',
       format: 'iife',
-      moduleName: 'Backbone.TemplateManager',
-      external: ['underscore', 'backbone'],
+      moduleName: conf.moduleName,
+      globals: conf.globals,
+      external: _.keys(conf.globals),
       plugins: [
         includePaths({
           paths: [path.join(conf.root, 'src')],
-          external: ['underscore', 'backbone'],
         }),
 
         babel({
@@ -101,11 +111,6 @@ module.exports = (config) => {
           presets: ['es2015-rollup'],
         }),
       ],
-
-      globals: {
-        underscore: '_',
-        backbone: 'Backbone',
-      },
     },
   });
 };

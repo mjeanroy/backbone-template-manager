@@ -36,8 +36,8 @@ module.exports = (options) => {
 
   gulp.task('tag', () => {
     // Read version number.
-    const pkg = fs.readFileSync(packageJson, 'utf8');
-    const version = JSON.parse(pkg).version;
+    const pkg = require(packageJson);
+    const version = pkg.version;
 
     const src = [packageJson, options.dist];
     const isDist = (file) => file.path === options.dist;
