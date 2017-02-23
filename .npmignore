@@ -3,8 +3,11 @@ node_modules/
 npm-debug.log
 
 # Ignored file & directories
-/sample/
-/test/
-/build/
-/.*
+/sample
+/src
+/test
+/build
+/.travis.yml
+/.nvmrc
+/.eslintrc
 /gulpfile.js
