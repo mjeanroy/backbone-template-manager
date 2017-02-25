@@ -63,7 +63,7 @@ const createUrl = (path, prefix, suffix) => {
  * Each template will (by default) be fetched with `GET` method.
  * @class
  */
-export class RemoteTemplateManager extends AbstractTemplateManager {
+export const RemoteTemplateManager = AbstractTemplateManager.extend({
   /**
    * Initialize template manager with options, with:
    * - prefix: default is '/templates'.
@@ -99,7 +99,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
         throw new Error(`Cannot infer JST variables from: ${toString(JST)}`);
       }
     }
-  }
+  },
 
   /**
    * Clear request cache.
@@ -107,7 +107,7 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
    */
   clear() {
     this._cache = {};
-  }
+  },
 
   /**
    * Fetch template and trigger success callback if request succed,
@@ -163,5 +163,5 @@ export class RemoteTemplateManager extends AbstractTemplateManager {
     };
 
     cache[id].then(onSuccess, onError);
-  }
-}
+  },
+});

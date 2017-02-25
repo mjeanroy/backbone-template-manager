@@ -35,7 +35,7 @@ const defaultSelectorFactory = (id) => `[data-template-id="${id}"]`;
  * will be search with a given selector.
  * @class
  */
-export class DomTemplateManager extends AbstractTemplateManager {
+export const DomTemplateManager = AbstractTemplateManager.extend({
 
   /**
    * Initialize template manager (i.e initialize empty cache).
@@ -50,7 +50,7 @@ export class DomTemplateManager extends AbstractTemplateManager {
   initialize(options) {
     this.selector = or(options.selector, defaultSelectorFactory);
     this._cache = {};
-  }
+  },
 
   /**
    * Clear DOM cache.
@@ -58,7 +58,7 @@ export class DomTemplateManager extends AbstractTemplateManager {
    */
   clear() {
     this._cache = {};
-  }
+  },
 
   /**
    * Fetch template from the dom.
@@ -95,5 +95,5 @@ export class DomTemplateManager extends AbstractTemplateManager {
         success(cache[id]);
       }
     });
-  }
-}
+  },
+});

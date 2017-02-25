@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import Backbone from 'backbone';
 import {noop, keys, after, isString, isEmpty, isArray, every, forEach, toString} from './utils';
 
 const firstEntry = (obj) => obj[keys(obj)[0]];
@@ -32,21 +33,21 @@ const firstEntry = (obj) => obj[keys(obj)[0]];
  * templates according to several strategies, such as:
  *  - Querying the DOM for templates.
  *  - Make an ajax call to fetch templates on the server.
+ *
+ * Constructor using options as arguments.
+ * The constructor will automatically called the `initialize` function
+ * with a valid options object (empty object if no options given).
+ *
+ * @param {object} options Optional options.
+ * @constructor
+ * @class
  */
-export class AbstractTemplateManager {
-  /**
-   * Constructor using options as arguments.
-   * The constructor will automatically called the `initialize` function
-   * with a valid options object (empty object if no options given).
-   *
-   * @param {object} options Optional options.
-   * @constructor
-   */
-  constructor(options) {
-    this.options = options || {};
-    this.initialize(this.options);
-  }
+export const AbstractTemplateManager = function(options) {
+  this.options = options || {};
+  this.initialize(this.options);
+};
 
+AbstractTemplateManager.prototype = {
   /**
    * Initalize function.
    *
@@ -55,7 +56,7 @@ export class AbstractTemplateManager {
    * @abstract
    */
   initialize(options) {
-  }
+  },
 
   /**
    * Fetch a template (or an array of templates).
@@ -140,7 +141,7 @@ export class AbstractTemplateManager {
         },
       });
     });
-  }
+  },
 
   /**
    * Clear template manager (i.e clear cache if appropriate).
@@ -148,7 +149,7 @@ export class AbstractTemplateManager {
    * @return {void}
    */
   clear() {
-  }
+  },
 
   /**
    * Fetch a single template.
@@ -162,5 +163,7 @@ export class AbstractTemplateManager {
    */
   _doFetch(template, options) {
     throw new Error('Method "doFetch" should be implemented');
-  }
-}
+  },
+};
+
+AbstractTemplateManager.extend = Backbone.View.extend;

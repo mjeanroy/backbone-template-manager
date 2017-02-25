@@ -44,7 +44,7 @@ const EVT_PREFIX = 'render';
  *
  * @class
  */
-export class TemplateView extends Backbone.View {
+export const TemplateView = Backbone.View.extend({
   /**
    * Template / Array of templates to load to render the view.
    * May return:
@@ -59,7 +59,7 @@ export class TemplateView extends Backbone.View {
    */
   templates() {
     return null;
-  }
+  },
 
   /**
    * Default template manager for the view: by default, delegate
@@ -70,7 +70,7 @@ export class TemplateView extends Backbone.View {
    */
   templateManager() {
     return templateManager();
-  }
+  },
 
   /**
    * Compile HTML and produce a render function: by default, delegate
@@ -82,7 +82,7 @@ export class TemplateView extends Backbone.View {
    */
   compile(html) {
     return compile(html);
-  }
+  },
 
   /**
    * Default implementation.
@@ -121,7 +121,7 @@ export class TemplateView extends Backbone.View {
     }
 
     return results;
-  }
+  },
 
   /**
    * Default render function:
@@ -160,7 +160,7 @@ export class TemplateView extends Backbone.View {
 
       return this;
     }
-  }
+  },
 
   /**
    * Render templates into the view.
@@ -177,7 +177,7 @@ export class TemplateView extends Backbone.View {
     const output = this._toHTML(main, partials);
     this._setHtml(output);
     return this;
-  }
+  },
 
   /**
    * Produce HTML output from main template and optional partials.
@@ -191,7 +191,7 @@ export class TemplateView extends Backbone.View {
   _toHTML(main, partials) {
     const html = this.compile(main);
     return html(this.toJSON(), partials);
-  }
+  },
 
   /**
    * Update view content with new html output.
@@ -204,8 +204,5 @@ export class TemplateView extends Backbone.View {
   _setHtml(output) {
     this.$el.html(output);
     return this;
-  }
-}
-
-// Add `extend` method from Backbone.
-TemplateView.extend = Backbone.View.extend;
+  },
+});
