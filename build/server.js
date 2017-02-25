@@ -33,7 +33,6 @@ const includePaths = require('rollup-plugin-includepaths');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const babel = require('babel-core');
-const babelConf = require('./babel.conf');
 
 module.exports = (options) => {
   const bundle = (id) => {
@@ -55,7 +54,7 @@ module.exports = (options) => {
 
         gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
         const dest = path.join(options.sample, id, '.tmp', 'bundle.js');
-        const es5 = babel.transform(result.code, babelConf);
+        const es5 = babel.transform(result.code, require('./babel.conf'));
 
         gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
         fs.writeFileSync(dest, es5.code, 'utf-8');

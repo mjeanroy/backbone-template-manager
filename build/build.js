@@ -30,8 +30,6 @@ const rollup = require('rollup');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header-comment');
-
-const babelConf = require('./babel.conf');
 const rollupConf = require('./rollup.conf');
 
 const applyRollup = (config) => {
@@ -48,7 +46,7 @@ module.exports = (options) => {
       .then((src) => {
         gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
         return gulp.src(src)
-          .pipe(babel(babelConf))
+          .pipe(babel())
           .pipe(header({file: options.license}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
           .pipe(uglify())
