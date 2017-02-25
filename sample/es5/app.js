@@ -73,7 +73,7 @@
     renderCollection: function() {
       var $container = this.$('.js-frameworks');
       this.collection.forEach(function(model) {
-        $container.append(new FrameworkView({model}).$el);
+        $container.append(new FrameworkView({model: model}).$el);
       });
     },
 
