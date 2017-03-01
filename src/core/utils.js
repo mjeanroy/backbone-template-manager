@@ -44,6 +44,22 @@ export const clone = _.clone;
 
 export const or = (val, def) => isUndefined(val) ? def : val;
 
+/**
+ * Trim a string, using native `String.prototype.trim` if available or a regexp
+ * as a fallback.
+ * @param {string} val String value to trim.
+ * @return {string} Trimmed value.
+ */
+export const trim = (val) => {
+  if (!val || !isString(val)) {
+    return val;
+  }
+
+  return String.prototype.trim ?
+    String.prototype.trim.call(val) :
+    val.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+};
+
 export const toString = (val) => {
   if (isNull(val) || isUndefined(val)) {
     return String(val);

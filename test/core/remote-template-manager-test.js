@@ -24,10 +24,14 @@
 
 import Backbone from 'backbone';
 import {RemoteTemplateManager} from 'core/remote-template-manager';
+import {deleteProp} from '../utils/delete';
 
 describe('RemoteTemplateManager', () => {
+  beforeEach(() => jasmine.clock().install());
+  afterEach(() => jasmine.clock().uninstall());
+
   afterEach(() => {
-    delete window.JST;
+    deleteProp(window, 'JST');
   });
 
   it('should create template manager with default options', () => {
@@ -124,9 +128,6 @@ describe('RemoteTemplateManager', () => {
 
     beforeEach(() => jasmine.Ajax.install());
     afterEach(() => jasmine.Ajax.uninstall());
-
-    beforeEach(() => jasmine.clock().install());
-    afterEach(() => jasmine.clock().uninstall());
 
     it('should fail to fetch non string template', () => {
       const apply = (val) => {

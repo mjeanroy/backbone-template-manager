@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {has, isEmpty, or} from './utils';
+import {has, isEmpty, or, trim} from './utils';
 import {AbstractTemplateManager} from './abstract-template-manager';
 
 // Default selector factory, used if no factory is specified during
@@ -91,7 +91,7 @@ export const DomTemplateManager = AbstractTemplateManager.extend({
         error({data: `Found multiple templates for selector: ${selector}`});
       } else {
         // Put in the cache for next resolution.
-        cache[id] = node.html();
+        cache[id] = trim(node.html());
         success(cache[id]);
       }
     });

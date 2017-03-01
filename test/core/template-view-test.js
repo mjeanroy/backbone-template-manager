@@ -182,9 +182,13 @@ describe('TemplateView', () => {
       jasmine.clock().tick();
 
       expect(_.template).toHaveBeenCalledWith(template);
-      expect(view.$el.html()).toEqual('<div>Hello John Doe</div>');
       expect(view.trigger).toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+
+      const children = view.$el.children();
+      expect(children.length).toBe(1);
+      expect(children[0].tagName).toBe('DIV');
+      expect(children[0].innerHTML).toBe('Hello John Doe');
     });
 
     it('should not render single template with failure', () => {
