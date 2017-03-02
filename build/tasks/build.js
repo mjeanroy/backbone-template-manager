@@ -32,7 +32,9 @@ const uglify = require('gulp-uglify');
 const header = require('gulp-header-comment');
 const es3ify = require('gulp-es3ify');
 const strip = require('gulp-strip-banner');
-const rollupConf = require('./rollup.conf');
+
+const rollupConf = require('../rollup.conf');
+const uglifyConf = require('../uglify.conf');
 
 const applyRollup = (config) => {
   gutil.log(gutil.colors.gray(`Rollup entry point`));
@@ -53,11 +55,7 @@ module.exports = (options) => {
           .pipe(es3ify())
           .pipe(header({file: options.license}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
-          .pipe(uglify({
-            output: {screw_ie8: false},
-            mangle: {screw_ie8: false},
-            compress: {screw_ie8: false},
-          }))
+          .pipe(uglify(uglifyConf))
           .pipe(rename({extname: '.min.js'}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')));
       });
