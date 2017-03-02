@@ -53,7 +53,11 @@ module.exports = (options) => {
           .pipe(es3ify())
           .pipe(header({file: options.license}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')))
-          .pipe(uglify())
+          .pipe(uglify({
+            output: {screw_ie8: false},
+            mangle: {screw_ie8: false},
+            compress: {screw_ie8: false},
+          }))
           .pipe(rename({extname: '.min.js'}))
           .pipe(gulp.dest(path.join(options.dist, 'es5')));
       });
