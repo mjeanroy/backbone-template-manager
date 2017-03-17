@@ -1,6 +1,6 @@
 {
   "name": "backbone-template-manager",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Simple template manager for Backbone",
   "main": "dist/es5/backbone-template-manager.js",
   "module": "dist/backbone-template-manager.js",
