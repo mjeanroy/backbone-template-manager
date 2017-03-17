@@ -160,12 +160,24 @@ describe('TemplateView', () => {
     it('should render a single template', () => {
       view.model = new Backbone.Model({id: 1, name: 'John Doe'});
       view.templates = 'foo';
+
+      spyOn(view, 'onBeforeRender').and.callThrough();
+      spyOn(view, 'onRender').and.callThrough();
+      spyOn(view, 'onRenderError').and.callThrough();
+      spyOn(view, 'onRendered').and.callThrough();
+
       view.render();
+
+      expect(view.onBeforeRender).toHaveBeenCalled();
+      expect(view.onRender).not.toHaveBeenCalled();
+      expect(view.onRenderError).not.toHaveBeenCalled();
+      expect(view.onRendered).not.toHaveBeenCalled();
 
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
       expect(_.template).not.toHaveBeenCalled();
+
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
         error: jasmine.any(Function),
@@ -180,6 +192,10 @@ describe('TemplateView', () => {
       });
 
       jasmine.clock().tick();
+
+      expect(view.onRender).toHaveBeenCalled();
+      expect(view.onRenderError).not.toHaveBeenCalled();
+      expect(view.onRendered).toHaveBeenCalled();
 
       expect(_.template).toHaveBeenCalledWith(template);
       expect(view.trigger).toHaveBeenCalledWith('render:success');
@@ -196,12 +212,24 @@ describe('TemplateView', () => {
 
       view.model = new Backbone.Model({id: 1, name: 'John Doe'});
       view.templates = 'foo';
+
+      spyOn(view, 'onBeforeRender').and.callThrough();
+      spyOn(view, 'onRender').and.callThrough();
+      spyOn(view, 'onRenderError').and.callThrough();
+      spyOn(view, 'onRendered').and.callThrough();
+
       view.render();
+
+      expect(view.onBeforeRender).toHaveBeenCalled();
+      expect(view.onRender).not.toHaveBeenCalled();
+      expect(view.onRenderError).not.toHaveBeenCalled();
+      expect(view.onRendered).not.toHaveBeenCalled();
 
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
       expect(_.template).not.toHaveBeenCalled();
+
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
         success: jasmine.any(Function),
         error: jasmine.any(Function),
@@ -218,6 +246,11 @@ describe('TemplateView', () => {
 
       expect(_.template).not.toHaveBeenCalled();
       expect(view.$el.html()).toEqual('');
+
+      expect(view.onRenderError).toHaveBeenCalled();
+      expect(view.onRender).not.toHaveBeenCalled();
+      expect(view.onRendered).toHaveBeenCalled();
+
       expect(view.trigger).toHaveBeenCalledWith('render:error');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
     });

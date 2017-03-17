@@ -139,6 +139,7 @@ export const TemplateView = Backbone.View.extend({
     if (!isEmpty(templates)) {
       // Trigger event
       this.trigger(`${EVT_PREFIX}:loading`);
+      this.onBeforeRender();
 
       // Get view's template manager.
       // Use _.result if template manager is a static variable defined
@@ -150,16 +151,54 @@ export const TemplateView = Backbone.View.extend({
         success: (results) => {
           this._renderTemplates(templates, results);
           this.trigger(`${EVT_PREFIX}:success`);
+          this.onRender();
+          this.onRendered();
         },
 
-        error: () => {
+        error: (err) => {
           this.trigger(`${EVT_PREFIX}:error`);
-          // Should we throw an exception?
+          this.onRenderError();
+          this.onRendered(err);
         },
       });
 
       return this;
     }
+  },
+
+  /**
+   * Hook triggered when is going to be rendered (template has not been fetched yet).
+   * Default is a no-op.
+   * @return {void}
+   */
+  onBeforeRender() {
+  },
+
+  /**
+   * Hook triggered when view is rendered (template has been fetched and view has
+   * been rendered with view-model).
+   * Default is a no-op.
+   * @return {void}
+   */
+  onRender() {
+  },
+
+  /**
+   * Hook triggered when view is rendered (template has been fetched and view has
+   * been rendered with view-model).
+   * Default is a no-op.
+   * @return {void}
+   */
+  onRenderError() {
+  },
+
+  /**
+   * Hook triggered when view rendering is done (success or error).
+   * Default is a no-op.
+   * @param {Object} err The error, if an error occurred during rendering.
+   * @return {void}
+   */
+  onRendered(err) {
   },
 
   /**
