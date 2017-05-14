@@ -1,5 +1,7 @@
 ### Backbone Template-Manager
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mjeanroy/backbone-template-manager.svg)](https://greenkeeper.io/)
+
 Simple template manager for your Backbone application.
 This library allows you to:
 
