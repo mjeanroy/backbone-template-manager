@@ -1,6 +1,9 @@
 ### Backbone Template-Manager
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/mjeanroy/backbone-template-manager.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/mjeanroy/backbone-template-manager.svg?branch=master)](https://travis-ci.org/mjeanroy/backbone-template-manager)
+[![Npm version](https://badge.fury.io/js/backbone-template-manager.svg)](https://badge.fury.io/js/backbone-template-manager)
+[![Bower version](https://badge.fury.io/bo/backbone-template-manager.svg)](https://badge.fury.io/bo/backbone-template-manager)
 
 Simple template manager for your Backbone application.
 This library allows you to:
