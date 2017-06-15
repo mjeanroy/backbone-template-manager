@@ -104,7 +104,7 @@
     "rollup-plugin-includepaths": "0.2.2",
     "rollup-plugin-license": "0.4.0",
     "rollup-plugin-node-resolve": "3.0.0",
-    "rollup-plugin-strip-banner": "0.1.0",
+    "rollup-plugin-strip-banner": "0.2.0",
     "run-sequence": "1.2.2",
     "underscore": ">=1.6.0"
   }
