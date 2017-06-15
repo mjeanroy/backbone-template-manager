@@ -22,16 +22,16 @@
 * SOFTWARE.
 */
 
-const SCREW_IE8 = false;
+const SUPPRORT_IE8 = true;
 
 module.exports = {
   output: {
-    screw_ie8: SCREW_IE8,
+    ie8: SUPPRORT_IE8,
   },
   mangle: {
-    screw_ie8: SCREW_IE8,
+    ie8: SUPPRORT_IE8,
   },
   compress: {
-    screw_ie8: SCREW_IE8,
+    ie8: SUPPRORT_IE8,
   },
 };
