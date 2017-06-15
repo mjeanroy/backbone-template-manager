@@ -31,7 +31,7 @@
 export function deleteProp(o, name) {
   try {
     delete o[name];
-  } catch(e) {
+  } catch (e) {
     o[name] = undefined;
   }
 }
