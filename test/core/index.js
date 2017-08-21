@@ -22,35 +22,9 @@
  * SOFTWARE.
  */
 
-import {templateManager, overrideTemplateManager} from 'core/template-manager';
-import {RemoteTemplateManager} from 'core/remote-template-manager';
-
-describe('templateManager', () => {
-  let defaultTemplateManager;
-
-  beforeEach(() => {
-    defaultTemplateManager = templateManager();
-  });
-
-  afterEach(() => {
-    overrideTemplateManager(defaultTemplateManager);
-  });
-
-  it('should have a default template manager', () => {
-    const currentTemplateManager = templateManager();
-    expect(currentTemplateManager).toBeDefined();
-    expect(currentTemplateManager instanceof RemoteTemplateManager).toBeTruthy();
-  });
-
-  it('should override template manager', () => {
-    const fakeTemplateManager = jasmine.createSpyObj('fakeTemplateManager', ['fetch', 'clear']);
-    const currentTemplateManager = templateManager();
-
-    spyOn(currentTemplateManager, 'clear').and.callThrough();
-
-    overrideTemplateManager(fakeTemplateManager);
-
-    expect(templateManager()).toBe(fakeTemplateManager);
-    expect(currentTemplateManager.clear).toHaveBeenCalled();
-  });
-});
+import './dom-template-manager-test';
+import './remote-template-manager-test';
+import './template-manager-test';
+import './template-view-test';
+import './utils-test';
+import './compile-test';

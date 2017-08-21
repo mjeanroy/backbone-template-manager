@@ -50,7 +50,7 @@ module.exports = (config) => ({
     lib('jasmine-ajax/lib/mock-ajax.js'),
 
     // Load test files.
-    path.join(conf.root, 'test', '**', '*-test.js'),
+    path.join(conf.root, 'test', 'index.js'),
   ],
 
   // list of files to exclude
@@ -91,9 +91,9 @@ module.exports = (config) => ({
 
   // Rollup Configuration
   rollupPreprocessor: {
-    sourceMap: 'inline',
+    sourcemap: 'inline',
     format: 'iife',
-    moduleName: conf.moduleName,
+    name: conf.moduleName,
     globals: conf.globals,
     external: _.keys(conf.globals),
     plugins: [

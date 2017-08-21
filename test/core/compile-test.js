@@ -30,6 +30,10 @@ describe('compile', () => {
     spyOn(_, 'template').and.callThrough();
   });
 
+  afterEach(() => {
+    overrideCompile((html) => _.template(html));
+  });
+
   it('should compile HTML using _.template', () => {
     const template = '<div><%= name %></div>';
     const renderFn = compile(template);
