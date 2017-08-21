@@ -40,7 +40,7 @@ const applyRollup = (config) => {
   gutil.log(gutil.colors.gray(`Rollup entry point`));
   return rollup.rollup(config).then((bundle) => {
     gutil.log(gutil.colors.gray(`Writing rollup bundle`));
-    return bundle.write(config).then(() => config.dest);
+    return bundle.write(config.output).then(() => config.output.file);
   });
 };
 

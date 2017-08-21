@@ -29,11 +29,15 @@ const license = require('rollup-plugin-license');
 const conf = require('./app.conf');
 
 module.exports = {
-  entry: path.join(conf.src, 'index.js'),
-  dest: path.join(conf.dist, 'backbone-template-manager.js'),
-  globals: conf.globals,
+  input: path.join(conf.src, 'index.js'),
+  output: {
+    file: path.join(conf.dist, 'backbone-template-manager.js'),
+    format: 'es',
+    globals: conf.globals,
+  },
+
   external: _.keys(conf.globals),
-  format: 'es',
+
   plugins: [
     stripBanner(),
     license({
