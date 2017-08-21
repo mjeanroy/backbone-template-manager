@@ -23,7 +23,7 @@
  */
 
 import _ from 'underscore';
-import {compile, overrideCompile} from 'core/compile';
+import {compile, overrideCompile} from '../../src/core/compile';
 
 describe('compile', () => {
   beforeEach(() => {

@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {RemoteTemplateManager} from 'core/remote-template-manager';
+import {RemoteTemplateManager} from '../../src/core/remote-template-manager';
 import {deleteProp} from '../utils/delete';
 
 describe('RemoteTemplateManager', () => {

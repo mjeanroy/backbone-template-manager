@@ -24,7 +24,6 @@
 
 const path = require('path');
 const _ = require('lodash');
-const includePaths = require('rollup-plugin-includepaths');
 const conf = require('./app.conf');
 const lib = (file) => ({
   pattern: path.join(conf.root, 'node_modules', file),
@@ -96,10 +95,5 @@ module.exports = (config) => ({
     name: conf.moduleName,
     globals: conf.globals,
     external: _.keys(conf.globals),
-    plugins: [
-      includePaths({
-        paths: [path.join(conf.root, 'src')],
-      }),
-    ],
   },
 });

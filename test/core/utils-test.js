@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {trim} from 'core/utils';
+import {trim} from '../../src/core/utils';
 
 describe('utils', () => {
   it('should trim string value', () => {

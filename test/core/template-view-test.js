@@ -24,8 +24,8 @@
 
 import _ from 'underscore';
 import Backbone from 'backbone';
-import {templateManager} from 'core/template-manager';
-import {TemplateView} from 'core/template-view';
+import {templateManager} from '../../src/core/template-manager';
+import {TemplateView} from '../../src/core/template-view';
 
 describe('TemplateView', () => {
   it('should create view instance', () => {

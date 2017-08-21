@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import {templateManager, overrideTemplateManager} from 'core/template-manager';
-import {RemoteTemplateManager} from 'core/remote-template-manager';
+import {templateManager, overrideTemplateManager} from '../../src/core/template-manager';
+import {RemoteTemplateManager} from '../../src/core/remote-template-manager';
 
 describe('templateManager', () => {
   let defaultTemplateManager;

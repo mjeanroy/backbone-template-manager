@@ -28,10 +28,12 @@ const gulp = require('gulp');
 const gutil = require('gulp-util');
 const Q = require('q');
 const gls = require('gulp-live-server');
-const rollup = require('rollup').rollup;
-const includePaths = require('rollup-plugin-includepaths');
+
+const rollup = require('rollup');
+const alias = require('rollup-plugin-alias');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
+
 const babel = require('babel-core');
 const babelConf = require('../babel.conf');
 
@@ -39,26 +41,36 @@ module.exports = (options) => {
   const bundle = (id) => {
     gutil.log(gutil.colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
+      // Keep the `entry` option for `rollup-plugin-commonjs`
       entry: path.join(options.sample, id, 'app.js'),
+
+      input: path.join(options.sample, id, 'app.js'),
       format: 'iife',
       plugins: [
-        includePaths({paths: [options.dist]}),
-        nodeResolve({jsnext: true, main: true}),
+        alias({
+          'backbone-template-manager': path.join(options.dist, 'backbone-template-manager.js'),
+        }),
+
+        nodeResolve({
+          jsnext: true,
+          main: true,
+        }),
+
         commonjs(),
       ],
     };
 
-    return rollup(rollupConf)
+    return rollup.rollup(rollupConf)
       .then((bundle) => {
         gutil.log(gutil.colors.gray(`[${id}] Generating ES6 bundle`));
-        const result = bundle.generate(rollupConf);
+        bundle.generate(rollupConf).then((result) => {
+          gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
+          const dest = path.join(options.sample, id, '.tmp', 'bundle.js');
+          const es5 = babel.transform(result.code, babelConf);
 
-        gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
-        const dest = path.join(options.sample, id, '.tmp', 'bundle.js');
-        const es5 = babel.transform(result.code, babelConf);
-
-        gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
-        fs.writeFileSync(dest, es5.code, 'utf-8');
+          gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
+          fs.writeFileSync(dest, es5.code, 'utf-8');
+        });
       })
       .catch((err) => {
         gutil.log(gutil.colors.red(err));

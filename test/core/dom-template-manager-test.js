@@ -24,7 +24,7 @@
 
 import _ from 'underscore';
 import Backbone from 'backbone';
-import {DomTemplateManager} from 'core/dom-template-manager';
+import {DomTemplateManager} from '../../src/core/dom-template-manager';
 import {createTemplate} from '../utils/create-script-template';
 
 describe('DomTemplateManager', () => {
