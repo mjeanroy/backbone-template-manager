@@ -41,9 +41,6 @@ module.exports = (options) => {
   const bundle = (id) => {
     gutil.log(gutil.colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
-      // Keep the `entry` option for `rollup-plugin-commonjs`
-      entry: path.join(options.sample, id, 'app.js'),
-
       input: path.join(options.sample, id, 'app.js'),
       format: 'iife',
       plugins: [
