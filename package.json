@@ -85,7 +85,7 @@
     "jasmine-core": "2.8.0",
     "jquery": "1.12.4",
     "karma": "1.3.0",
-    "karma-babel-preprocessor": "6.0.1",
+    "karma-babel-preprocessor": "7.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-firefox-launcher": "1.0.1",
     "karma-ie-launcher": "1.0.0",
