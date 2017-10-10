@@ -254,5 +254,72 @@ describe('TemplateView', () => {
       expect(view.trigger).toHaveBeenCalledWith('render:error');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
     });
+
+    it('should render a single template using _triggerBeforeRender method', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      spyOn(view, '_triggerBeforeRender').and.callThrough();
+
+      view.render();
+
+      expect(view._triggerBeforeRender).toHaveBeenCalled();
+    });
+
+    it('should render a single template using _triggerRenderSuccess method', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      spyOn(view, '_triggerRenderSuccess').and.callThrough();
+      spyOn(view, '_triggerRenderError').and.callThrough();
+
+      view.render();
+
+      expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
+      expect(view._triggerRenderError).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      const template = '<div>Hello <%= model.name %></div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(view._triggerRenderSuccess).toHaveBeenCalled();
+      expect(view._triggerRenderError).not.toHaveBeenCalled();
+    });
+
+    it('should render a single template using _triggerRenderError method', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      spyOn(view, '_triggerRenderSuccess').and.callThrough();
+      spyOn(view, '_triggerRenderError').and.callThrough();
+
+      view.render();
+
+      expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
+      expect(view._triggerRenderError).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 404,
+      });
+
+      jasmine.clock().tick();
+
+      expect(view._triggerRenderError).toHaveBeenCalled();
+      expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
+    });
   });
 });

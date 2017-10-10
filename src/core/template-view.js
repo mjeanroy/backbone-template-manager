@@ -130,16 +130,16 @@ export const TemplateView = Backbone.View.extend({
    *  2. Fetch templates.
    *  3. Compile templates.
    *  4. Produce data model (calling `toJSON`).
-   *  4. Render view with templates.
+   *  5. Render view with templates.
+   *  6. Trigger events and callbacks (success or error).
    *
    * @return {TemplateView} Current view (for chaining).
    */
   render() {
     const templates = result(this, 'templates');
     if (!isEmpty(templates)) {
-      // Trigger event
-      this.trigger(`${EVT_PREFIX}:loading`);
-      this.onBeforeRender();
+      // Trigger event.
+      this._triggerBeforeRender();
 
       // Get view's template manager.
       // Use _.result if template manager is a static variable defined
@@ -150,15 +150,11 @@ export const TemplateView = Backbone.View.extend({
       tmplMngr.fetch(templates, {
         success: (results) => {
           this._renderTemplates(templates, results);
-          this.trigger(`${EVT_PREFIX}:success`);
-          this.onRender();
-          this.onRendered();
+          this._triggerRenderSuccess();
         },
 
         error: (err) => {
-          this.trigger(`${EVT_PREFIX}:error`);
-          this.onRenderError();
-          this.onRendered(err);
+          this._triggerRenderError(err);
         },
       });
 
@@ -199,6 +195,36 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   onRendered(err) {
+  },
+
+  /**
+   * Trigger events and callbacks that notify of view rendering.
+   * @return {void}
+   */
+  _triggerBeforeRender() {
+    this.trigger(`${EVT_PREFIX}:loading`);
+    this.onBeforeRender();
+  },
+
+  /**
+   * Trigger events and callback that notify of view rendering (in success).
+   * @return {void}
+   */
+  _triggerRenderSuccess() {
+    this.trigger(`${EVT_PREFIX}:success`);
+    this.onRender();
+    this.onRendered();
+  },
+
+  /**
+   * Trigger events and callback that notify of view rendering (in error).
+   * @param {Object} err Optional error details.
+   * @return {void}
+   */
+  _triggerRenderError(err = null) {
+    this.trigger(`${EVT_PREFIX}:error`);
+    this.onRenderError();
+    this.onRendered(err);
   },
 
   /**

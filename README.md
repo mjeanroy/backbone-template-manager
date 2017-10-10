@@ -63,10 +63,16 @@ Note that following events will be triggered:
 
 The `render` method comes with a default implementation:
 
-- Get the default template manager of the view (basically, calls `templateManager` method view).
-- Download the template using its id (what happens here precisely depends on the template manager, more details later).
-- Calls the `toJSON` method from the view: by default return an object containing a `model` property (with `model.toJSON` as the value) and/or a `collection` property (result of `collection.toJSON` method).
-- Render the view using default compile function (use `_.template` under the hood).
+- Get the templates to fetch.
+- Without templates, the `render` method do nothing).
+- Otherwise:
+  - Trigger `render:loading` event and execute the view `onBeforeRender` method.
+  - Get the default template manager of the view (basically, calls `templateManager` method view).
+  - Download the template using its id (what happens here precisely depends on the template manager, more details later).
+  - Calls the `toJSON` method from the view: by default return an object containing a `model` property (with `model.toJSON` as the value) and/or a `collection` property (result of `collection.toJSON` method).
+  - Render the view using default compile function (use `_.template` under the hood).
+  - Trigger `render:success` event and execute view `onRendered` and `onRender` methods without errors.
+  - Trigger `render:error` event and execute view `onRendered` and `onRenderError` if something bad happened.
 
 **How templates are downloaded?**
 
