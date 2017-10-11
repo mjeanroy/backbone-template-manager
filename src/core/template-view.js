@@ -26,7 +26,7 @@ import Backbone from 'backbone';
 import {defaults, result, isEmpty, isArray} from './utils';
 import {compile} from './compile';
 import {templateManager} from './template-manager';
-import {VIEW_RENDER_LOADING, VIEW_RENDER_SUCCESS, VIEW_RENDER_ERROR} from './view-events';
+import {VIEW_RENDER_LOADING, VIEW_RENDER_SUCCESS, VIEW_RENDER_ERROR, VIEW_RENDER_DONE} from './view-events';
 
 /**
  * Implementation of `Backbone.View` that use a template manager to fetch templates
@@ -212,7 +212,7 @@ export const TemplateView = Backbone.View.extend({
   _triggerRenderSuccess() {
     this.trigger(VIEW_RENDER_SUCCESS);
     this.onRender();
-    this.onRendered();
+    this._triggerRenderDone();
   },
 
   /**
@@ -221,8 +221,18 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   _triggerRenderError(err = null) {
-    this.trigger(VIEW_RENDER_ERROR);
+    this.trigger(VIEW_RENDER_ERROR, err);
     this.onRenderError();
+    this._triggerRenderDone(err);
+  },
+
+  /**
+   * Trigger events and callback that notify that view rendering is done.
+   * @param {Object} err Optional data to send in event (when view has not been rendered in success).
+   * @return {void}
+   */
+  _triggerRenderDone(err = null) {
+    this.trigger(VIEW_RENDER_DONE, err);
     this.onRendered(err);
   },
 

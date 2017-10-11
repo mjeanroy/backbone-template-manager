@@ -176,6 +176,7 @@ describe('TemplateView', () => {
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:done');
       expect(_.template).not.toHaveBeenCalled();
 
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
@@ -200,6 +201,7 @@ describe('TemplateView', () => {
       expect(_.template).toHaveBeenCalledWith(template);
       expect(view.trigger).toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).toHaveBeenCalledWith('render:done', null);
 
       const children = view.$el.children();
       expect(children.length).toBe(1);
@@ -228,6 +230,7 @@ describe('TemplateView', () => {
       expect(view.trigger).toHaveBeenCalledWith('render:loading');
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:done');
       expect(_.template).not.toHaveBeenCalled();
 
       expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
@@ -251,7 +254,8 @@ describe('TemplateView', () => {
       expect(view.onRender).not.toHaveBeenCalled();
       expect(view.onRendered).toHaveBeenCalled();
 
-      expect(view.trigger).toHaveBeenCalledWith('render:error');
+      expect(view.trigger).toHaveBeenCalledWith('render:error', jasmine.anything());
+      expect(view.trigger).toHaveBeenCalledWith('render:done', jasmine.anything());
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
     });
 
@@ -320,6 +324,56 @@ describe('TemplateView', () => {
 
       expect(view._triggerRenderError).toHaveBeenCalled();
       expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
+    });
+
+    it('should render a single template in error using _triggerRenderDone method', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      spyOn(view, '_triggerRenderDone').and.callThrough();
+
+      view.render();
+
+      expect(view._triggerRenderDone).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 404,
+      });
+
+      jasmine.clock().tick();
+
+      expect(view._triggerRenderDone).toHaveBeenCalled();
+    });
+
+    it('should render a single template in success using _triggerRenderDone method', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      spyOn(view, '_triggerRenderDone').and.callThrough();
+
+      view.render();
+
+      expect(view._triggerRenderDone).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      const template = '<div>Hello <%= model.name %></div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(view._triggerRenderDone).toHaveBeenCalled();
     });
   });
 });
