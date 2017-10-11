@@ -22,5 +22,16 @@
  * SOFTWARE.
  */
 
-import './core/index';
-import './index-test';
+import {
+  VIEW_RENDER_LOADING,
+  VIEW_RENDER_SUCCESS,
+  VIEW_RENDER_ERROR,
+} from '../src/index';
+
+describe('index', () => {
+  it('should export view events', () => {
+    expect(VIEW_RENDER_LOADING).toBe('render:loading');
+    expect(VIEW_RENDER_SUCCESS).toBe('render:success');
+    expect(VIEW_RENDER_ERROR).toBe('render:error');
+  });
+});

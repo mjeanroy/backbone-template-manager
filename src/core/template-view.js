@@ -26,8 +26,7 @@ import Backbone from 'backbone';
 import {defaults, result, isEmpty, isArray} from './utils';
 import {compile} from './compile';
 import {templateManager} from './template-manager';
-
-const EVT_PREFIX = 'render';
+import {VIEW_RENDER_LOADING, VIEW_RENDER_SUCCESS, VIEW_RENDER_ERROR} from './view-events';
 
 /**
  * Implementation of `Backbone.View` that use a template manager to fetch templates
@@ -202,7 +201,7 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   _triggerBeforeRender() {
-    this.trigger(`${EVT_PREFIX}:loading`);
+    this.trigger(VIEW_RENDER_LOADING);
     this.onBeforeRender();
   },
 
@@ -211,7 +210,7 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   _triggerRenderSuccess() {
-    this.trigger(`${EVT_PREFIX}:success`);
+    this.trigger(VIEW_RENDER_SUCCESS);
     this.onRender();
     this.onRendered();
   },
@@ -222,7 +221,7 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   _triggerRenderError(err = null) {
-    this.trigger(`${EVT_PREFIX}:error`);
+    this.trigger(VIEW_RENDER_ERROR);
     this.onRenderError();
     this.onRendered(err);
   },

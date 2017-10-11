@@ -22,5 +22,22 @@
  * SOFTWARE.
  */
 
-import './core/index';
-import './index-test';
+const PREFIX = `render`;
+
+/**
+ * The view `render:loading` event.
+ * @type {string}
+ */
+export const VIEW_RENDER_LOADING = `${PREFIX}:loading`;
+
+/**
+ * The view `render:success` event.
+ * @type {string}
+ */
+export const VIEW_RENDER_SUCCESS = `${PREFIX}:success`;
+
+/**
+ * The view `render:error` event.
+ * @type {string}
+ */
+export const VIEW_RENDER_ERROR = `${PREFIX}:error`;
