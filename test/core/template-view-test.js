@@ -77,6 +77,8 @@ describe('TemplateView', () => {
     beforeEach(() => jasmine.clock().install());
     afterEach(() => jasmine.clock().uninstall());
 
+    afterEach(() => templateManager().clear());
+
     it('should get empty json', () => {
       expect(view.toJSON()).toEqual({});
     });
@@ -155,6 +157,127 @@ describe('TemplateView', () => {
       const templateManager = view.templateManager();
       expect(templateManager).toBeDefined();
       expect(templateManager).toBe(tmplMngr);
+    });
+
+    it('should fetch single template', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      view.fetchTemplates({success, error});
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      const template = '<div>Hello <%= model.name %></div>';
+      request.respondWith({
+        status: 200,
+        responseText: template,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(success).toHaveBeenCalledWith(template);
+      expect(error).not.toHaveBeenCalled();
+    });
+
+    it('should fetch and trigger success without templates', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = [];
+
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      view.fetchTemplates({success, error});
+
+      expect(success).toHaveBeenCalledWith(null);
+      expect(error).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).not.toHaveBeenCalled();
+    });
+
+    it('should fetch array of templates', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = [
+        'foo',
+        'bar',
+      ];
+
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      view.fetchTemplates({success, error});
+
+      expect(jasmine.Ajax.requests.count()).toBe(2);
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const template1 = '<div>Hello <%= model.name %></div>';
+      const template2 = '<div>Bye <%= model.name %></div>';
+      jasmine.Ajax.requests.at(0).respondWith({
+        status: 200,
+        responseText: template1,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+
+      jasmine.Ajax.requests.at(1).respondWith({
+        status: 200,
+        responseText: template2,
+        contentType: 'text/html',
+      });
+
+      expect(success).toHaveBeenCalledWith({
+        foo: template1,
+        bar: template2,
+      });
+
+      expect(error).not.toHaveBeenCalled();
+    });
+
+    it('should fetch single template and fail', () => {
+      view.model = new Backbone.Model({id: 1, name: 'John Doe'});
+      view.templates = 'foo';
+
+      const success = jasmine.createSpy('success');
+      const error = jasmine.createSpy('error');
+
+      view.fetchTemplates({success, error});
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).not.toHaveBeenCalled();
+      expect(tmplMngr.fetch).toHaveBeenCalledWith('foo', {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const request = jasmine.Ajax.requests.mostRecent();
+      const template = '<div>Hello <%= model.name %></div>';
+      request.respondWith({
+        status: 404,
+        responseText: template,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(success).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalled();
     });
 
     it('should render a single template', () => {

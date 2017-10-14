@@ -23,7 +23,7 @@
  */
 
 import Backbone from 'backbone';
-import {defaults, result, isEmpty, isArray} from './utils';
+import {defaults, result, isEmpty, isArray, noop} from './utils';
 import {compile} from './compile';
 import {templateManager} from './template-manager';
 import {VIEW_RENDER_LOADING, VIEW_RENDER_SUCCESS, VIEW_RENDER_ERROR, VIEW_RENDER_DONE} from './view-events';
@@ -136,29 +136,25 @@ export const TemplateView = Backbone.View.extend({
    */
   render() {
     const templates = result(this, 'templates');
-    if (!isEmpty(templates)) {
-      // Trigger event.
-      this._triggerBeforeRender();
-
-      // Get view's template manager.
-      // Use _.result if template manager is a static variable defined
-      // on the class.
-      const tmplMngr = result(this, 'templateManager');
-
-      // Fetch templates and render view on success.
-      tmplMngr.fetch(templates, {
-        success: (results) => {
+    const options = {
+      success: (results) => {
+        // View may not have any templates to render.
+        if (results) {
           this._renderTemplates(templates, results);
-          this._triggerRenderSuccess();
-        },
+        }
 
-        error: (err) => {
-          this._triggerRenderError(err);
-        },
-      });
+        this._triggerRenderSuccess();
+      },
 
-      return this;
-    }
+      error: (err) => {
+        this._triggerRenderError(err);
+      },
+    };
+
+    this._triggerBeforeRender();
+    this._doFetchTemplates(options, templates);
+
+    return this;
   },
 
   /**
@@ -194,6 +190,46 @@ export const TemplateView = Backbone.View.extend({
    * @return {void}
    */
   onRendered(err) {
+  },
+
+  /**
+   * Fetch templates.
+   * The `success` or `error` callbacks may be given in the `options`
+   * parameter.
+   *
+   * @param {Object} options Options, may contain `success` or `error` callbacks.
+   * @return {void}
+   */
+  fetchTemplates(options) {
+    this._doFetchTemplates(options);
+  },
+
+  /**
+   * Fetch templates.
+   * The `success` or `error` callbacks may be given in the `options`
+   * parameter.
+   *
+   * @param {Object} options Options, may contain `success` or `error` callbacks.
+   * @param {*} templates Templates to fetch.
+   * @return {void}
+   */
+  _doFetchTemplates(options = {}, templates = result(this, 'templates')) {
+    const success = options.success || noop;
+    const error = options.error || noop;
+
+    if (!isEmpty(templates)) {
+      // Get view's template manager.
+      // Use _.result if template manager is a static variable defined
+      // on the class.
+      const templateManager = result(this, 'templateManager');
+
+      // Fetch templates and trigger success/error callbacks.
+      templateManager.fetch(templates, {success, error});
+    } else {
+      // View does not have templates to render, trigger success
+      // callback.
+      success(null);
+    }
   },
 
   /**
