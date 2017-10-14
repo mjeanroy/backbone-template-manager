@@ -35,7 +35,6 @@ describe('DomTemplateManager', () => {
     const domTemplateManager = new DomTemplateManager();
     expect(domTemplateManager).toBeDefined();
     expect(domTemplateManager._cache).toBeDefined();
-    expect(domTemplateManager._cache).toEqual({});
     expect(domTemplateManager.selector).toBeDefined();
     expect(domTemplateManager.selector('foo')).toBe('[data-template-id="foo"]');
   });
@@ -170,9 +169,7 @@ describe('DomTemplateManager', () => {
 
       expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(html);
-      expect(domTemplateManager._cache).toEqual({
-        [id]: html,
-      });
+      expect(domTemplateManager._cache.get(id)).toEqual(html);
 
       spyOn(Backbone, '$').and.callThrough();
 
@@ -366,14 +363,12 @@ describe('DomTemplateManager', () => {
       jasmine.clock().tick();
 
       expect(domTemplateManager._cache).toBeDefined();
-      expect(domTemplateManager._cache).toEqual({
-        [id]: html,
-      });
+      expect(domTemplateManager._cache.get(id)).toEqual(html);
 
       domTemplateManager.clear();
 
       expect(domTemplateManager._cache).toBeDefined();
-      expect(domTemplateManager._cache).toEqual({});
+      expect(domTemplateManager._cache.get(id)).toBeUndefined();
     });
   });
 });

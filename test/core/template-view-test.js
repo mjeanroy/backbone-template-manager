@@ -28,6 +28,10 @@ import {templateManager} from '../../src/core/template-manager';
 import {TemplateView} from '../../src/core/template-view';
 
 describe('TemplateView', () => {
+  afterEach(() => {
+    templateManager().clear();
+  });
+
   it('should create view instance', () => {
     const view = new TemplateView();
     expect(view).toBeDefined();
@@ -60,7 +64,6 @@ describe('TemplateView', () => {
 
       // Clear cache before each tests.
       tmplMngr = templateManager();
-      tmplMngr._cache = {};
 
       spyOn(_, 'template').and.callThrough();
       spyOn(tmplMngr, 'fetch').and.callThrough();
@@ -71,13 +74,21 @@ describe('TemplateView', () => {
       view.trigger.calls.reset();
     });
 
-    beforeEach(() => jasmine.Ajax.install());
-    afterEach(() => jasmine.Ajax.uninstall());
+    beforeEach(() => {
+      jasmine.Ajax.install();
+    });
 
-    beforeEach(() => jasmine.clock().install());
-    afterEach(() => jasmine.clock().uninstall());
+    beforeEach(() => {
+      jasmine.clock().install();
+    });
 
-    afterEach(() => templateManager().clear());
+    afterEach(() => {
+      jasmine.Ajax.uninstall();
+    });
+
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
 
     it('should get empty json', () => {
       expect(view.toJSON()).toEqual({});

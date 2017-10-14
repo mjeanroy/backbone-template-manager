@@ -27,8 +27,13 @@ import {RemoteTemplateManager} from '../../src/core/remote-template-manager';
 import {deleteProp} from '../utils/delete';
 
 describe('RemoteTemplateManager', () => {
-  beforeEach(() => jasmine.clock().install());
-  afterEach(() => jasmine.clock().uninstall());
+  beforeEach(() => {
+    jasmine.clock().install();
+  });
+
+  afterEach(() => {
+    jasmine.clock().uninstall();
+  });
 
   afterEach(() => {
     deleteProp(window, 'JST');
@@ -36,7 +41,7 @@ describe('RemoteTemplateManager', () => {
 
   it('should create template manager with default options', () => {
     const templateManager = new RemoteTemplateManager();
-    expect(templateManager._cache).toEqual({});
+    expect(templateManager._cache).toBeDefined();
     expect(templateManager._prefix).toEqual('/templates/');
     expect(templateManager._suffix).toEqual('.template.html');
     expect(templateManager._method).toEqual('GET');
@@ -48,7 +53,7 @@ describe('RemoteTemplateManager', () => {
     const method = 'JSONP';
     const templateManager = new RemoteTemplateManager({prefix, suffix, method});
 
-    expect(templateManager._cache).toEqual({});
+    expect(templateManager._cache).toBeDefined();
     expect(templateManager._prefix).toEqual(prefix);
     expect(templateManager._suffix).toEqual(suffix);
     expect(templateManager._method).toEqual(method);
@@ -68,8 +73,11 @@ describe('RemoteTemplateManager', () => {
 
   it('should create template manager with pre-filled cache with JST variables', () => {
     const JST = true;
+
+    const id = 'foo';
+    const template = '<div>Hello <%= name %></div>';
     const templates = {
-      foo: '<div>Hello <%= name %></div>',
+      [id]: template,
     };
 
     window.JST = templates;
@@ -77,13 +85,15 @@ describe('RemoteTemplateManager', () => {
     const templateManager = new RemoteTemplateManager({JST});
 
     expect(templateManager._cache).not.toBe(templates);
-    expect(templateManager._cache).toEqual(templates);
+    expect(templateManager._cache.get(id)).toEqual(template);
   });
 
   it('should create template manager with pre-filled cache with custom JST variable', () => {
     const JST = '__JST__';
+    const id = 'foo';
+    const template = '<div>Hello <%= name %></div>';
     const templates = {
-      foo: '<div>Hello <%= name %></div>',
+      [id]: template,
     };
 
     window.__JST__ = templates;
@@ -91,21 +101,23 @@ describe('RemoteTemplateManager', () => {
     const templateManager = new RemoteTemplateManager({JST});
 
     expect(templateManager._cache).not.toBe(templates);
-    expect(templateManager._cache).toEqual(templates);
+    expect(templateManager._cache.get(id)).toEqual(template);
   });
 
   it('should create template manager with pre-filled cache with custom JST object', () => {
+    const id = 'foo';
+    const template = '<div>Hello <%= name %></div>';
     const JST = {
-      foo: '<div>Hello <%= name %></div>',
+      [id]: template,
     };
 
     const templateManager = new RemoteTemplateManager({JST});
 
     expect(templateManager._cache).not.toBe(JST);
-    expect(templateManager._cache).toEqual(JST);
+    expect(templateManager._cache.get(id)).toEqual(template);
   });
 
-  it('should if JST object is not a string, nor a boolean, nor an object', () => {
+  it('should fail if JST object is not a string, nor a boolean, nor an object', () => {
     const JST = [{
       foo: '<div>Hello <%= name %></div>',
     }];
@@ -123,11 +135,15 @@ describe('RemoteTemplateManager', () => {
     beforeEach(() => {
       spyOn(Backbone, 'ajax').and.callThrough();
       templateManager = new RemoteTemplateManager();
-      templateManager._cache = {};
     });
 
-    beforeEach(() => jasmine.Ajax.install());
-    afterEach(() => jasmine.Ajax.uninstall());
+    beforeEach(() => {
+      jasmine.Ajax.install();
+    });
+
+    afterEach(() => {
+      jasmine.Ajax.uninstall();
+    });
 
     it('should fail to fetch non string template', () => {
       const apply = (val) => {
@@ -194,6 +210,7 @@ describe('RemoteTemplateManager', () => {
     it('should fetch a single template', () => {
       const success = jasmine.createSpy('success');
       const error = jasmine.createSpy('error');
+
       templateManager.fetch('foo', {
         success: success,
         error: error,
@@ -656,10 +673,12 @@ describe('RemoteTemplateManager', () => {
     });
 
     it('should clear cache', () => {
-      templateManager.fetch('foo');
+      const id = 'foo';
+      const template = '<div>Hello World</div>';
+
+      templateManager.fetch(id);
 
       const request = jasmine.Ajax.requests.mostRecent();
-      const template = '<div>Hello World</div>';
       request.respondWith({
         status: 200,
         responseText: template,
@@ -669,14 +688,12 @@ describe('RemoteTemplateManager', () => {
       jasmine.clock().tick();
 
       expect(templateManager._cache).toBeDefined();
-      expect(templateManager._cache).toEqual({
-        foo: jasmine.anything(),
-      });
+      expect(templateManager._cache.get(id)).toEqual(template);
 
       templateManager.clear();
 
       expect(templateManager._cache).toBeDefined();
-      expect(templateManager._cache).toEqual({});
+      expect(templateManager._cache.get(id)).toBeUndefined();
     });
   });
 });

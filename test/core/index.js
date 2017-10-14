@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
+import './cache-test';
+import './compile-test';
 import './dom-template-manager-test';
 import './remote-template-manager-test';
 import './template-manager-test';
 import './template-view-mixin-test';
 import './template-view-test';
 import './utils-test';
-import './compile-test';

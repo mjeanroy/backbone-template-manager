@@ -23,8 +23,9 @@
  */
 
 import Backbone from 'backbone';
-import {has, result, isNull, isString, isObject, isBoolean, isArray, clone, or, toString} from './utils';
+import {forEach, keys, result, isString, isObject, isBoolean, isArray, or, toString} from './utils';
 import {AbstractTemplateManager} from './abstract-template-manager';
+import {Cache} from './cache';
 
 const URL_SEPARATOR = '/';
 const DEFAULT_PREFIX = '/templates/';
@@ -79,25 +80,32 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
     this._prefix = or(result(options, 'prefix'), DEFAULT_PREFIX);
     this._suffix = or(result(options, 'suffix'), DEFAULT_SUFFIX);
     this._method = options.method || 'GET';
-    this._cache = {};
+    this._cache = new Cache();
 
     // Try to initialize cache with JavaScript templates created
     // at build time.
     const JST = options.JST;
     if (JST) {
+      let o;
+
       if (isString(JST)) {
         // 1- Name of the variable.
-        this._cache = clone(window[JST] || {});
+        o = window[JST];
       } else if (isBoolean(JST)) {
         // 2- Default name is JST.
-        this._cache = clone(window.JST || {});
+        o = window.JST;
       } else if (isObject(JST) && !isArray(JST)) {
         // 3- The cache object is given.
-        this._cache = clone(JST);
+        o = JST;
       } else {
         // 4- Don't know how to handle this variable!
         throw new Error(`Cannot infer JST variables from: ${toString(JST)}`);
       }
+
+      // Put everything in the cache.
+      forEach(keys(o || {}), (k) => {
+        this._cache.set(k, o[k]);
+      });
     }
   },
 
@@ -106,7 +114,7 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
    * @return {void}
    */
   clear() {
-    this._cache = {};
+    this._cache.clear();
   },
 
   /**
@@ -122,19 +130,19 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
     const error = options.error;
     const cache = this._cache;
 
-    if (!has(cache, id) || isNull(cache[id])) {
+    if (!cache.has(id)) {
       const prefix = this._prefix || '';
       const suffix = this._suffix || '';
       const method = this._method;
       const url = createUrl(id, prefix, suffix);
-      cache[id] = Backbone.ajax({
+      cache.set(id, Backbone.ajax({
         url: url,
         method: method,
-      });
+      }));
     }
 
     // If template is already in the cache.
-    const cachedValue = cache[id];
+    const cachedValue = cache.get(id);
     if (isString(cachedValue)) {
       setTimeout(() => {
         success(cachedValue);
@@ -145,7 +153,7 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
 
     const onSuccess = (data) => {
       // Remove promise from cache and populate with template.
-      cache[id] = data;
+      cache.set(id, data);
 
       // Trigger success.
       success(data);
@@ -153,7 +161,7 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
 
     const onError = (xhr) => {
       // Remove from cache, maybe we will be luckier on next try.
-      cache[id] = null;
+      cache.delete(id);
 
       // Then, trigger error callback.
       error({
@@ -162,6 +170,6 @@ export const RemoteTemplateManager = AbstractTemplateManager.extend({
       });
     };
 
-    cache[id].then(onSuccess, onError);
+    cache.get(id).then(onSuccess, onError);
   },
 });

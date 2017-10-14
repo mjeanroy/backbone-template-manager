@@ -23,8 +23,9 @@
  */
 
 import Backbone from 'backbone';
-import {has, isEmpty, or, trim} from './utils';
+import {isEmpty, or, trim} from './utils';
 import {AbstractTemplateManager} from './abstract-template-manager';
+import {Cache} from './cache';
 
 // Default selector factory, used if no factory is specified during
 // initialization.
@@ -36,7 +37,6 @@ const defaultSelectorFactory = (id) => `[data-template-id="${id}"]`;
  * @class
  */
 export const DomTemplateManager = AbstractTemplateManager.extend({
-
   /**
    * Initialize template manager (i.e initialize empty cache).
    *
@@ -49,7 +49,7 @@ export const DomTemplateManager = AbstractTemplateManager.extend({
    */
   initialize(options) {
     this.selector = or(options.selector, defaultSelectorFactory);
-    this._cache = {};
+    this._cache = new Cache();
   },
 
   /**
@@ -57,7 +57,7 @@ export const DomTemplateManager = AbstractTemplateManager.extend({
    * @return {void}
    */
   clear() {
-    this._cache = {};
+    this._cache.clear();
   },
 
   /**
@@ -77,8 +77,8 @@ export const DomTemplateManager = AbstractTemplateManager.extend({
       const cache = this._cache;
 
       // Already in cache.
-      if (has(cache, id)) {
-        success(cache[id]);
+      if (cache.has(id)) {
+        success(cache.get(id));
         return;
       }
 
@@ -91,8 +91,9 @@ export const DomTemplateManager = AbstractTemplateManager.extend({
         error({data: `Found multiple templates for selector: ${selector}`});
       } else {
         // Put in the cache for next resolution.
-        cache[id] = trim(node.html());
-        success(cache[id]);
+        const html = trim(node.html());
+        cache.set(id, html);
+        success(html);
       }
     });
   },

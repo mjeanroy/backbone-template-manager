@@ -40,7 +40,6 @@ export const isEmpty = _.isEmpty;
 export const result = _.result;
 export const every = _.every;
 export const forEach = _.forEach;
-export const clone = _.clone;
 
 export const or = (val, def) => isUndefined(val) ? def : val;
 
