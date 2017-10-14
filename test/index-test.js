@@ -23,6 +23,7 @@
  */
 
 import {
+  TemplateViewMixin,
   VIEW_RENDER_LOADING,
   VIEW_RENDER_SUCCESS,
   VIEW_RENDER_ERROR,
@@ -35,5 +36,9 @@ describe('index', () => {
     expect(VIEW_RENDER_SUCCESS).toBe('render:success');
     expect(VIEW_RENDER_ERROR).toBe('render:error');
     expect(VIEW_RENDER_DONE).toBe('render:done');
+  });
+
+  it('should export TemplateViewMixin', () => {
+    expect(TemplateViewMixin).toBeDefined();
   });
 });
