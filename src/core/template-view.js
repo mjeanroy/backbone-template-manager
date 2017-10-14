@@ -135,25 +135,7 @@ export const TemplateView = Backbone.View.extend({
    * @return {TemplateView} Current view (for chaining).
    */
   render() {
-    const templates = result(this, 'templates');
-    const options = {
-      success: (results) => {
-        // View may not have any templates to render.
-        if (results) {
-          this._renderTemplates(templates, results);
-        }
-
-        this._triggerRenderSuccess();
-      },
-
-      error: (err) => {
-        this._triggerRenderError(err);
-      },
-    };
-
-    this._triggerBeforeRender();
-    this._doFetchTemplates(options, templates);
-
+    this._doRender();
     return this;
   },
 
@@ -202,6 +184,32 @@ export const TemplateView = Backbone.View.extend({
    */
   fetchTemplates(options) {
     this._doFetchTemplates(options);
+  },
+
+  /**
+   * Render the view.
+   *
+   * @return {void}
+   */
+  _doRender() {
+    const templates = result(this, 'templates');
+    const options = {
+      success: (results) => {
+        // View may not have any templates to render.
+        if (results) {
+          this._renderTemplates(templates, results);
+        }
+
+        this._triggerRenderSuccess();
+      },
+
+      error: (err) => {
+        this._triggerRenderError(err);
+      },
+    };
+
+    this._triggerBeforeRender();
+    this._doFetchTemplates(options, templates);
   },
 
   /**
