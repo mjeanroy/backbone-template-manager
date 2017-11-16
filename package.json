@@ -99,7 +99,7 @@
     "mustache": "2.3.0",
     "phantomjs-prebuilt": "2.1.16",
     "q": "1.5.1",
-    "rollup": "0.51.5",
+    "rollup": "0.51.6",
     "rollup-plugin-alias": "1.4.0",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-license": "0.5.0",
