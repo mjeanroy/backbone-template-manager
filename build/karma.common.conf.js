@@ -25,11 +25,16 @@
 const path = require('path');
 const _ = require('lodash');
 const conf = require('./app.conf');
+
 const lib = (file) => ({
   pattern: path.join(conf.root, 'node_modules', file),
   watched: false,
   included: true,
   served: true,
+});
+
+const globals = _.extend({}, conf.globals, {
+  mustache: 'Mustache',
 });
 
 module.exports = (config) => ({
@@ -46,6 +51,7 @@ module.exports = (config) => ({
     lib('jquery/dist/jquery.js'),
     lib('underscore/underscore.js'),
     lib('backbone/backbone.js'),
+    lib('mustache/mustache.js'),
     lib('jasmine-ajax/lib/mock-ajax.js'),
 
     // Load test files.
@@ -93,7 +99,7 @@ module.exports = (config) => ({
     sourcemap: 'inline',
     format: 'iife',
     name: conf.moduleName,
-    globals: conf.globals,
-    external: _.keys(conf.globals),
+    globals: globals,
+    external: _.keys(globals),
   },
 });

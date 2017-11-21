@@ -30,13 +30,14 @@ const conf = require('./app.conf');
 
 module.exports = {
   input: path.join(conf.src, 'index.js'),
+  external: _.keys(conf.globals),
+  legacy: true,
+
   output: {
     file: path.join(conf.dist, 'backbone-template-manager.js'),
     format: 'es',
     globals: conf.globals,
   },
-
-  external: _.keys(conf.globals),
 
   plugins: [
     stripBanner(),

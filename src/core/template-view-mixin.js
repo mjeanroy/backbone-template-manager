@@ -272,8 +272,9 @@ export const TemplateViewMixin = {
    * @return {TemplateView} Current view (for chaining).
    */
   _renderTemplates(templates, results) {
-    const main = isArray(templates) ? results[0] : results;
-    const partials = isArray(results) ? results : null;
+    const multiple = isArray(templates);
+    const main = multiple ? results[templates[0]] : results;
+    const partials = multiple ? results : null;
     const output = this._toHTML(main, partials);
     this._setHtml(output);
     return this;

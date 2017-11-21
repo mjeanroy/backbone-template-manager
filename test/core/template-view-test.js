@@ -509,5 +509,45 @@ describe('TemplateView', () => {
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
     });
+
+    it('should render array of templates', () => {
+      view.model = new Backbone.Model({
+        id: 1,
+        name: 'John Doe',
+      });
+
+      view.templates = [
+        'foo',
+        'bar',
+      ];
+
+      view.render();
+
+      expect(view.$el.html()).toBe('');
+      expect(jasmine.Ajax.requests.count()).toBe(2);
+      expect(tmplMngr.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const template1 = '<div>Hello <%= model.name %></div>';
+      const template2 = '<div>Bye <%= model.name %></div>';
+
+      jasmine.Ajax.requests.at(0).respondWith({
+        status: 200,
+        responseText: template1,
+        contentType: 'text/html',
+      });
+
+      expect(view.$el.html()).toBe('');
+
+      jasmine.Ajax.requests.at(1).respondWith({
+        status: 200,
+        responseText: template2,
+        contentType: 'text/html',
+      });
+
+      expect(view.$el.html()).not.toBe('');
+    });
   });
 });

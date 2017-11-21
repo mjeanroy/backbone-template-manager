@@ -23,6 +23,7 @@
  */
 
 import Backbone from 'backbone';
+import Mustache from 'mustache';
 import {templateManager} from '../../src/core/template-manager';
 import {TemplateViewMixin} from '../../src/core/template-view-mixin';
 
@@ -554,6 +555,85 @@ describe('TemplateViewMixin', () => {
       jasmine.clock().tick();
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
+    });
+
+    it('should render multiple template with partials (using Mustache)', () => {
+      view.compile = (html) => (
+        (view, partials) => Mustache.render(html, view, partials)
+      );
+
+      view.templates = [
+        'foo',
+        'bar',
+      ];
+
+      view.model = new Backbone.Model({
+        id: 1,
+        name: 'John Doe',
+      });
+
+      spyOn(view, 'trigger').and.callThrough();
+      spyOn(view, 'onBeforeRender').and.callThrough();
+      spyOn(view, 'onRender').and.callThrough();
+      spyOn(view, 'onRenderError').and.callThrough();
+      spyOn(view, 'onRendered').and.callThrough();
+
+      view.renderTemplates();
+
+      expect(view.onBeforeRender).toHaveBeenCalled();
+      expect(view.onRender).not.toHaveBeenCalled();
+      expect(view.onRenderError).not.toHaveBeenCalled();
+      expect(view.onRendered).not.toHaveBeenCalled();
+
+      expect(view.trigger).toHaveBeenCalledWith('render:loading');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:success');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:done');
+      expect(view.$el.html()).toBe('');
+
+      expect(defaultTemplateManager.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
+        success: jasmine.any(Function),
+        error: jasmine.any(Function),
+      });
+
+      const templateFoo = '<div>{{ > bar }}</div>';
+      const templateBar = 'Hello {{ model.name }}';
+
+      expect(jasmine.Ajax.requests.count()).toBe(2);
+      const r1 = jasmine.Ajax.requests.at(0);
+      const r2 = jasmine.Ajax.requests.at(1);
+
+      r1.respondWith({
+        status: 200,
+        responseText: templateFoo,
+        contentType: 'text/html',
+      });
+
+      expect(view.trigger).not.toHaveBeenCalledWith('render:success');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:done');
+      expect(view.$el.html()).toBe('');
+
+      r2.respondWith({
+        status: 200,
+        responseText: templateBar,
+        contentType: 'text/html',
+      });
+
+      jasmine.clock().tick();
+
+      expect(view.onRender).toHaveBeenCalled();
+      expect(view.onRenderError).not.toHaveBeenCalled();
+      expect(view.onRendered).toHaveBeenCalled();
+
+      expect(view.trigger).toHaveBeenCalledWith('render:success');
+      expect(view.trigger).not.toHaveBeenCalledWith('render:error');
+      expect(view.trigger).toHaveBeenCalledWith('render:done', null);
+
+      const children = view.$el.children();
+      expect(children.length).toBe(1);
+      expect(children[0].tagName).toBe('DIV');
+      expect(children[0].innerHTML).toBe('Hello John Doe');
     });
   });
 });
