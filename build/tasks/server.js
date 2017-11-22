@@ -65,19 +65,24 @@ module.exports = (options) => {
     return rollup.rollup(rollupConf)
       .then((bundle) => {
         gutil.log(gutil.colors.gray(`[${id}] Generating ES6 bundle`));
-        bundle.generate(rollupConf).then((result) => {
-          gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
-
-          // Ensure directory exist.
+        return bundle.generate(rollupConf).then((result) => {
+          gutil.log(gutil.colors.gray(`[${id}] Creating temporary directory`));
+          const deferred = Q.defer();
           const dir = path.join(options.sample, id, TMP);
-          mkdirp.sync(dir);
-
-          // Produce ES5 code.
+          mkdirp(dir, (err) => err ? deferred.reject(err) : deferred.resolve({dir, result}));
+          return deferred.promise;
+        })
+        .then(({dir, result}) => {
+          gutil.log(gutil.colors.gray(`[${id}] Creating ES5 bundle`));
           const dest = path.join(dir, 'bundle.js');
           const es5 = babel.transform(result.code, babelConf);
-
+          return {dest, es5};
+        })
+        .then(({dest, es5}) => {
           gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
-          fs.writeFileSync(dest, es5.code, 'utf-8');
+          const deferred = Q.defer();
+          fs.writeFile(dest, es5.code, 'utf-8', (err) => err ? deferred.reject(err) : deferred.resolve());
+          return deferred.promise;
         });
       })
       .catch((err) => {
@@ -91,7 +96,7 @@ module.exports = (options) => {
   };
 
   gulp.task('serve', ['build'], () => {
-    bundleAll().then(() => {
+    return bundleAll().then(() => {
       const main = path.join(options.sample, 'server.js');
       const server = gls.new(main);
 
@@ -128,6 +133,8 @@ module.exports = (options) => {
         gutil.log(gutil.colors.green(`Change detected, notify server`));
         server.notify();
       });
+
+      gutil.log(gutil.colors.black('Sample bundles are ready...'));
     });
   });
 };
