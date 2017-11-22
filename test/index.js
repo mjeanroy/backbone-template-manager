@@ -22,5 +22,6 @@
  * SOFTWARE.
  */
 
+import './bootstrap';
 import './core/index';
 import './index-test';

@@ -29,7 +29,7 @@ import {Frameworks} from '../commons/frameworks.collection';
  * Display list of frameworks.
  * @class
  */
-export class FrameworksView extends TemplateView {
+export const FrameworksView = TemplateView.extend({
   /**
    * Initialize callback.
    * @return {void}
@@ -39,7 +39,7 @@ export class FrameworksView extends TemplateView {
     this.collection = new Frameworks();
     this.listenTo(this.collection, 'sync', this.render);
     this.collection.fetch();
-  }
+  },
 
   /**
    * Get the view template.
@@ -48,5 +48,5 @@ export class FrameworksView extends TemplateView {
    */
   templates() {
     return 'frameworks';
-  }
-}
+  },
+});

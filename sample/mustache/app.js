@@ -23,7 +23,7 @@
  */
 
 import Mustache from 'mustache';
-import Backbone from 'backbone';
+import {Backbone} from '../commons/bootstrap';
 import {overrideCompile, overrideTemplateManager, DomTemplateManager} from 'backbone-template-manager';
 import {FrameworksView} from './frameworks.view';
 
@@ -31,7 +31,7 @@ import {FrameworksView} from './frameworks.view';
  * Application.
  * @class
  */
-class App extends Backbone.View {
+const App = Backbone.View.extend({
   /**
    * Initialize application.
    * @return {void}
@@ -40,7 +40,7 @@ class App extends Backbone.View {
   initialize() {
     this.$el = Backbone.$('#main');
     this.render();
-  }
+  },
 
   /**
    * Render application.
@@ -49,8 +49,8 @@ class App extends Backbone.View {
    */
   render() {
     this.$el.html(new FrameworksView().$el);
-  }
-}
+  },
+});
 
 // Override default template manager.
 overrideTemplateManager(new DomTemplateManager());

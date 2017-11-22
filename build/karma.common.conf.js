@@ -23,19 +23,9 @@
 */
 
 const path = require('path');
-const _ = require('lodash');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
 const conf = require('./app.conf');
-
-const lib = (file) => ({
-  pattern: path.join(conf.root, 'node_modules', file),
-  watched: false,
-  included: true,
-  served: true,
-});
-
-const globals = _.extend({}, conf.globals, {
-  mustache: 'Mustache',
-});
 
 module.exports = (config) => ({
   // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -47,14 +37,7 @@ module.exports = (config) => ({
 
   // Files to load in the browser.
   files: [
-    // Load mandatory libraries.
-    lib('jquery/dist/jquery.js'),
-    lib('underscore/underscore.js'),
-    lib('backbone/backbone.js'),
-    lib('mustache/mustache.js'),
-    lib('jasmine-ajax/lib/mock-ajax.js'),
-
-    // Load test files.
+    path.join(conf.root, 'node_modules', 'jasmine-ajax', 'lib', 'mock-ajax.js'),
     path.join(conf.root, 'test', 'index.js'),
   ],
 
@@ -99,7 +82,9 @@ module.exports = (config) => ({
     sourcemap: 'inline',
     format: 'iife',
     name: conf.moduleName,
-    globals: globals,
-    external: _.keys(globals),
+    plugins: [
+      nodeResolve(),
+      commonjs(),
+    ],
   },
 });

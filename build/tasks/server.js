@@ -27,6 +27,7 @@ const path = require('path');
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const Q = require('q');
+const mkdirp = require('mkdirp');
 const gls = require('gulp-live-server');
 
 const rollup = require('rollup');
@@ -37,12 +38,16 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const babel = require('babel-core');
 const babelConf = require('../babel.conf');
 
+// Temporary directory name.
+const TMP = 'tmp';
+
 module.exports = (options) => {
   const bundle = (id) => {
     gutil.log(gutil.colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
       input: path.join(options.sample, id, 'app.js'),
       format: 'iife',
+      name: 'SampleApp',
       plugins: [
         alias({
           'backbone-template-manager': path.join(options.dist, 'backbone-template-manager.js'),
@@ -62,7 +67,13 @@ module.exports = (options) => {
         gutil.log(gutil.colors.gray(`[${id}] Generating ES6 bundle`));
         bundle.generate(rollupConf).then((result) => {
           gutil.log(gutil.colors.gray(`[${id}] Generating ES5 bundle`));
-          const dest = path.join(options.sample, id, '.tmp', 'bundle.js');
+
+          // Ensure directory exist.
+          const dir = path.join(options.sample, id, TMP);
+          mkdirp.sync(dir);
+
+          // Produce ES5 code.
+          const dest = path.join(dir, 'bundle.js');
           const es5 = babel.transform(result.code, babelConf);
 
           gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
@@ -90,7 +101,7 @@ module.exports = (options) => {
       const srcFiles = path.join(options.src, '**', '*.js');
       const distFiles = path.join(options.dist, '**', '*.js');
       const sampleFiles = path.join(options.sample, '**', '*.js');
-      const bundles = path.join(options.sample, '**', '.tmp', '*.js');
+      const bundles = path.join(options.sample, '**', TMP, '*.js');
       const htmlFiles = path.join(options.sample, '**', '*.html');
       const cssFiles = path.join(options.sample, '**', '*.css');
 

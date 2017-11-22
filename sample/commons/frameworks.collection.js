@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-import Backbone from 'backbone';
+import {Backbone} from './bootstrap';
 import {Framework} from './framework.model';
 
 /**
  * Framework Collection.
  * @class
  */
-export class Frameworks extends Backbone.Collection {
+export const Frameworks = Backbone.Collection.extend({
   /**
    * Initialize Collection.
    * @return {void}
    */
   initialize() {
     this.model = Framework;
-  }
+  },
 
   /**
    * Get Collection URL.
@@ -44,5 +44,5 @@ export class Frameworks extends Backbone.Collection {
    */
   url() {
     return '/api/frameworks';
-  }
-}
+  },
+});

@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import Backbone from 'backbone';
+import {Backbone} from './bootstrap';
 
 /**
  * Framework Model Object.
  * @class
  */
-export class Framework extends Backbone.Model {
+export const Framework = Backbone.Model.extend({
   /**
    * Get Model URL.
    * @return {string} Model URL.
    */
   urlRoot() {
     return '/api/frameworks';
-  }
-}
+  },
+});

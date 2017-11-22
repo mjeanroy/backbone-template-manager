@@ -22,33 +22,11 @@
  * SOFTWARE.
  */
 
-import {Backbone} from '../commons/bootstrap';
-import {FrameworksView} from './frameworks.view';
+import $ from 'jquery';
+import Backbone from 'backbone';
 
-/**
- * Application.
- * @class
- */
-const App = Backbone.View.extend({
-  /**
-   * Initialize application.
-   * @return {void}
-   * @override
-   */
-  initialize() {
-    this.$el = Backbone.$('#main');
-    this.render();
-  },
+Backbone.$ = $;
 
-  /**
-   * Render application.
-   * @return {void}
-   * @override
-   */
-  render() {
-    this.$el.html(new FrameworksView().$el);
-  },
-});
-
-// Start and export app.
-new App(); // eslint-disable-line no-new
+export {
+  Backbone,
+};

@@ -30,7 +30,7 @@ import {FrameworkView} from './framework.view';
  * Display list of frameworks.
  * @class
  */
-export class FrameworksView extends TemplateView {
+export const FrameworksView = TemplateView.extend({
   /**
    * Initialize callback.
    * @return {void}
@@ -41,7 +41,7 @@ export class FrameworksView extends TemplateView {
     this.listenTo(this.collection, 'sync', this.render);
     this.listenTo(this, 'render:success', this.renderCollection);
     this.collection.fetch();
-  }
+  },
 
   /**
    * Render collection into sub-views.
@@ -52,7 +52,7 @@ export class FrameworksView extends TemplateView {
     this.collection.forEach((model) => {
       $container.append(new FrameworkView({model}).$el);
     });
-  }
+  },
 
   /**
    * Get the view template.
@@ -61,5 +61,5 @@ export class FrameworksView extends TemplateView {
    */
   templates() {
     return 'frameworks';
-  }
-}
+  },
+});

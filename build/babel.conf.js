@@ -42,7 +42,6 @@ module.exports = {
     ['transform-es2015-destructuring',           {loose}],
     ['transform-es2015-duplicate-keys',          {loose}],
     ['transform-es2015-for-of',                  {loose}],
-    ['transform-es2015-function-name',           {loose}],
     ['transform-es2015-literals',                {loose}],
     ['transform-es2015-object-super',            {loose}],
     ['transform-es2015-parameters',              {loose}],
