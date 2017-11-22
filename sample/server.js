@@ -34,7 +34,7 @@ app.use(connectLivereload());
 
 // Static directories
 app.use('/vendors', express.static(path.join(root, 'node_modules')));
-app.use('/dist', express.static(path.join(root, 'sample', 'tmp')));
+app.use('/dist', express.static(path.join(root, 'sample', '.tmp')));
 app.use('/dist', express.static(path.join(root, 'dist')));
 app.use('/', express.static(path.join(root, 'sample')));
 

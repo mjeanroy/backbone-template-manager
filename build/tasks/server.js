@@ -39,7 +39,7 @@ const babel = require('babel-core');
 const babelConf = require('../babel.conf');
 
 // Temporary directory name.
-const TMP = 'tmp';
+const TMP = '.tmp';
 
 module.exports = (options) => {
   const bundle = (id) => {

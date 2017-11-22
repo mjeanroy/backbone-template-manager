@@ -28,10 +28,11 @@ const eslint = require('gulp-eslint');
 
 module.exports = (options) => {
   const sources = [
-    path.join(options.src, '**/*.js'),
-    path.join(options.test, '**/*.js'),
-    path.join(options.build, '**/*.js'),
-    path.join(options.sample, '**/*.js'),
+    path.join(options.src, '**', '*.js'),
+    path.join(options.test, '**', '*.js'),
+    path.join(options.build, '**', '*.js'),
+    path.join(options.sample, '*', '*.js'),
+    path.join(options.sample, '*.js'),
   ];
 
   gulp.task('lint', () => {
