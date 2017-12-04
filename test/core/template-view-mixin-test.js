@@ -635,5 +635,46 @@ describe('TemplateViewMixin', () => {
       expect(children[0].tagName).toBe('DIV');
       expect(children[0].innerHTML).toBe('Hello John Doe');
     });
+
+    it('should have a hook to extend partials', () => {
+      view.compile = (html) => (
+        (view, partials) => Mustache.render(html, view, partials)
+      );
+
+      view.templates = [
+        'foo',
+      ];
+
+      view.model = new Backbone.Model({
+        id: 1,
+        name: 'John Doe',
+      });
+
+      // Use inline partial.
+      spyOn(view, '_buildPartials').and.returnValue({
+        bar: 'Hello {{ model.name }}',
+      });
+
+      view.renderTemplates();
+
+      expect(jasmine.Ajax.requests.count()).toBe(1);
+
+      const templateFoo = '<div>{{ > bar }}</div>';
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        responseText: templateFoo,
+        contentType: 'text/html',
+      });
+
+      expect(view._buildPartials).toHaveBeenCalledWith({
+        foo: templateFoo,
+      });
+
+      const children = view.$el.children();
+      expect(children.length).toBe(1);
+      expect(children[0].tagName).toBe('DIV');
+      expect(children[0].innerHTML).toBe('Hello John Doe');
+    });
   });
 });

@@ -275,9 +275,23 @@ export const TemplateViewMixin = {
     const multiple = isArray(templates);
     const main = multiple ? results[templates[0]] : results;
     const partials = multiple ? results : null;
-    const output = this._toHTML(main, partials);
+    const viewPartials = this._buildPartials(partials);
+    const output = this._toHTML(main, viewPartials);
     this._setHtml(output);
     return this;
+  },
+
+  /**
+   * Build partials dictionnary for this view.
+   * This method can be overrided to:
+   * - Extend default partials definition (such as dynamic view partials).
+   * - Change partials definiton for this view only.
+   *
+   * @param {Object} partials Partials, extracted from view `templates` definition.
+   * @return {Object} The partial dictionnary.
+   */
+  _buildPartials(partials) {
+    return partials;
   },
 
   /**
