@@ -67,7 +67,7 @@
     "express": "4.16.2",
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
-    "gulp-bump": "2.8.0",
+    "gulp-bump": "2.9.0",
     "gulp-debug": "3.1.0",
     "gulp-es3ify": "0.0.0",
     "gulp-eslint": "4.0.0",
