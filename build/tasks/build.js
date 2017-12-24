@@ -24,9 +24,10 @@
 
 const path = require('path');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
 const rename = require('gulp-rename');
 const rollup = require('rollup');
+const log = require('fancy-log');
+const colors = require('ansi-colors');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header-comment');
@@ -37,10 +38,12 @@ const rollupConf = require('../rollup.conf');
 const uglifyConf = require('../uglify.conf');
 
 const applyRollup = (config) => {
-  gutil.log(gutil.colors.gray(`Rollup entry point`));
+  log(colors.gray(`Rollup entry point`));
   return rollup.rollup(config).then((bundle) => {
-    gutil.log(gutil.colors.gray(`Writing rollup bundle`));
-    return bundle.write(config.output).then(() => config.output.file);
+    log(colors.gray(`Writing rollup bundle`));
+    return bundle.write(config.output).then(() => (
+      config.output.file
+    ));
   });
 };
 
@@ -48,7 +51,7 @@ module.exports = (options) => {
   gulp.task('build', ['clean'], () => {
     return applyRollup(rollupConf)
       .then((src) => {
-        gutil.log(gutil.colors.gray(`Creating ES5 bundle`));
+        log(colors.gray(`Creating ES5 bundle`));
         return gulp.src(src)
           .pipe(strip())
           .pipe(babel())

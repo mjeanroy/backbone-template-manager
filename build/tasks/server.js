@@ -25,7 +25,8 @@
 const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
+const log = require('fancy-log');
+const colors = require('ansi-colors');
 const Q = require('q');
 const mkdirp = require('mkdirp');
 const gls = require('gulp-live-server');
@@ -43,7 +44,7 @@ const TMP = '.tmp';
 
 module.exports = (options) => {
   const bundle = (id) => {
-    gutil.log(gutil.colors.gray(`[${id}] Running rollup...`));
+    log(colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
       input: path.join(options.sample, id, 'app.js'),
       format: 'iife',
@@ -64,29 +65,29 @@ module.exports = (options) => {
 
     return rollup.rollup(rollupConf)
       .then((bundle) => {
-        gutil.log(gutil.colors.gray(`[${id}] Generating ES6 bundle`));
+        log(colors.gray(`[${id}] Generating ES6 bundle`));
         return bundle.generate(rollupConf).then((result) => {
-          gutil.log(gutil.colors.gray(`[${id}] Creating temporary directory`));
+          log(colors.gray(`[${id}] Creating temporary directory`));
           const deferred = Q.defer();
           const dir = path.join(options.sample, id, TMP);
           mkdirp(dir, (err) => err ? deferred.reject(err) : deferred.resolve({dir, result}));
           return deferred.promise;
         })
         .then(({dir, result}) => {
-          gutil.log(gutil.colors.gray(`[${id}] Creating ES5 bundle`));
+          log(colors.gray(`[${id}] Creating ES5 bundle`));
           const dest = path.join(dir, 'bundle.js');
           const es5 = babel.transform(result.code, babelConf);
           return {dest, es5};
         })
         .then(({dest, es5}) => {
-          gutil.log(gutil.colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
+          log(colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
           const deferred = Q.defer();
           fs.writeFile(dest, es5.code, 'utf-8', (err) => err ? deferred.reject(err) : deferred.resolve());
           return deferred.promise;
         });
       })
       .catch((err) => {
-        gutil.log(gutil.colors.red(err));
+        log(colors.red(err));
       });
   };
 
@@ -112,29 +113,29 @@ module.exports = (options) => {
 
       // Rebuild dist file when a source file is updated.
       gulp.watch(srcFiles, () => {
-        gutil.log(gutil.colors.gray(`Change detected in source files, rebuild`));
+        log(colors.gray(`Change detected in source files, rebuild`));
         gulp.start('build');
       });
 
       // Rebuild sample bundle when dist file is updated.
       gulp.watch(distFiles, () => {
-        gutil.log(gutil.colors.gray(`Change detected in dist files, bundle app`));
+        log(colors.gray(`Change detected in dist files, bundle app`));
         bundleAll();
       });
 
       // Rebuild sample when sample source files are updated.
       gulp.watch([sampleFiles, `!${bundles}`], () => {
-        gutil.log(gutil.colors.gray(`Change detected in sample, bundle app`));
+        log(colors.gray(`Change detected in sample, bundle app`));
         bundleAll();
       });
 
       // Reload when bundle app is updated.
       gulp.watch([bundles, htmlFiles, cssFiles], () => {
-        gutil.log(gutil.colors.green(`Change detected, notify server`));
+        log(colors.green(`Change detected, notify server`));
         server.notify();
       });
 
-      gutil.log(gutil.colors.black('Sample bundles are ready...'));
+      log(colors.black('Sample bundles are ready...'));
     });
   });
 };
