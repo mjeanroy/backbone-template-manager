@@ -32,7 +32,6 @@ const loose = conf.loose;
 module.exports = {
   moduleId: moduleName,
   plugins: [
-    // ES5 Transformations.
     ['transform-es2015-arrow-functions',         {loose}],
     ['transform-es2015-block-scoped-functions',  {loose}],
     ['transform-es2015-block-scoping',           {loose}],
@@ -53,7 +52,6 @@ module.exports = {
     ['transform-es2015-unicode-regex',           {loose}],
     ['transform-es2015-modules-umd',             {loose, globals}],
 
-    // ES3 Transformations, must be the last plugins.
     ['transform-es3-member-expression-literals'],
     ['transform-es3-property-literals'],
     ['transform-es3-modules-literals'],
