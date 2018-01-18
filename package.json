@@ -59,7 +59,7 @@
     "babel-plugin-transform-es3-modules-literals": "0.0.3",
     "babel-plugin-transform-es3-property-literals": "6.22.0",
     "backbone": ">=1.0.0",
-    "bootstrap": "~3.3.5",
+    "bootstrap": "~4.0.0",
     "connect-livereload": "0.6.0",
     "del": "3.0.0",
     "eslint": "4.15.0",
