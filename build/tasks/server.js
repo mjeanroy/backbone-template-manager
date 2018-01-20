@@ -47,8 +47,11 @@ module.exports = (options) => {
     log(colors.gray(`[${id}] Running rollup...`));
     const rollupConf = {
       input: path.join(options.sample, id, 'app.js'),
-      format: 'iife',
-      name: 'SampleApp',
+      output: {
+        format: 'iife',
+        name: 'SampleApp',
+      },
+
       plugins: [
         alias({
           'backbone-template-manager': path.join(options.dist, 'backbone-template-manager.js'),
