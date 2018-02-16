@@ -25,16 +25,10 @@
 import Backbone from 'backbone';
 import {RemoteTemplateManager} from '../../src/core/remote-template-manager';
 import {deleteProp} from '../utils/delete';
+import {mostRecentXhr, respond, respondHtml, xhrAt} from '../utils/xhr';
+import {tick} from '../utils/clock';
 
 describe('RemoteTemplateManager', () => {
-  beforeEach(() => {
-    jasmine.clock().install();
-  });
-
-  afterEach(() => {
-    jasmine.clock().uninstall();
-  });
-
   afterEach(() => {
     deleteProp(window, 'JST');
   });
@@ -137,14 +131,6 @@ describe('RemoteTemplateManager', () => {
       templateManager = new RemoteTemplateManager();
     });
 
-    beforeEach(() => {
-      jasmine.Ajax.install();
-    });
-
-    afterEach(() => {
-      jasmine.Ajax.uninstall();
-    });
-
     it('should fail to fetch non string template', () => {
       const apply = (val) => {
         return () => {
@@ -216,7 +202,7 @@ describe('RemoteTemplateManager', () => {
         error: error,
       });
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
@@ -228,19 +214,13 @@ describe('RemoteTemplateManager', () => {
         url: expectedUrl,
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).toBeDefined();
       expect(request.method).toBe(expectedMethod);
       expect(request.url).toBe(expectedUrl);
 
       const template = '<div>Hello World</div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(template);
@@ -262,13 +242,13 @@ describe('RemoteTemplateManager', () => {
         error: error,
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).not.toBeDefined();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(template);
@@ -286,7 +266,7 @@ describe('RemoteTemplateManager', () => {
         error: error,
       });
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
@@ -298,19 +278,13 @@ describe('RemoteTemplateManager', () => {
         url: expectedUrl,
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).toBeDefined();
       expect(request.method).toBe(expectedMethod);
       expect(request.url).toBe(expectedUrl);
 
       const template = '<div>Hello World</div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(template);
@@ -328,7 +302,7 @@ describe('RemoteTemplateManager', () => {
         error: error,
       });
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
@@ -340,19 +314,13 @@ describe('RemoteTemplateManager', () => {
         url: expectedUrl,
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).toBeDefined();
       expect(request.method).toBe(expectedMethod);
       expect(request.url).toBe(expectedUrl);
 
       const template = '<div>Hello World</div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(template);
@@ -382,19 +350,13 @@ describe('RemoteTemplateManager', () => {
       expect(success2).not.toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).toBeDefined();
       expect(request.method).toBe('GET');
       expect(request.url).toBe('/templates/foo.template.html');
 
       const template = '<div>Hello World</div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(error1).not.toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
@@ -414,18 +376,12 @@ describe('RemoteTemplateManager', () => {
       expect(success1).not.toHaveBeenCalled();
       expect(error1).not.toHaveBeenCalled();
 
-      const r1 = jasmine.Ajax.requests.mostRecent();
+      const r1 = mostRecentXhr();
       expect(r1).toBeDefined();
       expect(r1.method).toBe('GET');
       expect(r1.url).toBe('/templates/foo.template.html');
 
-      r1.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(r1, template);
 
       expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(template);
@@ -438,11 +394,11 @@ describe('RemoteTemplateManager', () => {
         error: error2,
       });
 
-      const r2 = jasmine.Ajax.requests.mostRecent();
+      const r2 = mostRecentXhr();
       expect(r2).toBeDefined();
       expect(r2).toBe(r1);
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error2).not.toHaveBeenCalled();
       expect(success2).toHaveBeenCalledWith(template);
@@ -461,36 +417,24 @@ describe('RemoteTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      const request1 = jasmine.Ajax.requests.at(0);
+      const request1 = xhrAt(0);
       expect(request1).toBeDefined();
       expect(request1.method).toBe('GET');
       expect(request1.url).toBe('/templates/foo.template.html');
 
-      const request2 = jasmine.Ajax.requests.at(1);
+      const request2 = xhrAt(1);
       expect(request2).toBeDefined();
       expect(request2.method).toBe('GET');
       expect(request2.url).toBe('/templates/bar.template.html');
 
       const template1 = '<div>Hello World 1</div>';
-      request1.respondWith({
-        status: 200,
-        responseText: template1,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request1, template1);
 
       expect(error).not.toHaveBeenCalled();
       expect(success).not.toHaveBeenCalled();
 
       const template2 = '<div>Hello World 2</div>';
-      request2.respondWith({
-        status: 200,
-        responseText: template2,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request2, template2);
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith({
@@ -510,20 +454,14 @@ describe('RemoteTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       expect(request).toBeDefined();
       expect(request.method).toBe('GET');
       expect(request.url).toBe('/templates/foo.template.html');
 
       const message = 'Template does not exist';
       const status = 404;
-      request.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond(request, status, message);
 
       expect(error).toHaveBeenCalledWith({status, message});
       expect(success).not.toHaveBeenCalledWith();
@@ -542,30 +480,18 @@ describe('RemoteTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      const request1 = jasmine.Ajax.requests.at(0);
-      const request2 = jasmine.Ajax.requests.at(1);
+      const request1 = xhrAt(0);
+      const request2 = xhrAt(1);
 
       const message = 'Template does not exist';
       const status = 404;
 
-      request1.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond(request1, status, message);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      request2.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond(request2, status, message);
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
@@ -587,30 +513,18 @@ describe('RemoteTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      const request1 = jasmine.Ajax.requests.at(0);
-      const request2 = jasmine.Ajax.requests.at(1);
+      const request1 = xhrAt(0);
+      const request2 = xhrAt(1);
 
       const message = 'Template does not exist';
       const status = 404;
 
-      request1.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond(request1, status, message);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      request2.respondWith({
-        status: 200,
-        responseText: '<div>Hello World</div>',
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request2, '<div>Hello World</div>');
 
       expect(success).not.toHaveBeenCalledWith();
       expect(error).toHaveBeenCalledWith({
@@ -631,16 +545,10 @@ describe('RemoteTemplateManager', () => {
       expect(Backbone.ajax).toHaveBeenCalled();
       expect(Backbone.ajax.calls.count()).toBe(1);
 
-      const request1 = jasmine.Ajax.requests.at(0);
+      const request1 = xhrAt(0);
       const message = 'Template does not exist';
       const status = 404;
-      request1.respondWith({
-        status: status,
-        responseText: message,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond(request1, status, message);
 
       expect(success1).not.toHaveBeenCalled();
       expect(error1).toHaveBeenCalled();
@@ -658,15 +566,9 @@ describe('RemoteTemplateManager', () => {
       expect(Backbone.ajax).toHaveBeenCalled();
       expect(Backbone.ajax.calls.count()).toBe(2);
 
-      const request2 = jasmine.Ajax.requests.at(1);
+      const request2 = xhrAt(1);
       const template = '<div>Hello World</div>';
-      request2.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request2, template);
 
       expect(success2).toHaveBeenCalled();
       expect(error2).not.toHaveBeenCalled();
@@ -678,14 +580,8 @@ describe('RemoteTemplateManager', () => {
 
       templateManager.fetch(id);
 
-      const request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      const request = mostRecentXhr();
+      respondHtml(request, template);
 
       expect(templateManager._cache).toBeDefined();
       expect(templateManager._cache.get(id)).toEqual(template);

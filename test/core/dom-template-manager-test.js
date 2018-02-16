@@ -26,11 +26,9 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import {DomTemplateManager} from '../../src/core/dom-template-manager';
 import {createTemplate} from '../utils/create-script-template';
+import {tick} from '../utils/clock';
 
 describe('DomTemplateManager', () => {
-  beforeEach(() => jasmine.clock().install());
-  afterEach(() => jasmine.clock().uninstall());
-
   it('should create template manager', () => {
     const domTemplateManager = new DomTemplateManager();
     expect(domTemplateManager).toBeDefined();
@@ -141,7 +139,7 @@ describe('DomTemplateManager', () => {
       expect(error).not.toHaveBeenCalled();
       expect(success).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(html);
@@ -165,7 +163,7 @@ describe('DomTemplateManager', () => {
       expect(error1).not.toHaveBeenCalled();
       expect(success1).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error1).not.toHaveBeenCalled();
       expect(success1).toHaveBeenCalledWith(html);
@@ -184,7 +182,7 @@ describe('DomTemplateManager', () => {
       expect(error2).not.toHaveBeenCalled();
       expect(success2).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error2).not.toHaveBeenCalled();
       expect(success2).toHaveBeenCalledWith(html);
@@ -215,7 +213,7 @@ describe('DomTemplateManager', () => {
       expect(error).not.toHaveBeenCalled();
       expect(success).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(error).not.toHaveBeenCalled();
       expect(success).toHaveBeenCalledWith(_.object(ids, html));
@@ -231,7 +229,7 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
@@ -255,7 +253,7 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
@@ -275,7 +273,7 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
@@ -310,7 +308,7 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
@@ -338,7 +336,7 @@ describe('DomTemplateManager', () => {
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.clock().tick();
+      tick();
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalledWith({
@@ -360,7 +358,7 @@ describe('DomTemplateManager', () => {
 
       domTemplateManager.fetch(id, {success, error});
 
-      jasmine.clock().tick();
+      tick();
 
       expect(domTemplateManager._cache).toBeDefined();
       expect(domTemplateManager._cache.get(id)).toEqual(html);

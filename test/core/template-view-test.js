@@ -26,6 +26,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import {templateManager} from '../../src/core/template-manager';
 import {TemplateView} from '../../src/core/template-view';
+import {countXhr, mostRecentXhr, respond404, respondHtml, xhrAt} from '../utils/xhr';
 
 describe('TemplateView', () => {
   afterEach(() => {
@@ -72,22 +73,6 @@ describe('TemplateView', () => {
       _.template.calls.reset();
       tmplMngr.fetch.calls.reset();
       view.trigger.calls.reset();
-    });
-
-    beforeEach(() => {
-      jasmine.Ajax.install();
-    });
-
-    beforeEach(() => {
-      jasmine.clock().install();
-    });
-
-    afterEach(() => {
-      jasmine.Ajax.uninstall();
-    });
-
-    afterEach(() => {
-      jasmine.clock().uninstall();
     });
 
     it('should get empty json', () => {
@@ -186,16 +171,10 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
 
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(success).toHaveBeenCalledWith(template);
       expect(error).not.toHaveBeenCalled();
@@ -227,7 +206,7 @@ describe('TemplateView', () => {
 
       view.fetchTemplates({success, error});
 
-      expect(jasmine.Ajax.requests.count()).toBe(2);
+      expect(countXhr()).toBe(2);
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
       expect(tmplMngr.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
@@ -238,24 +217,12 @@ describe('TemplateView', () => {
       const template1 = '<div>Hello <%= model.name %></div>';
       const template2 = '<div>Bye <%= model.name %></div>';
 
-      jasmine.Ajax.requests.at(0).respondWith({
-        status: 200,
-        responseText: template1,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(0), template1);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.Ajax.requests.at(1).respondWith({
-        status: 200,
-        responseText: template2,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(1), template2);
 
       expect(success).toHaveBeenCalledWith({
         foo: template1,
@@ -281,15 +248,9 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
-      const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 404,
-        responseText: template,
-        contentType: 'text/html',
-      });
+      const request = mostRecentXhr();
 
-      jasmine.clock().tick();
+      respond404(request);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalled();
@@ -322,15 +283,10 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
 
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view.onRender).toHaveBeenCalled();
       expect(view.onRenderError).not.toHaveBeenCalled();
@@ -376,14 +332,7 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        status: 404,
-        responseText: 'Cannot find template',
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respond404(mostRecentXhr());
 
       expect(_.template).not.toHaveBeenCalled();
       expect(view.$el.html()).toEqual('');
@@ -424,15 +373,9 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view._triggerRenderSuccess).toHaveBeenCalled();
       expect(view._triggerRenderError).not.toHaveBeenCalled();
@@ -454,11 +397,7 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        status: 404,
-      });
-
-      jasmine.clock().tick();
+      respond404(mostRecentXhr());
 
       expect(view._triggerRenderError).toHaveBeenCalled();
       expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
@@ -478,11 +417,7 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        status: 404,
-      });
-
-      jasmine.clock().tick();
+      respond404(mostRecentXhr());
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
     });
@@ -501,15 +436,9 @@ describe('TemplateView', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
     });
@@ -528,7 +457,7 @@ describe('TemplateView', () => {
       view.render();
 
       expect(view.$el.html()).toBe('');
-      expect(jasmine.Ajax.requests.count()).toBe(2);
+      expect(countXhr()).toBe(2);
       expect(tmplMngr.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
         success: jasmine.any(Function),
         error: jasmine.any(Function),
@@ -537,23 +466,11 @@ describe('TemplateView', () => {
       const template1 = '<div>Hello <%= model.name %></div>';
       const template2 = '<div>Bye <%= model.name %></div>';
 
-      jasmine.Ajax.requests.at(0).respondWith({
-        status: 200,
-        responseText: template1,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(0), template1);
 
       expect(view.$el.html()).toBe('');
 
-      jasmine.Ajax.requests.at(1).respondWith({
-        status: 200,
-        responseText: template2,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(1), template2);
 
       expect(view.$el.html()).not.toBe('');
     });

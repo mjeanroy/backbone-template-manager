@@ -26,6 +26,7 @@ import Backbone from 'backbone';
 import Mustache from 'mustache';
 import {templateManager} from '../../src/core/template-manager';
 import {TemplateViewMixin} from '../../src/core/template-view-mixin';
+import {countXhr, mostRecentXhr, respond404, respondHtml, xhrAt} from '../utils/xhr';
 
 describe('TemplateViewMixin', () => {
   let ViewImpl;
@@ -69,22 +70,6 @@ describe('TemplateViewMixin', () => {
       });
 
       spyOn(defaultTemplateManager, 'fetch').and.callThrough();
-    });
-
-    beforeEach(() => {
-      jasmine.Ajax.install();
-    });
-
-    beforeEach(() => {
-      jasmine.clock().install();
-    });
-
-    afterEach(() => {
-      jasmine.Ajax.uninstall();
-    });
-
-    afterEach(() => {
-      jasmine.clock().uninstall();
     });
 
     it('should get empty json', () => {
@@ -213,15 +198,10 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
 
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(success).toHaveBeenCalledWith(template);
       expect(error).not.toHaveBeenCalled();
@@ -256,7 +236,7 @@ describe('TemplateViewMixin', () => {
 
       view.fetchTemplates({success, error});
 
-      expect(jasmine.Ajax.requests.count()).toBe(2);
+      expect(countXhr()).toBe(2);
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
       expect(defaultTemplateManager.fetch).toHaveBeenCalledWith(['foo', 'bar'], {
@@ -267,24 +247,12 @@ describe('TemplateViewMixin', () => {
       const template1 = '<div>Hello <%= model.name %></div>';
       const template2 = '<div>Bye <%= model.name %></div>';
 
-      jasmine.Ajax.requests.at(0).respondWith({
-        status: 200,
-        responseText: template1,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(0), template1);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).not.toHaveBeenCalled();
 
-      jasmine.Ajax.requests.at(1).respondWith({
-        status: 200,
-        responseText: template2,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(xhrAt(1), template2);
 
       expect(success).toHaveBeenCalledWith({
         foo: template1,
@@ -313,15 +281,9 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
-      const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 404,
-        responseText: template,
-        contentType: 'text/html',
-      });
+      const request = mostRecentXhr();
 
-      jasmine.clock().tick();
+      respond404(request);
 
       expect(success).not.toHaveBeenCalled();
       expect(error).toHaveBeenCalled();
@@ -357,15 +319,10 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
 
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view.onRender).toHaveBeenCalled();
       expect(view.onRenderError).not.toHaveBeenCalled();
@@ -408,14 +365,9 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
-      request.respondWith({
-        status: 404,
-        responseText: 'Cannot find template',
-        contentType: 'text/html',
-      });
+      const request = mostRecentXhr();
 
-      jasmine.clock().tick();
+      respond404(request);
 
       expect(view.$el.html()).toEqual('');
 
@@ -461,15 +413,10 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
 
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view._triggerRenderSuccess).toHaveBeenCalled();
       expect(view._triggerRenderError).not.toHaveBeenCalled();
@@ -494,11 +441,7 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        status: 404,
-      });
-
-      jasmine.clock().tick();
+      respond404(mostRecentXhr());
 
       expect(view._triggerRenderError).toHaveBeenCalled();
       expect(view._triggerRenderSuccess).not.toHaveBeenCalled();
@@ -521,11 +464,7 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        status: 404,
-      });
-
-      jasmine.clock().tick();
+      respond404(mostRecentXhr());
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
     });
@@ -547,15 +486,10 @@ describe('TemplateViewMixin', () => {
         error: jasmine.any(Function),
       });
 
-      const request = jasmine.Ajax.requests.mostRecent();
+      const request = mostRecentXhr();
       const template = '<div>Hello <%= model.name %></div>';
-      request.respondWith({
-        status: 200,
-        responseText: template,
-        contentType: 'text/html',
-      });
 
-      jasmine.clock().tick();
+      respondHtml(request, template);
 
       expect(view._triggerRenderDone).toHaveBeenCalled();
     });
@@ -602,28 +536,18 @@ describe('TemplateViewMixin', () => {
       const templateFoo = '<div>{{ > bar }}</div>';
       const templateBar = 'Hello {{ model.name }}';
 
-      expect(jasmine.Ajax.requests.count()).toBe(2);
-      const r1 = jasmine.Ajax.requests.at(0);
-      const r2 = jasmine.Ajax.requests.at(1);
+      expect(countXhr()).toBe(2);
+      const r1 = xhrAt(0);
+      const r2 = xhrAt(1);
 
-      r1.respondWith({
-        status: 200,
-        responseText: templateFoo,
-        contentType: 'text/html',
-      });
+      respondHtml(r1, templateFoo);
 
       expect(view.trigger).not.toHaveBeenCalledWith('render:success');
       expect(view.trigger).not.toHaveBeenCalledWith('render:error');
       expect(view.trigger).not.toHaveBeenCalledWith('render:done');
       expect(view.$el.html()).toBe('');
 
-      r2.respondWith({
-        status: 200,
-        responseText: templateBar,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(r2, templateBar);
 
       expect(view.onRender).toHaveBeenCalled();
       expect(view.onRenderError).not.toHaveBeenCalled();
@@ -660,17 +584,11 @@ describe('TemplateViewMixin', () => {
 
       view.renderTemplates();
 
-      expect(jasmine.Ajax.requests.count()).toBe(1);
+      expect(countXhr()).toBe(1);
 
       const templateFoo = '<div>{{ > bar }}</div>';
 
-      jasmine.Ajax.requests.mostRecent().respondWith({
-        status: 200,
-        responseText: templateFoo,
-        contentType: 'text/html',
-      });
-
-      jasmine.clock().tick();
+      respondHtml(mostRecentXhr(), templateFoo);
 
       expect(view._buildPartials).toHaveBeenCalledWith({
         foo: templateFoo,

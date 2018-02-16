@@ -22,19 +22,11 @@
  * SOFTWARE.
  */
 
-import $ from 'jquery';
-import Backbone from 'backbone';
-
-// Ensure jQuery and Backbone are correctly associated before each tests.
-beforeEach(() => {
-  Backbone.$ = $;
-
-  // Install timers and XHR mocks.
-  jasmine.clock().install();
-  jasmine.Ajax.install();
-});
-
-afterEach(() => {
-  jasmine.clock().uninstall();
-  jasmine.Ajax.uninstall();
-});
+/**
+ * Trigger next tick.
+ *
+ * @return {void}
+ */
+export function tick() {
+  jasmine.clock().tick();
+}
