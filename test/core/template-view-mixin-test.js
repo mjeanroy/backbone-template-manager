@@ -266,6 +266,7 @@ describe('TemplateViewMixin', () => {
 
       const template1 = '<div>Hello <%= model.name %></div>';
       const template2 = '<div>Bye <%= model.name %></div>';
+
       jasmine.Ajax.requests.at(0).respondWith({
         status: 200,
         responseText: template1,
@@ -282,6 +283,8 @@ describe('TemplateViewMixin', () => {
         responseText: template2,
         contentType: 'text/html',
       });
+
+      jasmine.clock().tick();
 
       expect(success).toHaveBeenCalledWith({
         foo: template1,
@@ -666,6 +669,8 @@ describe('TemplateViewMixin', () => {
         responseText: templateFoo,
         contentType: 'text/html',
       });
+
+      jasmine.clock().tick();
 
       expect(view._buildPartials).toHaveBeenCalledWith({
         foo: templateFoo,

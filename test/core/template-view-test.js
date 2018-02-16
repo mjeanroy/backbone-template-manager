@@ -188,6 +188,7 @@ describe('TemplateView', () => {
 
       const request = jasmine.Ajax.requests.mostRecent();
       const template = '<div>Hello <%= model.name %></div>';
+
       request.respondWith({
         status: 200,
         responseText: template,
@@ -236,6 +237,7 @@ describe('TemplateView', () => {
 
       const template1 = '<div>Hello <%= model.name %></div>';
       const template2 = '<div>Bye <%= model.name %></div>';
+
       jasmine.Ajax.requests.at(0).respondWith({
         status: 200,
         responseText: template1,
@@ -252,6 +254,8 @@ describe('TemplateView', () => {
         responseText: template2,
         contentType: 'text/html',
       });
+
+      jasmine.clock().tick();
 
       expect(success).toHaveBeenCalledWith({
         foo: template1,
@@ -539,6 +543,8 @@ describe('TemplateView', () => {
         contentType: 'text/html',
       });
 
+      jasmine.clock().tick();
+
       expect(view.$el.html()).toBe('');
 
       jasmine.Ajax.requests.at(1).respondWith({
@@ -546,6 +552,8 @@ describe('TemplateView', () => {
         responseText: template2,
         contentType: 'text/html',
       });
+
+      jasmine.clock().tick();
 
       expect(view.$el.html()).not.toBe('');
     });
