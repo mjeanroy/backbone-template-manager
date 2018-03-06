@@ -102,7 +102,7 @@
     "rollup-plugin-alias": "1.4.0",
     "rollup-plugin-babel": "3.0.3",
     "rollup-plugin-commonjs": "9.0.0",
-    "rollup-plugin-license": "0.5.0",
+    "rollup-plugin-license": "0.6.0",
     "rollup-plugin-node-resolve": "3.0.3",
     "rollup-plugin-strip-banner": "0.2.0",
     "run-sequence": "2.2.1",
