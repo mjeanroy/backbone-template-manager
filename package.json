@@ -105,7 +105,7 @@
     "rollup-plugin-node-resolve": "3.3.0",
     "rollup-plugin-strip-banner": "0.2.0",
     "run-sequence": "2.2.1",
-    "uglify-js": "3.4.0",
+    "uglify-js": "3.4.1",
     "underscore": ">=1.6.0"
   }
 }
