@@ -36,7 +36,7 @@ const alias = require('rollup-plugin-alias');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const babelConf = require('../babel.conf');
 
 // Temporary directory name.
@@ -69,25 +69,34 @@ module.exports = (options) => {
     return rollup.rollup(rollupConf)
       .then((bundle) => {
         log(colors.gray(`[${id}] Generating ES6 bundle`));
-        return bundle.generate(rollupConf).then((result) => {
-          log(colors.gray(`[${id}] Creating temporary directory`));
-          const deferred = Q.defer();
-          const dir = path.join(options.sample, id, TMP);
-          mkdirp(dir, (err) => err ? deferred.reject(err) : deferred.resolve({dir, result}));
-          return deferred.promise;
-        })
-        .then(({dir, result}) => {
-          log(colors.gray(`[${id}] Creating ES5 bundle`));
-          const dest = path.join(dir, 'bundle.js');
-          const es5 = babel.transform(result.code, babelConf);
-          return {dest, es5};
-        })
-        .then(({dest, es5}) => {
-          log(colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
-          const deferred = Q.defer();
-          fs.writeFile(dest, es5.code, 'utf-8', (err) => err ? deferred.reject(err) : deferred.resolve());
-          return deferred.promise;
-        });
+        return bundle.generate(rollupConf)
+          .then((result) => {
+            log(colors.gray(`[${id}] Creating temporary directory`));
+            const deferred = Q.defer();
+            const dir = path.join(options.sample, id, TMP);
+
+            mkdirp(dir, (err) => (
+              err ? deferred.reject(err) : deferred.resolve({dir, result})
+            ));
+
+            return deferred.promise;
+          })
+          .then(({dir, result}) => {
+            log(colors.gray(`[${id}] Creating ES5 bundle`));
+            const dest = path.join(dir, 'bundle.js');
+            const promise = babel.transformAsync(result.code, babelConf());
+            return promise.then((es5) => ({dest, es5}));
+          })
+          .then(({dest, es5}) => {
+            log(colors.gray(`[${id}] Writing ES5 bundle to: ${dest}`));
+            const deferred = Q.defer();
+
+            fs.writeFile(dest, es5.code, 'utf-8', (err) => (
+              err ? deferred.reject(err) : deferred.resolve()
+            ));
+
+            return deferred.promise;
+          })
       })
       .catch((err) => {
         log(colors.red(err));

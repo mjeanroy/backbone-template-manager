@@ -29,31 +29,21 @@ const moduleName = conf.moduleName;
 const globals = conf.globals;
 const loose = conf.loose;
 
-module.exports = {
+module.exports = () => ({
   moduleId: moduleName,
-  plugins: [
-    ['transform-es2015-arrow-functions',         {loose}],
-    ['transform-es2015-block-scoped-functions',  {loose}],
-    ['transform-es2015-block-scoping',           {loose}],
-    ['transform-es2015-classes',                 {loose}],
-    ['transform-es2015-computed-properties',     {loose}],
-    ['check-es2015-constants',                   {loose}],
-    ['transform-es2015-destructuring',           {loose}],
-    ['transform-es2015-duplicate-keys',          {loose}],
-    ['transform-es2015-for-of',                  {loose}],
-    ['transform-es2015-literals',                {loose}],
-    ['transform-es2015-object-super',            {loose}],
-    ['transform-es2015-parameters',              {loose}],
-    ['transform-es2015-shorthand-properties',    {loose}],
-    ['transform-es2015-spread',                  {loose}],
-    ['transform-es2015-sticky-regex',            {loose}],
-    ['transform-es2015-template-literals',       {loose}],
-    ['transform-es2015-typeof-symbol',           {loose}],
-    ['transform-es2015-unicode-regex',           {loose}],
-    ['transform-es2015-modules-umd',             {loose, globals}],
 
-    ['transform-es3-member-expression-literals'],
-    ['transform-es3-property-literals'],
-    ['transform-es3-modules-literals'],
+  presets: [
+    ["@babel/preset-env", {
+      loose: true,
+      targets: {
+        ie: '8',
+      },
+    }],
   ],
-};
+
+  plugins: [
+    "@babel/plugin-transform-property-literals",
+    "@babel/plugin-transform-member-expression-literals",
+    "@babel/plugin-transform-reserved-words",
+  ],
+});
