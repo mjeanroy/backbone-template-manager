@@ -1,8 +1,9 @@
 # NPM
-node_modules/
-npm-debug.log
+/node_modules/
+/npm-debug.log
+/package-lock.json
 
 # Build
 /dist/
-sample/*/tmp/
-sample/*/.tmp/
+/sample/*/tmp/
+/sample/*/.tmp/
