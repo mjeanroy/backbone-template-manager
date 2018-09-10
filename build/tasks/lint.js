@@ -37,8 +37,8 @@ module.exports = (options) => {
 
   gulp.task('lint', () => {
     return gulp.src(sources)
-          .pipe(eslint())
-          .pipe(eslint.format())
-          .pipe(eslint.failAfterError());
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
   });
 };

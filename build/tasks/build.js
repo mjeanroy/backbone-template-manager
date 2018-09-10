@@ -49,16 +49,16 @@ const applyRollup = (config) => {
 module.exports = (options) => {
   gulp.task('build', ['clean'], () => {
     return applyRollup(rollupConf)
-      .then((src) => {
-        log(colors.gray(`Creating ES5 bundle`));
-        return gulp.src(src)
-          .pipe(strip())
-          .pipe(babel())
-          .pipe(header({file: options.license}))
-          .pipe(gulp.dest(path.join(options.dist, 'es5')))
-          .pipe(uglify(uglifyConf))
-          .pipe(rename({extname: '.min.js'}))
-          .pipe(gulp.dest(path.join(options.dist, 'es5')));
-      });
+        .then((src) => {
+          log(colors.gray(`Creating ES5 bundle`));
+          return gulp.src(src)
+              .pipe(strip())
+              .pipe(babel())
+              .pipe(header({file: options.license}))
+              .pipe(gulp.dest(path.join(options.dist, 'es5')))
+              .pipe(uglify(uglifyConf))
+              .pipe(rename({extname: '.min.js'}))
+              .pipe(gulp.dest(path.join(options.dist, 'es5')));
+        });
   });
 };
