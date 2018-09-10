@@ -67,14 +67,15 @@ module.exports = (options) => {
     };
 
     return rollup.rollup(rollupConf)
-      .then((bundle) => {
-        log(colors.gray(`[${id}] Generating ES6 bundle`));
-        return bundle.generate(rollupConf).then((result) => {
-          log(colors.gray(`[${id}] Creating temporary directory`));
-          const deferred = Q.defer();
-          const dir = path.join(options.sample, id, TMP);
-          mkdirp(dir, (err) => err ? deferred.reject(err) : deferred.resolve({dir, result}));
-          return deferred.promise;
+        .then((bundle) => {
+          log(colors.gray(`[${id}] Generating ES6 bundle`));
+          return bundle.generate(rollupConf).then((result) => {
+            log(colors.gray(`[${id}] Creating temporary directory`));
+            const deferred = Q.defer();
+            const dir = path.join(options.sample, id, TMP);
+            mkdirp(dir, (err) => err ? deferred.reject(err) : deferred.resolve({dir, result}));
+            return deferred.promise;
+          });
         })
         .then(({dir, result}) => {
           log(colors.gray(`[${id}] Creating ES5 bundle`));
@@ -87,11 +88,10 @@ module.exports = (options) => {
           const deferred = Q.defer();
           fs.writeFile(dest, es5.code, 'utf-8', (err) => err ? deferred.reject(err) : deferred.resolve());
           return deferred.promise;
+        })
+        .catch((err) => {
+          log(colors.red(err));
         });
-      })
-      .catch((err) => {
-        log(colors.red(err));
-      });
   };
 
   const bundleAll = () => {

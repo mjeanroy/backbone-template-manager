@@ -43,19 +43,19 @@ module.exports = (options) => {
     const distFilter = gulpFilter(isDist, {restore: true});
 
     return gulp.src(src)
-      .pipe(git.add({args: '-f'}))
-      .pipe(git.commit(`release: release version ${version}`))
-      .pipe(tagVersion())
-      .pipe(distFilter)
-      .pipe(git.rm({args: '-r'}))
-      .pipe(git.commit('release: prepare new release'));
+        .pipe(git.add({args: '-f'}))
+        .pipe(git.commit(`release: release version ${version}`))
+        .pipe(tagVersion())
+        .pipe(distFilter)
+        .pipe(git.rm({args: '-r'}))
+        .pipe(git.commit('release: prepare new release'));
   });
 
   ['patch', 'minor', 'major'].forEach((type) => {
     gulp.task(`bump:${type}`, () => {
       return gulp.src(packageJson)
-        .pipe(bump({type}))
-        .pipe(gulp.dest(options.root));
+          .pipe(bump({type}))
+          .pipe(gulp.dest(options.root));
     });
 
     // A release run a bump task and a tag task in sequence.

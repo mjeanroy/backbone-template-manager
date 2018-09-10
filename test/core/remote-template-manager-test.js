@@ -142,23 +142,23 @@ describe('RemoteTemplateManager', () => {
       };
 
       expect(apply({})).toThrow(
-        new Error('Templates must be a string or an array of string, found: {}')
+          new Error('Templates must be a string or an array of string, found: {}')
       );
 
       expect(apply(1)).toThrow(
-        new Error('Templates must be a string or an array of string, found: 1')
+          new Error('Templates must be a string or an array of string, found: 1')
       );
 
       expect(apply(true)).toThrow(
-        new Error('Templates must be a string or an array of string, found: true')
+          new Error('Templates must be a string or an array of string, found: true')
       );
 
       expect(apply(null)).toThrow(
-        new Error('Templates must be a string or an array of string, found: null')
+          new Error('Templates must be a string or an array of string, found: null')
       );
 
       expect(apply(undefined)).toThrow(
-        new Error('Templates must be a string or an array of string, found: undefined')
+          new Error('Templates must be a string or an array of string, found: undefined')
       );
     });
 
@@ -173,23 +173,23 @@ describe('RemoteTemplateManager', () => {
       };
 
       expect(apply([])).toThrow(
-        new Error('Templates must be a string or an array of string, found: []')
+          new Error('Templates must be a string or an array of string, found: []')
       );
 
       expect(apply([{}])).toThrow(
-        new Error('Templates must be a string or an array of string, found: [{}]')
+          new Error('Templates must be a string or an array of string, found: [{}]')
       );
 
       expect(apply(['foo', 'bar', true])).toThrow(
-        new Error('Templates must be a string or an array of string, found: ["foo","bar",true]')
+          new Error('Templates must be a string or an array of string, found: ["foo","bar",true]')
       );
 
       expect(apply(['foo', 'bar', 1])).toThrow(
-        new Error('Templates must be a string or an array of string, found: ["foo","bar",1]')
+          new Error('Templates must be a string or an array of string, found: ["foo","bar",1]')
       );
 
       expect(apply(['foo', 'bar', null])).toThrow(
-        new Error('Templates must be a string or an array of string, found: ["foo","bar",null]')
+          new Error('Templates must be a string or an array of string, found: ["foo","bar",null]')
       );
     });
 
