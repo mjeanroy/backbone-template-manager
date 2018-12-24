@@ -24,7 +24,7 @@
 
 /* eslint no-multi-spaces:0 */
 
-const conf = require('./app.conf');
+const conf = require('./conf.js');
 const moduleName = conf.moduleName;
 const globals = conf.globals;
 const loose = conf.loose;

@@ -23,23 +23,13 @@
  */
 
 const path = require('path');
-const rootDirectory = path.join(__dirname, '..');
+const del = require('del');
+const conf = require('../conf');
 
-module.exports = {
-  // Path configurations.
-  root: rootDirectory,
-  src: path.join(rootDirectory, 'src'),
-  dist: path.join(rootDirectory, 'dist'),
-  build: path.join(rootDirectory, 'build'),
-  test: path.join(rootDirectory, 'test'),
-  sample: path.join(rootDirectory, 'sample'),
-  license: path.join(rootDirectory, 'LICENSE'),
-
-  // Application settings.
-  moduleName: 'BackboneTemplateManager',
-  loose: true,
-  globals: {
-    underscore: '_',
-    backbone: 'Backbone',
-  },
+module.exports = function clean() {
+  return del([
+    conf.dist,
+    path.join(conf.sample, '.tmp'),
+    path.join(conf.sample, '*', '.tmp'),
+  ]);
 };

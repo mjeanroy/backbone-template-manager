@@ -23,22 +23,24 @@
  */
 
 const path = require('path');
-const gulp = require('gulp');
-const eslint = require('gulp-eslint');
+const ROOT = path.join(__dirname, '..');
+const DIST = path.join(ROOT, 'dist');
 
-module.exports = (options) => {
-  const sources = [
-    path.join(options.src, '**', '*.js'),
-    path.join(options.test, '**', '*.js'),
-    path.join(options.build, '**', '*.js'),
-    path.join(options.sample, '*', '*.js'),
-    path.join(options.sample, '*.js'),
-  ];
+module.exports = {
+  root: ROOT,
+  dist: DIST,
+  src: path.join(ROOT, 'src'),
+  scripts: path.join(ROOT, 'scripts'),
+  test: path.join(ROOT, 'test'),
+  sample: path.join(ROOT, 'sample'),
+  license: path.join(ROOT, 'LICENSE'),
+  es5: path.join(DIST, 'es5'),
 
-  gulp.task('lint', () => {
-    return gulp.src(sources)
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-  });
+  bundle: 'backbone-template-manager.js',
+  moduleName: 'BackboneTemplateManager',
+  loose: true,
+  globals: {
+    underscore: '_',
+    backbone: 'Backbone',
+  },
 };

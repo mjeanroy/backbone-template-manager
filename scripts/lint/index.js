@@ -22,11 +22,29 @@
  * SOFTWARE.
  */
 
+const path = require('path');
 const gulp = require('gulp');
-const del = require('del');
+const eslint = require('gulp-eslint');
+const log = require('../log');
+const conf = require('../conf');
 
-module.exports = (options) => {
-  gulp.task('clean', () => {
-    return del(options.dist);
-  });
+module.exports = function lint() {
+  const sources = [
+    path.join(conf.src, '**', '*.js'),
+    path.join(conf.test, '**', '*.js'),
+    path.join(conf.scripts, '**', '*.js'),
+    path.join(conf.sample, '*', '*.js'),
+    path.join(conf.sample, '*.js'),
+  ];
+
+  log.debug('Linting source files: ');
+
+  sources.forEach((src) => (
+    log.debug(`  ${src}`)
+  ));
+
+  return gulp.src(sources)
+      .pipe(eslint())
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError());
 };

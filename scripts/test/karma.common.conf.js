@@ -25,7 +25,7 @@
 const path = require('path');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
-const conf = require('./app.conf');
+const conf = require('../conf');
 
 module.exports = (config) => ({
   // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -89,7 +89,5 @@ module.exports = (config) => ({
       nodeResolve(),
       commonjs(),
     ],
-
-    legacy: true,
   },
 });

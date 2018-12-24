@@ -1,6 +1,6 @@
 {
   "compact": false,
   "presets": [
-    "./build/babel.conf.js"
+    "./scripts/babel.conf.js"
   ]
 }

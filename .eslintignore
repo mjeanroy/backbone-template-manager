@@ -22,17 +22,5 @@
 # SOFTWARE.
 ##
 
-# NPM
-/node_modules
-/npm-debug.log
-
 # Ignored file & directories
-/sample
-/src
-/test
-/scripts
-/.travis.yml
-/.nvmrc
-/.eslintrc
-/.babelrc
-/gulpfile.js
+/dist
