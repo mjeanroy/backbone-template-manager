@@ -20,14 +20,13 @@
   "homepage": "",
   "ignore": [
     "**/.*",
-    "node_modules",
-    "bower_components",
-    "src",
-    "test",
-    "tests",
-    "sample",
-    "build",
-    "gulpfile.js"
+    "/node_modules",
+    "/bower_components",
+    "/src",
+    "/test",
+    "/sample",
+    "/scripts",
+    "/gulpfile.js"
   ],
   "dependencies": {
     "backbone": ">=1.0.0",

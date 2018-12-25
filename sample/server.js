@@ -25,23 +25,25 @@
 const path = require('path');
 const express = require('express');
 const connectLivereload = require('connect-livereload');
+const conf = require('../scripts/conf');
 
 const port = 8080;
 const app = express();
-const root = path.join(__dirname, '..');
 
 app.use(connectLivereload());
 
 // Static directories
-app.use('/vendors', express.static(path.join(root, 'node_modules')));
-app.use('/dist', express.static(path.join(root, 'sample', '.tmp')));
-app.use('/dist', express.static(path.join(root, 'dist')));
-app.use('/', express.static(path.join(root, 'sample')));
+app.use('/vendors', express.static(path.join(conf.root, 'node_modules')));
+app.use('/dist', express.static(path.join(conf.sample, '.tmp')));
+app.use('/dist', express.static(conf.dist));
+app.use('/', express.static(conf.sample));
 
 const frameworks = require('./techs.json');
 
-app.get('/api/frameworks', (req, res) => res.json(frameworks));
+app.get('/api/frameworks', (req, res) => (
+  res.json(frameworks)
+));
 
 app.listen(port, () => {
-  console.log('Server listening on : http://localhost:' + port);
+  console.log(`Server listening on : http://localhost:${port}`);
 });

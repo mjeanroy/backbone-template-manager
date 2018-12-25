@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Mickael Jeanroy
+ * Copyright (c) 2016-2018 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,23 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const fs = require('fs');
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
-const conf = require('./build/app.conf');
+const clean = require('./scripts/clean');
+const lint = require('./scripts/lint');
+const build = require('./scripts/build');
+const test = require('./scripts/test');
+const serve = require('./scripts/serve');
+const release = require('./scripts/release');
 
-// Read sub-tasks
-const tasks = path.join(conf.build, 'tasks');
-fs.readdirSync(tasks).forEach((file) => {
-  require(path.join(tasks, file))(conf);
-});
-
-gulp.task('dist', (done) => {
-  runSequence('lint', 'test', 'build', done);
-});
-
-gulp.task('default', ['dist']);
+module.exports = {
+  'clean': clean,
+  'lint': lint,
+  'build': gulp.series(clean, lint, build),
+  'tdd': test.tdd,
+  'test': gulp.series(clean, lint, test.test),
+  'travis': gulp.series(lint, test.travis),
+  'serve': gulp.series(clean, build, serve),
+  'release:patch': gulp.series(clean, lint, build, release.patch),
+  'release:minor': gulp.series(clean, lint, build, release.minor),
+  'release:major': gulp.series(clean, lint, build, release.major),
+};

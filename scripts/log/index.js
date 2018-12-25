@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Mickael Jeanroy
+ * Copyright (c) 2016-2018 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,40 +22,41 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const gulp = require('gulp');
 const log = require('fancy-log');
 const colors = require('ansi-colors');
-const Q = require('q');
-const karma = require('karma');
-const KarmaServer = karma.Server;
 
-module.exports = (options) => {
-  const runKarma = (mode) => {
-    const configFile = path.join(options.build, `karma.${mode}.conf.js`);
-    const deferred = Q.defer();
-    const onDone = () => deferred.resolve();
-    const config = {configFile};
+/**
+ * Log message with `DEBUG` level.
+ *
+ * @param {string} msg The message to log.
+ * @return {void}
+ */
+function debug(msg) {
+  log(colors.gray(msg));
+}
 
-    log(colors.gray(`Running Karma server with configuration: ${configFile}`));
+/**
+ * Log message with `ERROR` level.
+ *
+ * @param {string} msg The message to log.
+ * @return {void}
+ */
+function error(msg) {
+  log(colors.red(msg));
+}
 
-    const server = new KarmaServer(config, onDone);
-    server.start();
-    return deferred.promise;
-  };
+/**
+ * Log message with `INFO` level.
+ *
+ * @param {string} msg The message to log.
+ * @return {void}
+ */
+function info(msg) {
+  log(colors.green(msg));
+}
 
-  ['test', 'tdd', 'saucelab'].forEach((mode) => {
-    gulp.task(mode, () => {
-      return runKarma(mode);
-    });
-  });
-
-  gulp.task('travis', () => {
-    if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
-      log(colors.grey('SauceLab environment not set, running classic test suite'));
-      return runKarma('test');
-    }
-
-    return runKarma('saucelab');
-  });
+module.exports = {
+  debug,
+  info,
+  error,
 };

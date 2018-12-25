@@ -26,15 +26,14 @@ const path = require('path');
 const _ = require('lodash');
 const stripBanner = require('rollup-plugin-strip-banner');
 const license = require('rollup-plugin-license');
-const conf = require('./app.conf');
+const conf = require('../conf');
 
 module.exports = {
   input: path.join(conf.src, 'index.js'),
   external: _.keys(conf.globals),
-  legacy: true,
 
   output: {
-    file: path.join(conf.dist, 'backbone-template-manager.js'),
+    file: path.join(conf.dist, conf.bundle),
     format: 'es',
     globals: conf.globals,
   },

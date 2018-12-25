@@ -80,7 +80,7 @@ AbstractTemplateManager.prototype = {
    * @return {void}
    */
   fetch(templates, options) {
-    let opts = options || {};
+    const opts = options || {};
 
     let sources;
     let singular;
