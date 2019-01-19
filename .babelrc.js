@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2017 Mickael Jeanroy
+ * Copyright (c) 2016-2018 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,29 @@
  * SOFTWARE.
  */
 
-const path = require('path');
-const ROOT = path.join(__dirname, '..');
-const DIST = path.join(ROOT, 'dist');
+const conf = require('./scripts/conf.js');
 
 module.exports = {
-  root: ROOT,
-  dist: DIST,
-  src: path.join(ROOT, 'src'),
-  scripts: path.join(ROOT, 'scripts'),
-  test: path.join(ROOT, 'test'),
-  sample: path.join(ROOT, 'sample'),
-  license: path.join(ROOT, 'LICENSE'),
-  es5: path.join(DIST, 'es5'),
+  compact: false,
+  moduleId: conf.moduleName,
 
-  bundle: 'backbone-template-manager.js',
-  moduleName: 'BackboneTemplateManager',
-  loose: true,
+  presets: [
+    [
+      '@babel/preset-env', {
+        loose: conf.loose,
+        modules: false,
+      },
+    ],
+  ],
 
-  globals: {
-    underscore: '_',
-    backbone: 'Backbone',
-  },
+  plugins: [
+    [
+      '@babel/plugin-transform-modules-umd', {
+        globals: conf.globals,
+      },
+    ],
+
+    '@babel/plugin-transform-member-expression-literals',
+    '@babel/plugin-transform-property-literals',
+  ],
 };

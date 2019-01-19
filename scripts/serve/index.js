@@ -26,16 +26,15 @@ const fs = require('fs-extra');
 const path = require('path');
 const gulp = require('gulp');
 const gls = require('gulp-live-server');
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const rollup = require('rollup');
 const alias = require('rollup-plugin-alias');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 
+const conf = require('../conf');
 const build = require('../build');
 const log = require('../log');
-const conf = require('../conf');
-const babelConf = require('../babel.conf');
 
 // Temporary directory name.
 const TMP = '.tmp';
@@ -66,14 +65,26 @@ function generateESMBundle(id, rollupConf) {
  */
 function generateES5Bundle(id, code) {
   const dir = path.join(conf.sample, id, '.tmp');
-  const dest = path.join(dir, 'bundle.js');
+  const filename = path.join(dir, 'bundle.js');
 
   log.debug(`[${id}] Generating ES5 code`);
-  const result = babel.transform(code, babelConf);
-  const es5 = result.code;
 
-  log.debug(`[${id}] Writing ES5 bundle to: ${dest}`);
-  return fs.outputFile(dest, es5, 'utf-8');
+  return babel.transformAsync(code, {filename})
+      .then((result) => result.code)
+      .then((code) => writeES5Bundle(id, code, filename));
+}
+
+/**
+ * Write ES5 bundle on disk.
+ *
+ * @param {string} id Sample identifier.
+ * @param {string} code ES5 code.
+ * @param {string} filename Destination file.
+ * @return {Promise<Void>} The promise result.
+ */
+function writeES5Bundle(id, code, filename) {
+  log.debug(`[${id}] Writing ES5 bundle to: ${filename}`);
+  return fs.outputFile(filename, code, 'utf-8');
 }
 
 /**
