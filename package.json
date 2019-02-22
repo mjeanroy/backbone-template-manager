@@ -82,7 +82,7 @@
     "rollup-plugin-babel": "4.3.2",
     "rollup-plugin-commonjs": "9.2.0",
     "rollup-plugin-license": "0.8.1",
-    "rollup-plugin-node-resolve": "4.0.0",
+    "rollup-plugin-node-resolve": "4.0.1",
     "rollup-plugin-strip-banner": "0.2.0",
     "uglify-js": "3.4.9",
     "underscore": ">=1.6.0"
