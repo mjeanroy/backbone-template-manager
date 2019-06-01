@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
+/* eslint-env node */
+/* eslint-disable no-console */
+
 const path = require('path');
 const express = require('express');
 const connectLivereload = require('connect-livereload');

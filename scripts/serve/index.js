@@ -168,7 +168,7 @@ module.exports = function serve() {
      * @return {Promise<Void>} The done promise.
      */
     function onChangeDistFiles() {
-      log.debug(colors.gray(`Change detected in dist files, bundle app`));
+      log.debug(`Change detected in dist files, bundle app`);
       return bundleApps();
     }
 

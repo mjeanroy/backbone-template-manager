@@ -93,7 +93,7 @@ function runKarma(mode, done) {
   log.debug(`Running Karma server with configuration: ${configFile}`);
 
   server.start();
-};
+}
 
 module.exports = {
   tdd,
