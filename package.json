@@ -37,7 +37,7 @@
     "@babel/plugin-transform-member-expression-literals": "7.2.0",
     "@babel/plugin-transform-modules-umd": "7.2.0",
     "@babel/plugin-transform-property-literals": "7.2.0",
-    "@babel/preset-env": "7.4.5",
+    "@babel/preset-env": "7.5.0",
     "ansi-colors": "4.1.0",
     "backbone": ">=1.0.0",
     "bootstrap": "3.3.5",
