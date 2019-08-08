@@ -109,11 +109,7 @@ function bundleApp(id) {
         'backbone-template-manager': path.join(conf.dist, conf.bundle),
       }),
 
-      nodeResolve({
-        jsnext: true,
-        main: true,
-      }),
-
+      nodeResolve(),
       commonjs(),
     ],
   };
