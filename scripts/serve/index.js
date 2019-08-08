@@ -53,6 +53,10 @@ function generateESMBundle(id, rollupConf) {
       .then((bundle) => {
         log.debug(`[${id}] Generating ES6 bundle`);
         return bundle.generate(rollupConf);
+      })
+      .then((result) => {
+        log.debug(`[${id}] Bundle generated, returning output`);
+        return result.output[0];
       });
 }
 
