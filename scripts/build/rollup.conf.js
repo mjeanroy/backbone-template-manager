@@ -42,7 +42,9 @@ module.exports = {
     stripBanner(),
     license({
       banner: {
-        file: conf.license,
+        content: {
+          file: conf.license,
+        },
       },
     }),
   ],
