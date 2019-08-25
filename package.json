@@ -77,7 +77,7 @@
     "lodash": "4.17.15",
     "mustache": "3.0.2",
     "phantomjs-prebuilt": "2.1.16",
-    "rollup": "1.20.1",
+    "rollup": "1.20.2",
     "rollup-plugin-alias": "2.0.0",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-commonjs": "10.0.2",
