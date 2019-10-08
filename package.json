@@ -84,7 +84,7 @@
     "rollup-plugin-license": "0.12.1",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-strip-banner": "0.2.0",
-    "uglify-js": "3.6.0",
+    "uglify-js": "3.6.1",
     "underscore": ">=1.6.0"
   }
 }
