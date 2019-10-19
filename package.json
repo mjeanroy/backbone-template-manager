@@ -33,11 +33,11 @@
     "underscore": ">=1.6.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.4",
     "@babel/plugin-transform-member-expression-literals": "7.2.0",
     "@babel/plugin-transform-modules-umd": "7.2.0",
     "@babel/plugin-transform-property-literals": "7.2.0",
-    "@babel/preset-env": "7.6.2",
+    "@babel/preset-env": "7.6.3",
     "ansi-colors": "4.1.1",
     "backbone": ">=1.0.0",
     "bootstrap": "3.3.5",
@@ -63,7 +63,7 @@
     "jasmine-ajax": "4.0.0",
     "jasmine-core": "2.99.1",
     "jquery": "1.12.4",
-    "karma": "4.3.0",
+    "karma": "4.4.1",
     "karma-babel-preprocessor": "8.0.1",
     "karma-chrome-launcher": "3.1.0",
     "karma-firefox-launcher": "1.2.0",
@@ -77,14 +77,14 @@
     "lodash": "4.17.15",
     "mustache": "3.1.0",
     "phantomjs-prebuilt": "2.1.16",
-    "rollup": "1.22.0",
+    "rollup": "1.25.0",
     "rollup-plugin-alias": "2.1.0",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-license": "0.12.1",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-strip-banner": "0.2.0",
-    "uglify-js": "3.6.0",
+    "uglify-js": "3.6.3",
     "underscore": ">=1.6.0"
   }
 }
