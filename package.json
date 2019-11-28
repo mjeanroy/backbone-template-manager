@@ -40,7 +40,7 @@
     "@babel/preset-env": "7.7.4",
     "ansi-colors": "4.1.1",
     "backbone": ">=1.0.0",
-    "bootstrap": "3.3.5",
+    "bootstrap": "4.4.1",
     "connect-livereload": "0.6.1",
     "del": "5.1.0",
     "eslint": "6.7.1",
