@@ -54,7 +54,7 @@
     "gulp-eslint": "6.0.0",
     "gulp-filter": "6.0.0",
     "gulp-git": "2.10.1",
-    "gulp-header-comment": "0.6.1",
+    "gulp-header-comment": "0.7.0",
     "gulp-live-server": "0.0.31",
     "gulp-rename": "2.0.0",
     "gulp-strip-banner": "0.0.2",
