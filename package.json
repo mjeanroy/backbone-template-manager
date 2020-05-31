@@ -33,7 +33,7 @@
     "underscore": ">=1.6.0"
   },
   "devDependencies": {
-    "@babel/core": "7.10.1",
+    "@babel/core": "7.10.2",
     "@babel/plugin-transform-member-expression-literals": "7.10.1",
     "@babel/plugin-transform-modules-umd": "7.10.1",
     "@babel/plugin-transform-property-literals": "7.10.1",
